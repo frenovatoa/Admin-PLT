@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "admin-plt": {
+      "hosting": {
+        "project": [
+          "admin-plt"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "admin-plt"
+  }
+}
