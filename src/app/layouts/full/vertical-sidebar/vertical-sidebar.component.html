@@ -19,7 +19,7 @@
             <mat-icon>settings</mat-icon> Settings
         </button>
         <button mat-menu-item>
-            <mat-icon>account_box</mat-icon> Profile
+            <mat-icon>settings</mat-icon> Profile
         </button>
         <button mat-menu-item>
             <mat-icon>notifications_off</mat-icon> Disable notifications
@@ -31,8 +31,7 @@
 </div>
 
 <mat-nav-list appAccordion>
-    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuitem()" routerLinkActive="selected"
-        group="{{menuitem.state}}" (click)="scrollToTop()">
+    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuitem()" routerLinkActive="selected" group="{{menuitem.state}}" (click)="scrollToTop()">
 
         <a class="" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'" (click)="handleNotify()">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
@@ -48,7 +47,7 @@
             <span class="label label-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
         </a>
 
-        <a class="" appAccordionToggle href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'" >
+        <a class="" appAccordionToggle href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name | translate}}</span>
             <span fxFlex></span>
@@ -65,11 +64,8 @@
 
         <mat-nav-list class="sub-item" *ngIf="menuitem.type === 'sub'">
 
-            <mat-list-item *ngFor="let childitem of menuitem.children; let j=index; let i = childitem"
-                routerLinkActive="selected">
-                <a [routerLink]="['/', menuitem.state, childitem.state ]" *ngIf="childitem.type === 'link'"
-                    class="relative" routerLinkActive="selected"
-                    (click)="itemSelect[i]=j" (click)="handleNotify()">{{ childitem.name | translate}}</a>
+            <mat-list-item *ngFor="let childitem of menuitem.children; let j=index; let i = childitem" routerLinkActive="selected">
+                <a [routerLink]="['/', menuitem.state, childitem.state ]" *ngIf="childitem.type === 'link'" class="relative" routerLinkActive="selected" (click)="itemSelect[i]=j" (click)="handleNotify()">{{ childitem.name | translate}}</a>
             </mat-list-item>
 
             <mat-list-item *ngFor="let childitem of menuitem.children; let j=index; let i=childitem; ">
@@ -81,14 +77,13 @@
                 </a>
 
                 <mat-nav-list class="child-sub-item" *ngIf="childitem.type === 'subchild'">
-                    <mat-list-item *ngFor="let child of childitem.subchildren" routerLinkActive="selected" >
+                    <mat-list-item *ngFor="let child of childitem.subchildren" routerLinkActive="selected">
 
-                        <a [routerLink]="['/', menuitem.state, childitem.state, child.state ]"
-                            routerLinkActive="selected">{{child.name | translate}}</a>
+                        <a [routerLink]="['/', menuitem.state, childitem.state, child.state ]" routerLinkActive="selected">{{child.name | translate}}</a>
 
                     </mat-list-item>
                 </mat-nav-list>
-                
+
             </mat-list-item>
 
         </mat-nav-list>
