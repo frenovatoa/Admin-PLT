@@ -1,31 +1,22 @@
 <!-- ============================================================== -->
 <!-- sidebar -->
 <!-- ============================================================== -->
-<div class="user-profile" style="background: url(assets/images/background/user-info.jpg) no-repeat;">
+<!-- Modificacion del cambio de imagen de fondo de la barra lateral -->
+<div class="user-profile" style="background: url(assets/images/logosplt/background_vert-siderbar.jpg) no-repeat; width: 100%; height: 150px; background-position: right;">
     <!-- User profile image -->
-    <div class="profile-img">
-        <img src="assets/images/users/profile.png" alt="user" (click)="handleNotify()"> </div>
     <!-- User profile text-->
     <!-- ============================================================== -->
     <!-- Profile - style you can find in header.scss -->
     <!-- ============================================================== -->
-    <div class="profile-text">
-        <a [matMenuTriggerFor]="sdprofile" class=""> Markarn Doe
+    <!--   Modificacion del texto, quitar imagen de perfil y dejando opcion de cerrar sesion -->
+    <div class="profile-text" style="top: 108px;">
+        <a [matMenuTriggerFor]="sdprofile" class=""> Usuario
             <i class="ti-angle-down font-12 m-l-5"></i>
         </a>
     </div>
     <mat-menu #sdprofile="matMenu" class="mymegamenu">
         <button mat-menu-item>
-            <mat-icon>settings</mat-icon> Settings
-        </button>
-        <button mat-menu-item>
-            <mat-icon>settings</mat-icon> Profile
-        </button>
-        <button mat-menu-item>
-            <mat-icon>notifications_off</mat-icon> Disable notifications
-        </button>
-        <button mat-menu-item>
-            <mat-icon >exit_to_app</mat-icon> Sign Out
+            <mat-icon >exit_to_app</mat-icon> Cerrar sesión
         </button>
     </mat-menu>
 </div>
