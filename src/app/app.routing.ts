@@ -1,7 +1,8 @@
 import { Routes } from '@angular/router';
-
+//import { AuthGuard, redirectLoggedInTo, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 import { FullComponent } from './layouts/full/full.component';
 import { AppBlankComponent } from './layouts/blank/blank.component';
+
 
 export const AppRoutes: Routes = [
     {
@@ -10,25 +11,18 @@ export const AppRoutes: Routes = [
         children: [
             {
                 path: '',
-                redirectTo: '/dashboards/dashboard1',
+                redirectTo: '/pages/dashboard',
                 pathMatch: 'full'
             },
              {
                 path: 'dashboard',
-                redirectTo: '/dashboards/dashboard1',
-                pathMatch: 'full'
+              //  canActivate: [AuthGuard], 
+                loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule),
+                pathMatch: 'full',
             },
-            {
-                path: 'dashboards',
-                loadChildren: () => import('./dashboards/dashboards.module').then(m => m.DashboardsModule)
-            },
-            {
-                path: 'apps',
-                loadChildren: () => import('./apps/apps.module').then(m => m.AppsModule)
-            },
-            
             {
                 path: 'pages',
+              //  canActivate: [ AuthGuard ],
                 loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule)
             }
         ]

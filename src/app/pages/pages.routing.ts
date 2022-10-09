@@ -1,66 +1,36 @@
 import { Routes } from '@angular/router';
 
 
-
 export const PagesRoutes: Routes = [
   {
-    path: '',
-    /*children: [
+    path: '',  
+    children:[
       {
-        path: 'icons/material',
-        component: MatIconComponent,
-        data: {
-          title: 'Material Icons',
-          urls: [
-            { title: 'Dashboard', url: '/dashboard' },
-            { title: 'Material Icons' }
-          ]
-        }
+        path: 'dashboard',
+                loadChildren: () => import('../dashboards/dashboards.module').then(m => m.DashboardsModule),
+                pathMatch: 'full',
       },
       {
-        path: 'timeline',
-        component: TimelineComponent,
-        data: {
-          title: 'Timeline',
-          urls: [
-            { title: 'Dashboard', url: '/dashboard' },
-            { title: 'Timeline' }
-          ]
-        }
+        path: 'admin',
+        loadChildren: () => import('./admin/admin.module').then(m => m.AdminModule),
       },
       {
-        path: 'invoice',
-        component: InvoiceComponent,
-        data: {
-          title: 'Invoice',
-          urls: [
-            { title: 'Dashboard', url: '/dashboard' },
-            { title: 'Invoice' }
-          ]
-        }
+        path: 'catalogs',
+        loadChildren: () => import('./catalogs/catalogs.module').then(m => m.CatalogsModule),
       },
       {
-        path: 'pricing',
-        component: PricingComponent,
-        data: {
-          title: 'Pricing',
-          urls: [
-            { title: 'Dashboard', url: '/dashboard' },
-            { title: 'Pricing' }
-          ]
-        }
+        path: 'orders',
+        loadChildren: () => import('./orders/orders.module').then(m => m.OrdersModule),
       },
       {
-        path: 'helper',
-        component: HelperComponent,
-        data: {
-          title: 'Helper',
-          urls: [
-            { title: 'Dashboard', url: '/dashboard' },
-            { title: 'Helper' }
-          ]
-        }
-      }
-    ]*/
+        path: 'production',
+        loadChildren: () => import('./production/production.module').then(m => m.ProductionModule),
+      },
+      {
+        path: 'sales',
+        loadChildren: () => import('./sales/sales.module').then(m => m.SalesModule),
+      },
+    ]
   }
 ];
+

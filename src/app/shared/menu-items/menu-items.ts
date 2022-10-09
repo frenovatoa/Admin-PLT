@@ -33,46 +33,52 @@ export interface Menu {
 /* Modificacion de los nombres e iconos de la barra lateral, conservando el state por si se llega a necesitar */
 const MENUITEMS = [
     {
+        state: 'dashboard',
+        name: 'Dashboard',
+        type: 'link',
+        icon: 'dashboard',
+    },
+    {
         /* state: 'administracion' */
-        state: 'dashboards',
+        state: 'admin',
         name: 'Administración',
         type: 'sub',
         icon: 'settings',
         children: [
-            { /* state: 'usuarios' */ state: 'dashboard2', name: 'Usuarios', type: 'link' }
+            { /* state: 'usuarios' */ state: 'users', name: 'Usuarios', type: 'link' }
         ]
     },
     {
        /*  state: 'catalogos' */
-        state: 'apps',
+        state: 'catalogs',
         name: 'Catálogos',
         type: 'sub',
         icon: 'apps',
         children: [
-            { /* state: 'clientes' */ state: 'calendar', name: 'Clientes', type: 'link' },
-            { /* state: 'productos' */  state: 'mailbox', name: 'Productos', type: 'link' },
-            { /* state: 'tipos_productos' */ state: 'messages', name: 'Tipos de producto', type: 'link' },
+            { /* state: 'clientes' */ state: 'clients', name: 'Clientes', type: 'link' },
+            { /* state: 'productos' */  state: 'products', name: 'Productos', type: 'link' },
+            { /* state: 'tipos_productos' */ state: 'typeOfProducts', name: 'Tipos de producto', type: 'link' },
         ]
     },
     {
-        state: 'ventas',
+        state: 'sales',
         name: 'Ventas',
         type: 'link',
         icon: 'add_shopping_cart',
     },
     {
         /* state: 'pedidos' */
-        state: 'authentication',
+        state: 'orders',
         name: 'Pedidos',
         type: 'sub',
         icon: 'shopping_bag',
         children: [
-            { /* state: 'generar_pedido' */ state: 'login', name: 'Generar pedido', type: 'link' },
-            { /* state: 'agenda' */ state: 'register', name: 'Agenda', type: 'link' },
+            { /* state: 'generar_pedido' */ state: 'generateOrder', name: 'Generar pedido', type: 'link' },
+            { /* state: 'agenda' */ state: 'schedule', name: 'Agenda', type: 'link' },
         ]
     },
     {
-        state: 'produccion',
+        state: 'production',
         name: 'Producción',
         type: 'link',
         icon: 'inventory_2',
