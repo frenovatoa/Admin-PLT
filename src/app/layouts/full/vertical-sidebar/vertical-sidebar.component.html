@@ -1,38 +1,28 @@
 <!-- ============================================================== -->
 <!-- sidebar -->
 <!-- ============================================================== -->
-<div class="user-profile" style="background: url(assets/images/background/user-info.jpg) no-repeat;">
+<!-- Modificacion del cambio de imagen de fondo de la barra lateral -->
+<div class="user-profile" style="background: url(assets/images/logosplt/background_vert-siderbar.jpg) no-repeat; width: 100%; height: 150px; background-position: right;">
     <!-- User profile image -->
-    <div class="profile-img">
-        <img src="assets/images/users/profile.png" alt="user" (click)="handleNotify()"> </div>
     <!-- User profile text-->
     <!-- ============================================================== -->
     <!-- Profile - style you can find in header.scss -->
     <!-- ============================================================== -->
-    <div class="profile-text">
-        <a [matMenuTriggerFor]="sdprofile" class=""> Markarn Doe
+    <!--   Modificacion del texto, quitar imagen de perfil y dejando opcion de cerrar sesion -->
+    <div class="profile-text" style="top: 108px;">
+        <a [matMenuTriggerFor]="sdprofile" class=""> Usuario
             <i class="ti-angle-down font-12 m-l-5"></i>
         </a>
     </div>
     <mat-menu #sdprofile="matMenu" class="mymegamenu">
         <button mat-menu-item>
-            <mat-icon>settings</mat-icon> Settings
-        </button>
-        <button mat-menu-item>
-            <mat-icon>account_box</mat-icon> Profile
-        </button>
-        <button mat-menu-item>
-            <mat-icon>notifications_off</mat-icon> Disable notifications
-        </button>
-        <button mat-menu-item>
-            <mat-icon >exit_to_app</mat-icon> Sign Out
+            <mat-icon >exit_to_app</mat-icon> Cerrar sesión
         </button>
     </mat-menu>
 </div>
 
 <mat-nav-list appAccordion>
-    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuitem()" routerLinkActive="selected"
-        group="{{menuitem.state}}" (click)="scrollToTop()">
+    <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuitem()" routerLinkActive="selected" group="{{menuitem.state}}" (click)="scrollToTop()">
 
         <a class="" appAccordionToggle [routerLink]="['/', menuitem.state]" *ngIf="menuitem.type === 'link'" (click)="handleNotify()">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
@@ -48,7 +38,7 @@
             <span class="label label-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
         </a>
 
-        <a class="" appAccordionToggle href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'" >
+        <a class="" appAccordionToggle href="{{menuitem.state}}" target="_blank" *ngIf="menuitem.type === 'extTabLink'">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name | translate}}</span>
             <span fxFlex></span>
@@ -65,11 +55,8 @@
 
         <mat-nav-list class="sub-item" *ngIf="menuitem.type === 'sub'">
 
-            <mat-list-item *ngFor="let childitem of menuitem.children; let j=index; let i = childitem"
-                routerLinkActive="selected">
-                <a [routerLink]="['/', menuitem.state, childitem.state ]" *ngIf="childitem.type === 'link'"
-                    class="relative" routerLinkActive="selected"
-                    (click)="itemSelect[i]=j" (click)="handleNotify()">{{ childitem.name | translate}}</a>
+            <mat-list-item *ngFor="let childitem of menuitem.children; let j=index; let i = childitem" routerLinkActive="selected">
+                <a [routerLink]="['/', menuitem.state, childitem.state ]" *ngIf="childitem.type === 'link'" class="relative" routerLinkActive="selected" (click)="itemSelect[i]=j" (click)="handleNotify()">{{ childitem.name | translate}}</a>
             </mat-list-item>
 
             <mat-list-item *ngFor="let childitem of menuitem.children; let j=index; let i=childitem; ">
@@ -81,14 +68,13 @@
                 </a>
 
                 <mat-nav-list class="child-sub-item" *ngIf="childitem.type === 'subchild'">
-                    <mat-list-item *ngFor="let child of childitem.subchildren" routerLinkActive="selected" >
+                    <mat-list-item *ngFor="let child of childitem.subchildren" routerLinkActive="selected">
 
-                        <a [routerLink]="['/', menuitem.state, childitem.state, child.state ]"
-                            routerLinkActive="selected">{{child.name | translate}}</a>
+                        <a [routerLink]="['/', menuitem.state, childitem.state, child.state ]" routerLinkActive="selected">{{child.name | translate}}</a>
 
                     </mat-list-item>
                 </mat-nav-list>
-                
+
             </mat-list-item>
 
         </mat-nav-list>

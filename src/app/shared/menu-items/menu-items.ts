@@ -1,3 +1,4 @@
+import { getLocaleExtraDayPeriodRules } from '@angular/common';
 import { Injectable } from '@angular/core';
 
 export interface BadgeItem {
@@ -29,93 +30,52 @@ export interface Menu {
     saperator?: Saperator[];
     children?: ChildrenItems[];
 }
-
+/* Modificacion de los nombres e iconos de la barra lateral, conservando el state por si se llega a necesitar */
 const MENUITEMS = [
     {
-        state: '',
-        name: 'Personal',
-        type: 'saperator',
-        icon: 'av_timer'
-    },
-    {
+        /* state: 'administracion' */
         state: 'dashboards',
-        name: 'Dashboards',
+        name: 'Administración',
         type: 'sub',
-        icon: 'av_timer',
+        icon: 'settings',
         children: [
-            { state: 'dashboard1', name: 'Dashboard 1', type: 'link' },
-            { state: 'dashboard2', name: 'Dashboard 2', type: 'link' }
+            { /* state: 'usuarios' */ state: 'dashboard2', name: 'Usuarios', type: 'link' }
         ]
     },
     {
+       /*  state: 'catalogos' */
         state: 'apps',
-        name: 'Apps',
+        name: 'Catálogos',
         type: 'sub',
         icon: 'apps',
-        badge: [{ type: 'warning', value: 'new' }],
         children: [
-            { state: 'calendar', name: 'Calendar', type: 'link' },
-            { state: 'mailbox', name: 'Mailbox', type: 'link' },
-            { state: 'messages', name: 'Mail', type: 'link' },
-            { state: 'chat', name: 'Chat', type: 'link' },
-            { state: 'taskboard', name: 'Taskboard', type: 'link' },
-            { state: 'notes', name: 'Notes', type: 'link' },
-
-            { state: 'employeelist', name: 'Employees', type: 'link' },
-
-            { state: 'courses', name: 'Courses', type: 'link' },
-            { state: 'contact', name: 'Contact', type: 'link' },
-
-            { state: 'ticketlist', name: 'Ticket List', type: 'link' },
-
-            { state: 'ticketdetails', name: 'Ticket Details', type: 'link' },
-
-            { state: 'invoice', name: 'Invoice', type: 'link' },
-            { state: 'todo', name: 'Todo', type: 'link' },
+            { /* state: 'clientes' */ state: 'calendar', name: 'Clientes', type: 'link' },
+            { /* state: 'productos' */  state: 'mailbox', name: 'Productos', type: 'link' },
+            { /* state: 'tipos_productos' */ state: 'messages', name: 'Tipos de producto', type: 'link' },
         ]
     },
     {
-        state: '',
-        name: 'Extra Component',
-        type: 'saperator',
-        icon: 'av_timer'
+        state: 'ventas',
+        name: 'Ventas',
+        type: 'link',
+        icon: 'add_shopping_cart',
     },
     {
+        /* state: 'pedidos' */
         state: 'authentication',
-        name: 'Authentication',
+        name: 'Pedidos',
         type: 'sub',
-        icon: 'perm_contact_calendar',
+        icon: 'shopping_bag',
         children: [
-            { state: 'login', name: 'Login', type: 'link' },
-            { state: 'register', name: 'Register', type: 'link' },
-            { state: 'forgot', name: 'Forgot', type: 'link' },
-            { state: 'lockscreen', name: 'Lockscreen', type: 'link' },
-            { state: '404', name: 'Error', type: 'link' }
+            { /* state: 'generar_pedido' */ state: 'login', name: 'Generar pedido', type: 'link' },
+            { /* state: 'agenda' */ state: 'register', name: 'Agenda', type: 'link' },
         ]
     },
     {
-        state: 'pages',
-        name: 'Pages',
-        type: 'sub',
-        icon: 'content_copy',
-        children: [
-            { state: 'timeline', name: 'Timeline', type: 'link' },
-            { state: 'invoice', name: 'Invoice', type: 'link' },
-            { state: 'pricing', name: 'Pricing', type: 'link' },
-            { state: 'helper', name: 'Helper Classes', type: 'link' },
-            {
-                state: 'icons',
-                name: 'Icons',
-                type: 'subchild',
-                subchildren: [
-                    {
-                        state: 'material',
-                        name: 'Material Icons',
-                        type: 'link'
-                    }
-                ]
-            }
-        ]
+        state: 'produccion',
+        name: 'Producción',
+        type: 'link',
+        icon: 'inventory_2',
     }
 ];
 
