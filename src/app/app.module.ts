@@ -42,6 +42,11 @@ import { provideFirestore,getFirestore } from '@angular/fire/firestore';
 
 /*Importaciones firebase*/
 import { AngularFireModule } from '@angular/fire/compat'
+import { AuthService } from './shared/auth/auth.service';
+import { AngularFireAuthModule } from '@angular/fire/compat/auth';
+import { AngularFireStorageModule } from '@angular/fire/compat/storage';
+import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
+import { AngularFireDatabaseModule } from '@angular/fire/compat/database'
 
 export function HttpLoaderFactory(http: HttpClient): any {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -90,14 +95,19 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         provideAuth(() => getAuth()),
         provideDatabase(() => getDatabase()),
         provideFirestore(() => getFirestore()),
-        AngularFireModule.initializeApp(environment.firebase)
+        AngularFireModule.initializeApp(environment.firebase),
+        AngularFireAuthModule,
+    AngularFirestoreModule,
+    AngularFireStorageModule,
+    AngularFireDatabaseModule
     ],
     providers: [
         {
             provide: PERFECT_SCROLLBAR_CONFIG,
             useValue: DEFAULT_PERFECT_SCROLLBAR_CONFIG
         },
-        DatePipe
+        DatePipe,
+        AuthService
     ],
     bootstrap: [AppComponent]
 })
