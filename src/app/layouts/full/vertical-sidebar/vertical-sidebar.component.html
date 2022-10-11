@@ -15,7 +15,7 @@
         </a>
     </div>
     <mat-menu #sdprofile="matMenu" class="mymegamenu">
-        <button mat-menu-item>
+        <button mat-menu-item (click)="logOut()">
             <mat-icon >exit_to_app</mat-icon> Cerrar sesión
         </button>
     </mat-menu>

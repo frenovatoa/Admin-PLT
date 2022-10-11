@@ -9,6 +9,7 @@ import {
 import { PerfectScrollbarConfigInterface } from 'ngx-perfect-scrollbar';
 import { MediaMatcher } from '@angular/cdk/layout';
 import { MenuItems } from '../../../shared/menu-items/menu-items';
+import { AuthService } from '../../../shared/auth/auth.service';
 
 @Component({
   selector: 'app-vertical-sidebar',
@@ -53,7 +54,8 @@ export class VerticalAppSidebarComponent implements OnDestroy {
   constructor(
     changeDetectorRef: ChangeDetectorRef,
     media: MediaMatcher,
-    public menuItems: MenuItems
+    public menuItems: MenuItems,
+    public authService:AuthService
   ) {
     this.mobileQuery = media.matchMedia('(min-width: 768px)');
     this._mobileQueryListener = () => changeDetectorRef.detectChanges();
@@ -70,5 +72,8 @@ export class VerticalAppSidebarComponent implements OnDestroy {
     if(window.innerWidth < 1024){
       this.notify.emit(!this.showClass);
     }
+  }
+  logOut(){
+    this.authService.SignOut();
   }
 }
