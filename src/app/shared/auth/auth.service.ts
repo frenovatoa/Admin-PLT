@@ -121,10 +121,14 @@ export class AuthService {
     );
     const userData: User = {
       uid: user.uid,
+      userTypeId: user.userTypeId,
+      name: user.name,
+      paternalLastName: user.paternalLastName,
+      maternalLastName: user.maternalLastName,
       email: user.email,
-      displayName: user.displayName,
-      photoURL: user.photoURL,
-      emailVerified: user.emailVerified,
+      password: user.password,
+      status: user.status,
+      image: user.image,
     };
     return userRef.set(userData, {
       merge: true,
