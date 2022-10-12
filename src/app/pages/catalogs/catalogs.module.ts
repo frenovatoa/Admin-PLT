@@ -5,6 +5,7 @@ import { ProductsComponent } from './products/products.component';
 import { TypeOfProductsComponent } from './type-of-products/type-of-products.component';
 import { CatalogsRoutingModule } from './catalogs-routing.module';
 import { ProductsDialogComponent } from './products/products-dialog/products-dialog.component';
+import { TypeOfProductsDialogComponent } from './type-of-products/type-of-products-dialog/type-of-products-dialog.component';
 
 
 
@@ -13,7 +14,8 @@ import { ProductsDialogComponent } from './products/products-dialog/products-dia
     ClientsComponent,
     ProductsComponent,
     TypeOfProductsComponent,
-    ProductsDialogComponent
+    ProductsDialogComponent,
+    TypeOfProductsDialogComponent
   ],
   imports: [
     CommonModule,
