@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthService } from '../../shared/auth/auth.service';
+import { User } from '../../shared/interfaces/user';
 import {
   FormBuilder,
   FormGroup,
@@ -17,12 +18,22 @@ import {
 export class LoginComponent implements OnInit {
   public form: FormGroup = Object.create(null);
   constructor(private fb: FormBuilder, private router: Router, public authService: AuthService) { }
-
+ /* public user:User={
+    userTypeId: '1',
+    name: 'Administracion',
+    paternalLastName: 'Admin', 
+    maternalLastName: 'Admom', 
+    email: 'admin@plt.com',
+    password: 'Admin123',
+    status: 1, 
+    image: ''
+  }*/
   ngOnInit(): void {
     this.form = this.fb.group({
       uname: [null, Validators.compose([Validators.required])],
       password: [null, Validators.compose([Validators.required])]
     });
+  //  this.authService.SignUp(this.user);
   }
 
   onSubmit(): void {

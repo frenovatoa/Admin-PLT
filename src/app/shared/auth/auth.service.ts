@@ -7,6 +7,8 @@ import {
 } from '@angular/fire/compat/firestore';
 import { Router } from '@angular/router';
 import { User } from '../interfaces/user';
+import * as moment from 'moment';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -40,7 +42,9 @@ export class AuthService {
     return this.afAuth
       .signInWithEmailAndPassword(email, password)
       .then((result) => {
-        this.SetUserData(result.user);
+        console.log(result)
+        //this.SetUserData(result.user);
+        console.log(result.user)
         this.afAuth.authState.subscribe((user) => {
           if (user) {
             this.router.navigate(['dashboard']);
@@ -56,14 +60,14 @@ export class AuthService {
       });
   }
   // Sign up with email/password
-  SignUp(email: string, password: string) {
+  SignUp(data:User) {
     return this.afAuth
-      .createUserWithEmailAndPassword(email, password)
+      .createUserWithEmailAndPassword(data.email, data.password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
         this.SendVerificationMail();
-        this.SetUserData(result.user);
+        this.SetUserData(data);
       })
       .catch((error) => {
         window.alert(error.message);
@@ -116,11 +120,12 @@ export class AuthService {
   sign up with username/password and sign in with social auth  
   provider in Firestore database using AngularFirestore + AngularFirestoreDocument service */
   SetUserData(user: any) {
+    const id = unicID();
     const userRef: AngularFirestoreDocument<any> = this.afs.doc(
-      `users/${user.uid}`
+      `tbl_users/${id}`
     );
     const userData: User = {
-      uid: user.uid,
+      uid: id,
       userTypeId: user.userTypeId,
       name: user.name,
       paternalLastName: user.paternalLastName,
@@ -141,4 +146,15 @@ export class AuthService {
       this.router.navigate(['/authentication/login']);
     });
   }
+}
+
+function unicID(): string {
+  const today = moment();
+
+  return (
+    today.day() +
+    today.month() +
+    today.year() +
+    Math.random().toString(36).substring(2, 15)
+  );
 }
