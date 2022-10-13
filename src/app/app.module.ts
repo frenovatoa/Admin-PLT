@@ -10,7 +10,7 @@ import { AppComponent } from './app.component';
 
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FullComponent } from './layouts/full/full.component';
-import { AppBlankComponent } from './layouts/blank/blank.component';
+import { AppBlankComponent } from './layouts/blank/blank.component';  
 
 
 import { VerticalAppHeaderComponent } from './layouts/full/vertical-header/vertical-header.component';
@@ -47,6 +47,10 @@ import { AngularFireAuthModule } from '@angular/fire/compat/auth';
 import { AngularFireStorageModule } from '@angular/fire/compat/storage';
 import { AngularFirestoreModule } from '@angular/fire/compat/firestore';
 import { AngularFireDatabaseModule } from '@angular/fire/compat/database'
+import { UserComponent } from './pages/admin/users/users.component';
+import { UsersDialogComponent } from './pages/admin/users/users-dialog/users-dialog.component';
+import { MatCardModule } from '@angular/material/card';
+import { AddComponent } from './pages/admin/users/add/add.component';
 
 export function HttpLoaderFactory(http: HttpClient): any {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -70,7 +74,10 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         VerticalAppSidebarComponent,
         AppBreadcrumbComponent,
         HorizontalAppHeaderComponent,
-        HorizontalAppSidebarComponent
+        HorizontalAppSidebarComponent,
+        UserComponent,
+        UsersDialogComponent,
+        AddComponent
     ],
     imports: [
         BrowserModule,
@@ -99,7 +106,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         AngularFireAuthModule,
     AngularFirestoreModule,
     AngularFireStorageModule,
-    AngularFireDatabaseModule
+    AngularFireDatabaseModule,
+    MatCardModule,
     ],
     providers: [
         {
