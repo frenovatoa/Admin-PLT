@@ -53,8 +53,9 @@ const MENUITEMS = [
             { state: 'chat', name: 'Chat', type: 'link' },
             { state: 'taskboard', name: 'Taskboard', type: 'link' },
             { state: 'notes', name: 'Notes', type: 'link' },
-
-            { state: 'employeelist', name: 'Employees', type: 'link' },
+            
+            { state: 'users', name: 'Usuarios', type: 'link' },
+            //{ state: 'userslist', name: 'Employees', type: 'link' },
 
             { state: 'courses', name: 'Courses', type: 'link' },
             { state: 'contact', name: 'Contact', type: 'link' },

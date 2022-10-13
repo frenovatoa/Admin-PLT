@@ -5,6 +5,7 @@ import { AppBlankComponent } from './layouts/blank/blank.component';
 //import { redirectUnauthorizedTo } from '@angular/fire/auth-guard';
 
 //import { AuthGuard, redirectUnauthorizedTo } from '@angular/fire/auth-guard';
+import { UserComponent } from './pages/admin/users/users.component';
 //const  accesWerbPage = () => redirectUnauthorizedTo(['/authentication/login']);
 
 export const AppRoutes: Routes = [
@@ -32,7 +33,22 @@ export const AppRoutes: Routes = [
                 loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
                 //canActivate: [AuthGuard],
                 canActivate: [AuthGuard], 
-            }
+            },  
+        ]
+    },
+    // Ruta a usuarios
+    {
+        path: '',
+        children: [
+            {
+                path: './pages/admin/users',
+                component: UserComponent,
+                data: {
+                    title: 'Usuarios',
+                    urls: [
+                    ]
+                }
+            },
         ]
     },
     {
@@ -49,5 +65,5 @@ export const AppRoutes: Routes = [
     {
         path: '**',
         redirectTo: 'authentication/404'
-    }
+    },
 ];
