@@ -1,1 +1,20 @@
 <p>type-of-products works!</p>
+<!--  -->
+<div fxLayout="row wrap">
+    <div fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <div fxLayout="row wrap" class="align-items-center">
+                    <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
+                        <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="A">
+                        </mat-form-field>
+                    </div>
+                    <div fxFlex.gt-md="75" class="text-right">
+                        <button mat-raised-button (click)="openDialog('Add',{})" color="primary">A</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
