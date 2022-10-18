@@ -8,7 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { PagesRoutes } from './pages.routing';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {MatListModule} from '@angular/material/list';
-
+import {MatDialogModule} from '@angular/material/dialog';
 
 @NgModule({
   imports: [
@@ -19,7 +19,8 @@ import {MatListModule} from '@angular/material/list';
     FormsModule,
     MatListModule,
     ReactiveFormsModule,
-    NgxDatatableModule
+    NgxDatatableModule,
+    MatDialogModule
   ],
   declarations: []
 })
