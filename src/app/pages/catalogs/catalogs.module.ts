@@ -13,13 +13,15 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ClientsDialogComponent } from './clients/clients-dialog/clients-dialog.component';
 
 @NgModule({
   declarations: [
     ClientsComponent,
     ProductsComponent,
     TypeOfProductsComponent,
-    TypeOfProductsDialogComponent
+    TypeOfProductsDialogComponent,
+    ClientsDialogComponent
   ],
   imports: [
     CommonModule,
