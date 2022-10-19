@@ -6,6 +6,10 @@ import { DatePipe } from '@angular/common';
 import { AddComponent } from './add/add.component';
 import { MatCardModule } from '@angular/material/card';
 import { UsersDialogComponent } from './users-dialog/users-dialog.component';
+import { UserService } from 'src/app/shared/services/user.services';
+import { FormControl, FormGroup } from '@angular/forms';
+import { MatSort } from '@angular/material/sort';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 export interface User {
     uid?: string;
@@ -19,21 +23,6 @@ export interface User {
     image?: string;
  }
 
-// Aquí se van a ir insertando los empleados
-const user = [
-    {
-        uid: 1,
-        userTypeId: 1,
-        name: 'Kaiser',
-        paternalLastName: 'Hdz',
-        maternalLastName: 'Flores',
-        email: 'k@gmail.com',
-        password: 123,
-        status: 1,
-        image: 'assets/images/users/2.jpg'
-    },
- ];
-
 @Component({
   selector: 'app-users',
   templateUrl: './users.component.html',
@@ -41,29 +30,51 @@ const user = [
 })
 
 export class UserComponent implements OnInit, AfterViewInit {
+     
 
+    // Inicializo un arreglo vacío de usuarios
+    public user: User[]=[];
 
-    @ViewChild(MatTable, { static: true }) table: MatTable<any> = Object.create(null);
     searchText: any;
-    displayedColumns: string[] = ['#', 'name', 'email', 'action'];
-    dataSource = new MatTableDataSource(user);
-    @ViewChild(MatPaginator, { static: true }) paginator: MatPaginator = Object.create(null);
+    
+    public dataSource!: MatTableDataSource<User>;
+    public displayedColumns: string[] = ['#', 'name','email', 'action'];
+ 
+    private started: boolean = false;
+ 
+    @ViewChild(MatPaginator)
+    paginator!: MatPaginator;
+  @ViewChild(MatSort) sort!: MatSort
     //mat-card
-    constructor(public dialog: MatDialog, public datePipe: DatePipe) { }
+    constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService) { 
+
+    }
 
     ngOnInit(): void {
+        // Obtener los documentos de la colección indicada en la función getUser()
+        this.fb.getUser().subscribe((user: any)=>{
+            console.log(user)
+            this.user=user
+            this.dataSource = new MatTableDataSource < User > (this.user);
+            console.log(this.dataSource);
+            this.dataSource.paginator =this.paginator;
+            this.dataSource.sort = this.sort;
+        });        
     }
 
     ngAfterViewInit(): void {
         this.dataSource.paginator = this.paginator;
     }
 
+    // Aplica filtro a la lista de usuarios
     applyFilter(filterValue: string): void {
         this.dataSource.filter = filterValue.trim().toLowerCase();
     }
 
     openDialog(action: string, obj: any): void {
         obj.action = action;
+        //obj.type = action == 'Nuevo' ? 1 : 2;
+        //obj.uId = AuthService.getUser().id;
         const dialogRef = this.dialog.open(UsersDialogComponent, {
             data: obj
         });
@@ -78,6 +89,21 @@ export class UserComponent implements OnInit, AfterViewInit {
         }); 
     }
 
+    /** Llama api para eliminar un registro */
+//   delete(local_data): void {
+//     local_data.type = 3;
+//     local_data.uId = AuthService.getUser().id;
+
+//     this.movementTypeService.crudMovementType(element).subscribe(response => {
+//       if (response['success']) {
+//         this.toastr.success(response['message']);
+//         this.ngOnInit();
+//       } else {
+//         this.toastr.error(response['message']);
+//       }
+//     });
+//   }
+  
     // tslint:disable-next-line - Disables all
     addRowData(row_obj: User): void {
         //this.dataSource.data.push({
