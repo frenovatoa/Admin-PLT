@@ -125,11 +125,7 @@ export class AuthService {
       `tbl_users/${id}`
     );
     const userData: User = {
-<<<<<<< HEAD
-      uid: user.uid,
-=======
       uid: id,
->>>>>>> developer
       userTypeId: user.userTypeId,
       name: user.name,
       paternalLastName: user.paternalLastName,

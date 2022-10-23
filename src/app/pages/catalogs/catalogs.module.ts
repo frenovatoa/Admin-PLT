@@ -4,12 +4,7 @@ import { ClientsComponent } from './clients/clients.component';
 import { ProductsComponent } from './products/products.component';
 import { TypeOfProductsComponent } from './type-of-products/type-of-products.component';
 import { CatalogsRoutingModule } from './catalogs-routing.module';
-<<<<<<< HEAD
 import { ProductsDialogComponent } from './products/products-dialog/products-dialog.component';
-import { TypeOfProductsDialogComponent } from './type-of-products/type-of-products-dialog/type-of-products-dialog.component';
-
-
-=======
 import { TypeOfProductsDialogComponent } from './type-of-products/type-of-products-dialog/type-of-products-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { DemoMaterialModule } from 'src/app/demo-material-module';
@@ -19,18 +14,16 @@ import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
->>>>>>> developer
+import { ClientsDialogComponent } from './clients/clients-dialog/clients-dialog.component';
 
 @NgModule({
   declarations: [
     ClientsComponent,
     ProductsComponent,
     TypeOfProductsComponent,
-<<<<<<< HEAD
     ProductsDialogComponent,
-=======
->>>>>>> developer
-    TypeOfProductsDialogComponent
+    TypeOfProductsDialogComponent,
+    ClientsDialogComponent
   ],
   imports: [
     CommonModule,
