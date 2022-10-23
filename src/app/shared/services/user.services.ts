@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/compat/firestore';
+import moment from 'moment';
 
 @Injectable({
   providedIn: 'root'
@@ -35,5 +36,16 @@ export class UserService {
    .collection("tbl_user_types")
    .valueChanges();
  }
- 
+
+ // Función que me da un id automático para los usuarios
+  unicID(): string {
+  const today = moment();
+
+  return (
+    today.day() +
+    today.month() +
+    today.year() +
+    Math.random().toString(36).substring(2, 15)
+  );
+  }
 }

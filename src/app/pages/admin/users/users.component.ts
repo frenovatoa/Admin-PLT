@@ -3,7 +3,6 @@ import { MatTableDataSource, MatTable } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
-import { AddComponent } from './add/add.component';
 import { MatCardModule } from '@angular/material/card';
 import { UsersDialogComponent } from './users-dialog/users-dialog.component';
 import { UserService } from 'src/app/shared/services/user.services';
@@ -31,21 +30,18 @@ export interface User {
 
 export class UserComponent implements OnInit, AfterViewInit {
      
-
     // Inicializo un arreglo vacío de usuarios
     public user: User[]=[];
-
+    public dataSource: MatTableDataSource<User>;
+  
+    @ViewChild(MatPaginator) paginator: MatPaginator;
+    @ViewChild(MatSort) sort: MatSort;
+      
     searchText: any;
-    
-    public dataSource!: MatTableDataSource<User>;
-    public displayedColumns: string[] = ['#', 'name','email', 'action'];
- 
+    // Columnas mostradas en la pantalla inicial de usuarios
+    public displayedColumns: string[] = ['#', 'name','email', 'action']; 
     private started: boolean = false;
  
-    @ViewChild(MatPaginator)
-    paginator!: MatPaginator;
-  @ViewChild(MatSort) sort!: MatSort
-    //mat-card
     constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService) { 
 
     }
@@ -63,12 +59,13 @@ export class UserComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.dataSource.paginator = this.paginator;
+        
     }
 
-    // Aplica filtro a la lista de usuarios
-    applyFilter(filterValue: string): void {
-        this.dataSource.filter = filterValue.trim().toLowerCase();
+    // Aplica filtro para búsqueda de usuarios
+    // No toma en cuenta mayúsculas y minúsculas, solo el caracter
+    applyFilter(value: string): void {
+        this.dataSource.filter = value;
     }
 
     openDialog(action: string, obj: any): void {
@@ -124,7 +121,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     // tslint:disable-next-line - Disables all
     updateRowData(row_obj: User): boolean | any {
         this.dataSource.data = this.dataSource.data.filter((value: any) => {
-            if (value.id === row_obj.uid) {
+            if (value.uid === row_obj.uid) {
                 value.userTypeId = row_obj.userTypeId;
                 value.name = row_obj.name;
                 value.paternalLastName = row_obj.paternalLastName;

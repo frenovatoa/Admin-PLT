@@ -50,7 +50,6 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database'
 import { UserComponent } from './pages/admin/users/users.component';
 import { UsersDialogComponent } from './pages/admin/users/users-dialog/users-dialog.component';
 import { MatCardModule } from '@angular/material/card';
-import { AddComponent } from './pages/admin/users/add/add.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
 
@@ -77,7 +76,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         AppBreadcrumbComponent,
         HorizontalAppHeaderComponent,
         HorizontalAppSidebarComponent,
-        AddComponent
     ],
     imports: [
         BrowserModule,

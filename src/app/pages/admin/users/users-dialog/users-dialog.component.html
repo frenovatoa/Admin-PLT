@@ -14,7 +14,7 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="name" name="name" 
-                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
+                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name" onkeyup="nextFocus('paternalLastName','name')">
                     </mat-form-field>
                 </div>
             </div>
@@ -57,13 +57,15 @@
             <!-- Menú desplegable con los tipos de usuario -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
-                    <mat-form-field appearance="fill">
+                    <mat-form-field>
                         <mat-label>Tipo Usuario</mat-label>
-                        <!-- <input type="text" matInput required id="userTypeId" name="userTypeId" 
-                            [(ngModel)]="local_data.userTypeId" placeholder="Tipo Usuario" formControlName="userTypeId"> -->
-                        <mat-select>
-                            <mat-option matInput required id="userTypeId" name="userTypeId" 
-                            [(ngModel)]="local_data.userTypeId" placeholder="Tipo Usuario" formControlName="userTypeId">{{objeto.userType}}</mat-option>
+                        <!-- Lo que voy a guardar es el ID -->
+                        <mat-select matInput required id="userTypeId" name="userTypeId" 
+                        [(ngModel)]="local_data.userTypeId" formControlName="userTypeId">
+                            <!-- Muestro la descripción de los tipos de usuarios en el select -->
+                            <mat-option *ngFor="let userType of userType" [value]="userType.id">
+                                {{userType.description}}
+                            </mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
