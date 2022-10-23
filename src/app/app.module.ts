@@ -51,6 +51,7 @@ import { UserComponent } from './pages/admin/users/users.component';
 import { UsersDialogComponent } from './pages/admin/users/users-dialog/users-dialog.component';
 import { MatCardModule } from '@angular/material/card';
 
+import { ToastrModule } from 'ngx-toastr';
 import { ReactiveFormsModule } from '@angular/forms';
 
 export function HttpLoaderFactory(http: HttpClient): any {
@@ -97,6 +98,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
                 deps: [HttpClient]
             }
         }),
+        ToastrModule.forRoot(),
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => getAuth()),
         provideDatabase(() => getDatabase()),
@@ -106,7 +108,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule,
-    MatCardModule,
+    MatCardModule
     ],
     providers: [
         {

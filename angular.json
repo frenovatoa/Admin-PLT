@@ -1,7 +1,7 @@
 {
     "$schema": "./node_modules/@angular/cli/lib/config/schema.json",
     "cli": {
-      "analytics": false
+        "analytics": false
     },
     "version": 1,
     "newProjectRoot": "projects",
@@ -53,7 +53,8 @@
                             "node_modules/@swimlane/ngx-datatable/index.css",
                             "node_modules/@swimlane/ngx-datatable/themes/material.css",
                             "node_modules/@swimlane/ngx-datatable/assets/icons.css",
-                            "src/assets/styles/style.scss"
+                            "src/assets/styles/style.scss",
+                            "node_modules/ngx-toastr/toastr.css"
                         ],
                         "scripts": []
                     },
@@ -118,7 +119,8 @@
                             "src/assets"
                         ],
                         "styles": [
-                            "src/styles.scss"
+                            "src/styles.scss",
+                            "node_modules/ngx-toastr/toastr.css"
                         ],
                         "scripts": []
                     }
