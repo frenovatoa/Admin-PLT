@@ -8,6 +8,12 @@ import {
 import { Router } from '@angular/router';
 import { User } from '../interfaces/user';
 import * as moment from 'moment';
+import { initializeApp } from '@angular/fire/app';
+import firebase from 'firebase/compat/app';
+import { environment } from 'src/environments/environment';
+//import { ToastrService } from 'ngx-toastr';
+import { ThrowStmt } from '@angular/compiler';
+import { ToastrService } from 'ngx-toastr';
 
 @Injectable({
   providedIn: 'root',
@@ -15,11 +21,17 @@ import * as moment from 'moment';
 export class AuthService {
   userData: any; // Save logged in user data
   loggedIn: boolean = false;
+  config = {apiKey: "AIzaSyBg_QokV6yWF_I-kkoknODljZEjrWxDmZk",
+  authDomain: "admin-plt.firebaseapp.com",
+  databaseURL: "https://admin-plt-default-rtdb.firebaseio.com/"};
+  secondaryApp:any;
+  
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
-    public ngZone: NgZone // NgZone service to remove outside scope warning
+    public ngZone: NgZone,
+    public toastr: ToastrService// NgZone service to remove outside scope warning
   ) {
     
     /* Saving user data in localstorage when 
@@ -36,7 +48,9 @@ export class AuthService {
         this.loggedIn = false;
       }
     });
+    
   }
+
   // Sign in with email/password
   SignIn(email: string, password: string) {
     return this.afAuth
@@ -56,22 +70,35 @@ export class AuthService {
         });
       })
       .catch((error) => {
-        window.alert(error.message);
+       this.toastr.warning(error.message);
       });
   }
   // Sign up with email/password
   SignUp(data:User) {
-    return this.afAuth
+   this.secondaryApp = firebase.initializeApp(this.config, "Secondary");
+  //this.setUserData(data);
+  this.SetUserData(data);
+   return this.secondaryApp.auth().createUserWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
+    console.log("User " + data.name + " created successfully!");
+        //I don't know if the next statement is necessary 
+       
+        this.secondaryApp.auth().signOut();
+      })
+      .catch((error) => {
+        this.toastr.success("Usuario Creado");
+      });
+    /*this.afAuth
       .createUserWithEmailAndPassword(data.email, data.password)
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
-        this.SendVerificationMail();
+        /*this.SendVerificationMail();
         this.SetUserData(data);
       })
       .catch((error) => {
         window.alert(error.message);
-      });
+      });*/
+      
   }
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
@@ -146,6 +173,9 @@ export class AuthService {
       this.router.navigate(['/authentication/login']);
     });
   }
+
+
+
 }
 
 function unicID(): string {

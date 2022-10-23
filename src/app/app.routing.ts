@@ -33,24 +33,10 @@ export const AppRoutes: Routes = [
                 loadChildren: () => import('./pages/pages.module').then(m => m.PagesModule),
                 //canActivate: [AuthGuard],
                 canActivate: [AuthGuard], 
-            },  
-        ]
+            },              
+        ],
     },
-    // Ruta a usuarios
-    {
-        path: '',
-        children: [
-            {
-                path: './pages/admin/users',
-                component: UserComponent,
-                data: {
-                    title: 'Usuarios',
-                    urls: [
-                    ]
-                }
-            },
-        ]
-    },
+
     {
         path: '',
         component: AppBlankComponent,
@@ -65,5 +51,20 @@ export const AppRoutes: Routes = [
     {
         path: '**',
         redirectTo: 'authentication/404'
+    },
+
+    {
+        path: '',
+        //component: UserComponent,
+        children: [    
+            {
+                path: 'pages/admin/users',
+                component: UserComponent,
+                data: {
+                    title: 'Usuarios',
+                    
+                }
+            }
+        ]
     },
 ];

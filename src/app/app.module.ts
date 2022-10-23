@@ -50,7 +50,9 @@ import { AngularFireDatabaseModule } from '@angular/fire/compat/database'
 import { UserComponent } from './pages/admin/users/users.component';
 import { UsersDialogComponent } from './pages/admin/users/users-dialog/users-dialog.component';
 import { MatCardModule } from '@angular/material/card';
-import { AddComponent } from './pages/admin/users/add/add.component';
+
+import { ToastrModule } from 'ngx-toastr';
+import { ReactiveFormsModule } from '@angular/forms';
 
 export function HttpLoaderFactory(http: HttpClient): any {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -75,9 +77,6 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         AppBreadcrumbComponent,
         HorizontalAppHeaderComponent,
         HorizontalAppSidebarComponent,
-        UserComponent,
-        UsersDialogComponent,
-        AddComponent
     ],
     imports: [
         BrowserModule,
@@ -91,6 +90,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         NgMultiSelectDropDownModule.forRoot(),
         RouterModule.forRoot(AppRoutes, { relativeLinkResolution: 'legacy' }),
         HttpClientModule,
+        ReactiveFormsModule,
         TranslateModule.forRoot({
             loader: {
                 provide: TranslateLoader,
@@ -98,6 +98,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
                 deps: [HttpClient]
             }
         }),
+        ToastrModule.forRoot(),
         provideFirebaseApp(() => initializeApp(environment.firebase)),
         provideAuth(() => getAuth()),
         provideDatabase(() => getDatabase()),
@@ -107,7 +108,7 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
     AngularFirestoreModule,
     AngularFireStorageModule,
     AngularFireDatabaseModule,
-    MatCardModule,
+    MatCardModule
     ],
     providers: [
         {
