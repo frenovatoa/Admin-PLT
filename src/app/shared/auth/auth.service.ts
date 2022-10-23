@@ -8,6 +8,7 @@ import {
 import { Router } from '@angular/router';
 import { User } from '../interfaces/user';
 import * as moment from 'moment';
+import firebase from 'firebase/compat/app';
 
 @Injectable({
   providedIn: 'root',
@@ -15,6 +16,11 @@ import * as moment from 'moment';
 export class AuthService {
   userData: any; // Save logged in user data
   loggedIn: boolean = false;
+  config = {apiKey: "apiKey",
+  authDomain: "projectId.firebaseapp.com",
+  databaseURL: "https://databaseName.firebaseio.com"};
+  secondaryApp = firebase.initializeApp(this.config, "Secondary");
+  
   constructor(
     public afs: AngularFirestore, // Inject Firestore service
     public afAuth: AngularFireAuth, // Inject Firebase auth service
@@ -66,7 +72,7 @@ export class AuthService {
       .then((result) => {
         /* Call the SendVerificaitonMail() function when new user sign 
         up and returns promise */
-        this.SendVerificationMail();
+        //this.SendVerificationMail();
         this.SetUserData(data);
       })
       .catch((error) => {
