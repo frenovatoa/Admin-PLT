@@ -10,6 +10,7 @@ import { UserService } from 'src/app/shared/services/user.services';
 import { AuthService } from 'src/app/shared/auth/auth.service';
 import { UserType } from 'src/app/shared/interfaces/user.type';
 import { MatSort } from '@angular/material/sort';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-users-dialog',
@@ -46,6 +47,7 @@ export class UsersDialogComponent {
       public fb: FormBuilder,
       public userService: UserService,
       public authService : AuthService,
+      public toastr :ToastrService,
       // @Optional() is used to prevent error if no data is passed
       @Optional() @Inject(MAT_DIALOG_DATA) public data: User) {
       this.local_data = { ...data };
@@ -69,7 +71,8 @@ export class UsersDialogComponent {
         this.userService.getUserTypes().subscribe((userType: any)=>{
           console.log(userType)
           this.userType=userType
-      });      
+      });     
+      this.toastr.success("Usuario Creado"); 
   }
 
 /** Guarda registro */
@@ -81,10 +84,11 @@ save(): void {
       // Aquí va la inserción en la base de datos
         this.authService.SignUp(data).then((user: any)=>{
             console.log(user)
+            this.toastr.success("Usuario Creado");
          });
          this.closeDialog();
     } else {
-      //this.toastr.error("Favor de llenar campos faltantes");
+      this.toastr.error("Favor de llenar campos faltantes");
     }
   }
 
@@ -106,6 +110,7 @@ update(): void {
   }
   closeDialog(): void {
       this.dialogRef.close({ event: 'Cancelar' });
+      this.toastr.success("Usuario Creado");
   }
 
   selectFile(event: any): void {
