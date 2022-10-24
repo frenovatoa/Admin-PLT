@@ -1,1 +1,75 @@
-<p>products-dialog works!</p>
+<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2> 
+<mat-dialog-content class="pb-3" *ngIf="action != 'Confirmación' else elseTemplate">
+    <form #productForm="ngForm" [formGroup]="formProducts">
+        <div class="d-flex align-items-center m-b-15">
+            <img class="mat-card-avatar" [src]='local_data.image'>
+            <!-- Botón para agregar una imagen -->
+            <button mat-raised-button color="primary" class="m-l-15 input-file-button">
+                <input type="file" (change)="selectFile($event)" #fileInput formControlName="image">
+            </button>
+        </div>
+        <!-- Descripción -->
+        <div fxLayout="row wrap" class="align-items-center">
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input type="text" matInput required  
+                            [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description">
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- Cantidad -->
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <input type="text" matInput required id="quantity" name="quantity" 
+                            [(ngModel)]="local_data.quantity" placeholder="Cantidad" formControlName="quantity">
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- Tipos de productos -->
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <mat-form-field>
+                        <mat-label>Tipo de Producto</mat-label>
+                        <!-- Lo que voy a guardar es el ID -->
+                        <mat-select matInput required id="productTypeId" name="productTypeId" 
+                        [(ngModel)]="local_data.productTypeId" formControlName="productTypeId">
+                            <!-- Muestro la descripción de los tipos de usuarios en el select -->
+                            <mat-option *ngFor="let productType of productType" [value]="productType.id">
+                                {{productType.description}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </div>
+            </div>
+            <!-- Checkbox para seleccionar si el usuario está o no activo -->
+            <div fxFlex="100" fxFlex.gt-md="50">
+                <div class="m-r-15 m-l-15">
+                    <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
+                        <label for="status">Activo</label>
+                </div>
+            </div>
+        </div> 
+        <!-- Botón de guardar registro de un nuevo usuario -->
+        <!-- mat-flat-button es para dar marco al botón -->
+        <!-- mat-dialog-actions dará un espaciado entre los botones -->
+        <div mat-dialog-actions align="center" class="pt-3">
+            <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
+            <button mat-button (click)="save()" mat-flat-button color="primary"
+                [disabled]="!formProducts.valid">Guardar</button>
+                <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+            <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
+        </div>
+    </form>
+</mat-dialog-content> 
+<ng-template #elseTemplate>
+    <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
+    <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
+    <p>¿Estás seguro que deseas eliminarlo? <br><div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div></p>
+    <div mat-dialog-actions align="center" class="pt-3">
+        <button mat-button (click)="doAction()" mat-flat-button color="primary">Si</button>
+        <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+        <button mat-button mat-flat-button color="warn" (click)="closeDialog()">No</button>
+    </div>
+</ng-template>
