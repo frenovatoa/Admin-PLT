@@ -53,7 +53,7 @@ export class UsersDialogComponent {
       // Definimos una imagen por default, en caso que no se seleccione ninguna *****
       this.action = this.local_data.action;
       if (this.local_data.image === undefined) {
-          this.local_data.image = 'assets/images/users/default.png';
+          this.local_data.image = 'gs://admin-plt.appspot.com/usuarioDefault.png';
       }
       console.log(this.local_data)
       // Formulario del diálogo, para insertar un nuevo registro
@@ -66,7 +66,7 @@ export class UsersDialogComponent {
         name: ['', Validators.required],
         paternalLastName: ['', Validators.required],
         maternalLastName: ['', Validators.required],
-        email: ['', Validators.required, Validators.email],
+        email: ['', Validators.required],
         password: ['', Validators.required],
         status: ['', Validators.required],
         // La imagen no es requerida *****
