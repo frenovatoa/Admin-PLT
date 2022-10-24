@@ -10,9 +10,10 @@ export class UserService {
   constructor(private db: AngularFirestore) { }
 
   // Función que permite obtener los documentos (registros) de la tabla de usuarios en la base de datos
+  // Solo me trae los usuarios con estatus true, es decir, que si están activos
   getUser() {
     return this.db
-   .collection("tbl_users")
+   .collection("tbl_users", ref => ref.where('status', '==', true))
    .valueChanges();
  }
 
@@ -29,6 +30,7 @@ export class UserService {
     .doc(`tbl_users/${uid}`)
     .update({...data})
   }
+
 
   // Función que permite obtener los registros de la tabla de tipos de usuarios en la base de datos, para utilizarlo en usuarios
   getUserTypes() {
