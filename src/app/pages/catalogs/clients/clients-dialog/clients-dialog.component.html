@@ -1,4 +1,4 @@
-<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2> 
+<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2>
 <mat-dialog-content class="pb-3" *ngIf="action != 'Confirmación' else elseTemplate">
     <form #userForm="ngForm" [formGroup]="formCustomer">
         <div fxLayout="row wrap" class="align-items-center">
@@ -6,8 +6,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="name" name="name" 
-                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
+                        <input type="text" matInput required id="name" name="name" [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
                     </mat-form-field>
                 </div>
             </div>
@@ -15,8 +14,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="paternalLastName" name="paternalLastName"
-                            [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName">
+                        <input type="text" matInput required id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName">
                     </mat-form-field>
                 </div>
             </div>
@@ -24,8 +22,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" 
-                            [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName">
+                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName">
                     </mat-form-field>
                 </div>
             </div>
@@ -33,8 +30,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="phone" name="phone" 
-                            [(ngModel)]="local_data.phone" placeholder="Teléfono 1" formControlName="phone">
+                        <input type="text" matInput required id="phone" name="phone" [(ngModel)]="local_data.phone" placeholder="Teléfono 1" formControlName="phone">
                     </mat-form-field>
                 </div>
             </div>
@@ -42,113 +38,95 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="alternativePhone" name="alternativePhone" 
-                            [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone">
+                        <input type="text" matInput required id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone">
                     </mat-form-field>
                 </div>
-            </div>            
+            </div>
             <!-- Checkbox para seleccionar si el cliente está o no activo -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
-                        <label for="status">Activo</label>
+                    <label for="status">Activo</label>
                 </div>
             </div>
         </div>
-    </form>
-    <form #userForm="ngForm" [formGroup]="formAddress">
-        <div fxLayout="row wrap" class="align-items-center">
-            <!-- Direcciones -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-label>Dirección</mat-label>       
+        <div formArrayName="address" *ngFor="let add of address.controls; index as i">
+            <div fxLayout="row wrap" class="align-items-center" [formGroup]="add">
+                <!-- Direcciones -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-label><b>Dirección {{i+1}}</b></mat-label>
+                    </div>
                 </div>
-            </div>
-            <!-- Botones para agregar o eliminar n direcciones a un cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div mat-dialog-actions align="center" class="pt-3">
+                <div fxFlex="100" fxFlex.gt-md="50">
                     <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-                    <button mat-button (click)="save()" mat-flat-button color="primary"
-                        [disabled]="!userForm.valid">Agregar</button>
-                        <!-- FALTA CAMBIAR EL CLOSEDIALOG() -->
-                    <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Eliminar</button>
+                    <button mat-button (click)="addAddress()" mat-flat-button color="primary">Agregar</button>
+                    <!-- FALTA CAMBIAR EL CLOSEDIALOG() -->
+                    <button *ngIf="i != 0" mat-button mat-flat-button color="warn" (click)="removeAddress(i)">Eliminar</button>
                 </div>
-            </div>
-            <!-- Espacio para escribir la ciudad del cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-form-field>
-                        <input type="text" matInput required id="city" name="city" 
-                            [(ngModel)]="local_data.city" placeholder="Ciudad" formControlName="city">
-                    </mat-form-field>
+                <!-- Espacio para escribir la ciudad del cliente -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-form-field>
+                            <input type="text" matInput required id="city" name="city" placeholder="Ciudad" formControlName="city">
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-            <!-- Espacio para escribir la colonia del cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-form-field>
-                        <input type="text" matInput required id="neighborhood" name="neighborhood" 
-                            [(ngModel)]="local_data.neighborhood" placeholder="Colonia" formControlName="neighborhood">
-                    </mat-form-field>
+                <!-- Espacio para escribir la colonia del cliente -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-form-field>
+                            <input type="text" matInput required id="neighborhood" name="neighborhood" placeholder="Colonia" formControlName="neighborhood">
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-            <!-- Espacio para escribir la calle del cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-form-field>
-                        <input type="text" matInput required id="street" name="street" 
-                            [(ngModel)]="local_data.street" placeholder="Calle" formControlName="street">
-                    </mat-form-field>
+                <!-- Espacio para escribir la calle del cliente -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-form-field>
+                            <input type="text" matInput required id="street" name="street" placeholder="Calle" formControlName="street">
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-            <!-- Espacio para escribir el código postal del cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-form-field>
-                        <input type="text" matInput required id="postCode" name="postCode" 
-                            [(ngModel)]="local_data.postCode" placeholder="Código Postal" formControlName="postCode">
-                    </mat-form-field>
+                <!-- Espacio para escribir el código postal del cliente -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-form-field>
+                            <input type="text" matInput required id="postCode" name="postCode" placeholder="Código Postal" formControlName="postCode">
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-            <!-- Espacio para escribir el número exterior del cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-form-field>
-                        <input type="text" matInput required id="outsideNumber" name="outsideNumber" 
-                            [(ngModel)]="local_data.outsideNumber" placeholder="No. Exterior" formControlName="outsideNumber">
-                    </mat-form-field>
+                <!-- Espacio para escribir el número exterior del cliente -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-form-field>
+                            <input type="text" matInput required id="outsideNumber" name="outsideNumber" placeholder="No. Exterior" formControlName="outsideNumber">
+                        </mat-form-field>
+                    </div>
                 </div>
-            </div>
-            <!-- Espacio para escribir el número interior del cliente -->
-            <div fxFlex="100" fxFlex.gt-md="50">
-                <div class="m-r-15 m-l-15">
-                    <mat-form-field>
-                        <input type="text" matInput required id="insideNumber" name="insideNumber" 
-                            [(ngModel)]="local_data.insideNumber" placeholder="No. Interior" formControlName="insideNumber">
-                    </mat-form-field>
+                <!-- Espacio para escribir el número interior del cliente -->
+                <div fxFlex="100" fxFlex.gt-md="50">
+                    <div class="m-r-15 m-l-15">
+                        <mat-form-field>
+                            <input type="text" matInput required id="insideNumber" name="insideNumber" placeholder="No. Interior" formControlName="insideNumber">
+                        </mat-form-field>
+                    </div>
                 </div>
+
             </div>
-        </div> 
-        <!-- Botón de guardar registro de un nuevo cliente -->
-        <!-- mat-flat-button es para dar marco al botón -->
-        <!-- mat-dialog-actions dará un espaciado entre los botones -->
+        </div>
         <div mat-dialog-actions align="center" class="pt-3">
             <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-            <button mat-button (click)="save()" mat-flat-button color="primary"
-                [disabled]="!userForm.valid">Guardar</button>
-                <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+            <button mat-button (click)="save()" mat-flat-button color="primary">Guardar</button>
+            <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
             <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
         </div>
     </form>
-</mat-dialog-content> 
+</mat-dialog-content>
 <ng-template #elseTemplate>
-    <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
-    <!-- Preguntamos mostrando el nombre del cliente que se quiere eliminar -->
-    <p>¿Estás seguro que deseas eliminarlo? <br><div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div></p>
-    <div mat-dialog-actions align="center" class="pt-3">
-        <button mat-button (click)="doAction()" mat-flat-button color="primary">Si</button>
-        <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
-        <button mat-button mat-flat-button color="warn" (click)="closeDialog()">No</button>
+    <p>Sure to delete <b>{{local_data.Name}}</b> ?</p>
+    <div mat-dialog-actions align="end" class="pt-3">
+        <button mat-button (click)="doAction()" mat-flat-button color="warn">{{action}}</button>
+        <button mat-button (click)="closeDialog()">Cancel</button>
     </div>
 </ng-template>
-
