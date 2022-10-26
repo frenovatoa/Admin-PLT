@@ -5,6 +5,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 //import { Customer } from '../../../shared/interfaces/customer';
 import { ClientsDialogComponent } from './clients-dialog/clients-dialog.component';
+import { CustomerService } from '../../../shared/services/customer.service';
 
 export interface Customer{
   id: string;
@@ -28,9 +29,18 @@ export class ClientsComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  constructor(public dialog: MatDialog,) { }
+  constructor(public dialog: MatDialog,
+              public customerService:CustomerService) { }
 
   ngOnInit(): void {
+    this.customerService.getCustomer().subscribe((user: any)=>{
+      console.log(user)
+      this.customers=user
+      this.dataSource = new MatTableDataSource < Customer > (this.customers);
+      console.log(this.dataSource);
+      this.dataSource.paginator =this.paginator;
+      this.dataSource.sort = this.sort;
+  });      
   }
 
   // Aplica filtro a la lista de clientes
@@ -43,7 +53,8 @@ export class ClientsComponent implements OnInit {
     //obj.type = action == 'Nuevo' ? 1 : 2;
     //obj.uId = AuthService.getUser().id;
     const dialogRef = this.dialog.open(ClientsDialogComponent, {
-        data: obj
+        data: obj,
+        width:'70%',
     });
     dialogRef.afterClosed().subscribe(result => {
         if (result.event === 'Nuevo Cliente') {

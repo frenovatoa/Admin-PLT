@@ -5,7 +5,7 @@ import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dial
 import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
 import { UsersDialogComponent } from './users-dialog/users-dialog.component';
-import { UserService } from 'src/app/shared/services/user.services';
+import { UserService } from 'src/app/shared/services/user.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { AuthService } from 'src/app/shared/auth/auth.service';
@@ -70,8 +70,6 @@ export class UserComponent implements OnInit, AfterViewInit {
 
     openDialog(action: string, obj: any): void {
         obj.action = action;
-        //obj.type = action == 'Nuevo' ? 1 : 2;
-        //obj.uId = AuthService.getUser().id;
         const dialogRef = this.dialog.open(UsersDialogComponent, {
             data: obj
         });

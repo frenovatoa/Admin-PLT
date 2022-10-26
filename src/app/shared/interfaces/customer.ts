@@ -1,3 +1,4 @@
+import { Address } from './address';
 export interface Customer{
     id: string;
     name: string;
@@ -6,4 +7,5 @@ export interface Customer{
     phone: string;
     alternativePhone: string;
     status:number;
+    address?:Address[]
 }
