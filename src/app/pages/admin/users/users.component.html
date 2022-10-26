@@ -41,7 +41,7 @@
               <th mat-header-cell *matHeaderCellDef> Nombre </th>
               <td mat-cell *matCellDef="let element">
                 <div class="d-flex">
-                  <img class="mat-card-avatar" [src]='element.image'>
+                  <img class="mat-card-avatar"  [src]="element.image ?? '/assets/images/users/default.png'">
                   <!-- Margen -->
                   <div class="m-l-15">
                     <!-- Hacemos la letra un poco más obscura con el font-medium-->
