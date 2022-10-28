@@ -115,32 +115,16 @@ export class AuthService {
       });*/
       
   }
-  updateEmail(data:any){
+  updateEmail(data:any, oldEmail:any){
     this.secondaryApp = firebase.initializeApp(this.config, "Secondary");
-  //this.setUserData(data);
- // this.SetUserData(data);
-   return this.secondaryApp.auth().signInWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
-    console.log("User " + data.name + " created successfully!");
-        //I don't know if the next statement is necessary 
-        console.log(firebaseUser)
-        firebaseUser.user.updateEmail('hola@gmail.com');
+
+   return this.secondaryApp.auth().signInWithEmailAndPassword(oldEmail, data.password).then(function(firebaseUser) {    
+        firebaseUser.user.updateEmail(data.email);
         this.secondaryApp.auth().signOut();
       })
       .catch((error) => {
-        this.toastr.success("Usuario Creado");
+        console.log(error)
       });
-    /*this.afAuth
-      .createUserWithEmailAndPassword(data.email, data.password)
-      .then((result) => {
-        /* Call the SendVerificaitonMail() function when new user sign 
-        up and returns promise */
-        /*this.SendVerificationMail();
-        this.SetUserData(data);
-      })
-      .catch((error) => {
-        window.alert(error.message);
-      });*/
-      
   }
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
@@ -202,6 +186,7 @@ export class AuthService {
       email: user.email,
       password: user.password,
       status: user.status,
+      image: user.image
     };
     return userRef.set(userData, {
       merge: true,

@@ -1,25 +1,24 @@
-<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2> 
+<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2>
 <mat-dialog-content class="pb-3" *ngIf="action != 'Confirmación' else elseTemplate">
     <form #userForm="ngForm" [formGroup]="formUsers">
         <div class="d-flex align-items-center m-b-15">
             <img *ngIf="!local_data.image" class="mat-card-avatar" [src]='src/assets/images/users/default.png'>
             <img *ngIf="local_data.image" class="mat-card-avatar" [src]='local_data.image'>
-            
+
             <!-- Botón para agregar una imagen al usuario desde nuestro equipo -->
-            <button *ngIf="action != 'Nuevo Usuario'" mat-raised-button color="primary" class="m-l-15 input-file-button">
+            <button mat-raised-button color="primary" class="m-l-15 input-file-button">
                 <input type="file" (change)="setImage($event)" #fileInput formControlName="image">
             </button>
-            <button *ngIf="action == 'Nuevo Usuario'" mat-raised-button color="primary" class="m-l-15 input-file-button">
+            <!--button *ngIf="action == 'Nuevo Usuario'" mat-raised-button color="primary" class="m-l-15 input-file-button">
                 <input type="file" (change)="saveFile($event)" #fileInput formControlName="image">
-            </button>
+            </button-->
         </div>
         <!-- Espacio para escribir el nombre del usuario -->
         <div fxLayout="row wrap" class="align-items-center">
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="name" name="name" 
-                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
+                        <input type="text" matInput required id="name" name="name" [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
                     </mat-form-field>
                 </div>
             </div>
@@ -27,8 +26,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="paternalLastName" name="paternalLastName"
-                            [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName">
+                        <input type="text" matInput required id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName">
                     </mat-form-field>
                 </div>
             </div>
@@ -36,8 +34,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" 
-                            [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName">
+                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName">
                     </mat-form-field>
                 </div>
             </div>
@@ -45,8 +42,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="email" name="email" 
-                            [(ngModel)]="local_data.email" placeholder="Correo" formControlName="email">
+                        <input type="text" matInput required id="email" name="email" [(ngModel)]="local_data.email" placeholder="Correo" formControlName="email">
                     </mat-form-field>
                 </div>
             </div>
@@ -55,8 +51,7 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <div fxFlex="100" fxFlex.gt-md="75">
-                            <input [type]="mostrar ? 'text' : 'password'" matInput required id="password" name="password" 
-                                [(ngModel)]="local_data.password" placeholder="Contraseña" formControlName="password">
+                            <input [type]="mostrar ? 'text' : 'password'" matInput required id="password" name="password" [(ngModel)]="local_data.password" placeholder="Contraseña" formControlName="password">
                         </div>
                         <div fxFlex="100" fxFlex.gt-md="25" class="text-right">
                             <div class="input-group-append">
@@ -74,8 +69,7 @@
                     <mat-form-field>
                         <mat-label>Tipo Usuario</mat-label>
                         <!-- Lo que voy a guardar es el ID -->
-                        <mat-select matInput required id="userTypeId" name="userTypeId" 
-                        [(ngModel)]="local_data.userTypeId" formControlName="userTypeId">
+                        <mat-select matInput required id="userTypeId" name="userTypeId" [(ngModel)]="local_data.userTypeId" formControlName="userTypeId">
                             <!-- Muestro la descripción de los tipos de usuarios en el select -->
                             <mat-option *ngFor="let userType of userType" [value]="userType.id">
                                 {{userType.description}}
@@ -88,29 +82,29 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
-                        <label for="status">Activo</label>
+                    <label for="status">Activo</label>
                 </div>
             </div>
-        </div> 
+        </div>
         <!-- Botón de guardar registro de un nuevo usuario -->
         <!-- mat-flat-button es para dar marco al botón -->
         <!-- mat-dialog-actions dará un espaciado entre los botones -->
         <div mat-dialog-actions align="center" class="pt-3">
             <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-            <button *ngIf="action == 'Nuevo Usuario'" mat-button (click)="save()" mat-flat-button color="primary"
-                [disabled]="!userForm.valid">Guardar</button>
-                <!-- Botón para actualizar -->
-            <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary"
-            [disabled]="!userForm.valid">Actualizar</button>
-                <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
-            <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>            
+            <button *ngIf="action == 'Nuevo Usuario'" mat-button (click)="save()" mat-flat-button color="primary" [disabled]="!userForm.valid">Guardar</button>
+            <!-- Botón para actualizar -->
+            <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary" [disabled]="!userForm.valid">Actualizar</button>
+            <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+            <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
         </div>
     </form>
-</mat-dialog-content> 
+</mat-dialog-content>
 <ng-template #elseTemplate>
     <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
     <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
-    <p>¿Estás seguro que deseas eliminarlo? <br><div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div></p>
+    <p>¿Estás seguro que deseas eliminarlo? </p> <br>
+    <div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div>
+
     <div mat-dialog-actions align="center" class="pt-3">
         <button mat-button (click)="updateStatus()" mat-flat-button color="primary">Si</button>
         <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
