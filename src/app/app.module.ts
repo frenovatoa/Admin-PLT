@@ -53,6 +53,7 @@ import { MatCardModule } from '@angular/material/card';
 
 import { ToastrModule } from 'ngx-toastr';
 import { ReactiveFormsModule } from '@angular/forms';
+import { getStorage, provideStorage } from '@angular/fire/storage';
 
 export function HttpLoaderFactory(http: HttpClient): any {
     return new TranslateHttpLoader(http, './assets/i18n/', '.json');
@@ -103,6 +104,8 @@ const DEFAULT_PERFECT_SCROLLBAR_CONFIG: PerfectScrollbarConfigInterface = {
         provideAuth(() => getAuth()),
         provideDatabase(() => getDatabase()),
         provideFirestore(() => getFirestore()),
+        // Para las imagenes
+        provideStorage(() => getStorage()),
         AngularFireModule.initializeApp(environment.firebase),
         AngularFireAuthModule,
     AngularFirestoreModule,

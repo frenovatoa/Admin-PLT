@@ -12,6 +12,10 @@ import { UserType } from 'src/app/shared/interfaces/user.type';
 import { MatSort } from '@angular/material/sort';
 import { ToastrService } from 'ngx-toastr';
 import { throwToolbarMixedModesError } from '@angular/material/toolbar';
+import { switchMap } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { ImageUploadService } from 'src/app/shared/services/image-upload.service';
+//import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
   selector: 'app-users-dialog',
@@ -39,6 +43,13 @@ export class UsersDialogComponent {
   // Inicializo el formulario de usuarios
   public formUsers: FormGroup;  
 
+  // Para la imagen
+  public image: any;
+  public showImage:any;
+  // Un observable?
+  user$ = this.userService.currentUserProfile$;
+  url: string;
+
   constructor(
       public datePipe: DatePipe,
       public dialogRef: MatDialogRef<UsersDialogComponent>,
@@ -46,6 +57,10 @@ export class UsersDialogComponent {
       public userService: UserService,
       public authService : AuthService,
       public toastr :ToastrService,
+      // IMAGENES
+      private storage: AngularFireStorage,
+      private imageUploadService: ImageUploadService,
+      //private toast: HotToastService,
       // @Optional() is used to prevent error if no data is passed
       @Optional() @Inject(MAT_DIALOG_DATA) public data: User) {
       this.local_data = { ...data };
@@ -53,7 +68,7 @@ export class UsersDialogComponent {
       // Definimos una imagen por default, en caso que no se seleccione ninguna *****
       this.action = this.local_data.action;
       if (this.local_data.image === undefined) {
-          this.local_data.image = 'gs://admin-plt.appspot.com/usuarioDefault.png';
+          this.local_data.image = 'assets/images/users/default.png';
       }
       console.log(this.local_data)
       // Formulario del diálogo, para insertar un nuevo registro
@@ -82,25 +97,31 @@ export class UsersDialogComponent {
     });   
     if(this.local_data.uid != null){
       // Una vez que se inserta un usuario, no puede cambiar su correo
-      this.formUsers.get('email').disable()
+      //this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
-      this.formUsers.get('password').disable()
+      //this.formUsers.get('password').disable()
       // Ni el estatus no ??????????????????????????????????
-      this.formUsers.get('status').disable()
+      //this.formUsers.get('status').disable()
     }
   }
 
 /** Guarda registro */
-save(): void {
+   save(): void {
     let data = this.formUsers.value;
     data.uid = this.userService.unicID();
-    console.log(data)
+    console.log(this)
+
+      data.image = this.url;
+  
+      console.log(this.url) 
     if (this.formUsers.valid) {
       // Aquí va la inserción en la base de datos
         this.authService.SignUp(data).then((user: any)=>{
-            console.log(user)
             this.toastr.success("Usuario Creado");
          });
+         
+      //this.uploadFile(data.image, data.uid)
+    
          this.closeDialog();
     } else {
       this.toastr.error("Favor de llenar campos faltantes");
@@ -112,9 +133,19 @@ update(): void {
   this.formUsers.get('uid').setValue(this.local_data.uid)
   let data = this.formUsers.value;
   console.log(data)
+  if(this.image != undefined){
+    data.image = this.image;
+  }else{
+    data.image = this.local_data.image
+  }
+  
+  console.log(data.image)
   if (this.formUsers.valid) {
     // Aquí va la inserción en la base de datos
     this.userService.updateUser(data.uid, data)
+    if(this.local_data.image !== data.image){
+      this.uploadFile(data.image, this.local_data.uid)
+    }    
     this.closeDialog();
   } else {
     //this.toastr.error("Favor de llenar campos faltantes");
@@ -140,6 +171,62 @@ updateStatus(): void {
   closeDialog(): void {
       this.dialogRef.close({ event: 'Cancelar' });
       this.toastr.success("Usuario Creado");
+  }
+
+  setImage(event: any){
+    console.log(event.target.files[0])
+    this.image = event.target.files[0];
+    this.showImage = event.target.files[0].type;
+
+    // Vista previa de la imagen en el dialog
+    const reader = new FileReader();
+      reader.readAsDataURL(event.target.files[0]);
+      reader.onload = (_event) => {
+          this.local_data.image = reader.result;
+      };
+  }
+
+  saveFile(event: any, uid:string) {
+    let data = this.local_data;
+    
+    console.log(event)
+    this.imageUploadService
+      .uploadImage(event, `users/${uid}`)
+      .pipe(
+        // this.toast.observe({
+        //   loading: 'Uploading profile image...',
+        //   success: 'Image uploaded successfully',
+        //   error: 'There was an error in uploading the image',
+        // }),
+        switchMap((image) =>
+        this.url = image   
+        )
+      )
+      .subscribe();
+  }
+
+  uploadFile(event: any, uid:string) {
+    let data = this.local_data;
+    
+    console.log(uid)
+    this.imageUploadService
+      .uploadImage(event, `users/${uid}`)
+      .pipe(
+        // this.toast.observe({
+        //   loading: 'Uploading profile image...',
+        //   success: 'Image uploaded successfully',
+        //   error: 'There was an error in uploading the image',
+        // }),
+        switchMap((image) =>
+         this.userService.updateUserTest({
+          uid,
+          image,
+        }       
+      )
+        )
+      )
+      .subscribe();
+      console.log(this.url)
   }
 
   selectFile(event: any): void {
