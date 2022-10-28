@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, Optional, ViewChild, AfterViewInit } from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { MatCardModule } from '@angular/material/card';
@@ -9,6 +9,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { AuthService } from 'src/app/shared/auth/auth.service';
+
 
 export interface User {
     uid?: string;
@@ -42,8 +43,8 @@ export class UserComponent implements OnInit, AfterViewInit {
     public displayedColumns: string[] = ['#', 'name','email', 'action']; 
     private started: boolean = false;
  
-    constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService) { 
-
+    constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService, public _MatPaginatorIntl: MatPaginatorIntl) { 
+        
     }
 
     ngOnInit(): void {
@@ -55,7 +56,9 @@ export class UserComponent implements OnInit, AfterViewInit {
             console.log(this.dataSource);
             this.dataSource.paginator =this.paginator;
             this.dataSource.sort = this.sort;
-        });        
+        });  
+        // Cambio texto de la paginación en la parte inferior 
+        this._MatPaginatorIntl.itemsPerPageLabel = 'Items por página';     
     }
 
     ngAfterViewInit(): void {
@@ -83,21 +86,6 @@ export class UserComponent implements OnInit, AfterViewInit {
             }
         }); 
     }
-
-    /** Llama api para eliminar un registro */
-//   delete(local_data): void {
-//     local_data.type = 3;
-//     local_data.uId = AuthService.getUser().id;
-
-//     this.movementTypeService.crudMovementType(element).subscribe(response => {
-//       if (response['success']) {
-//         this.toastr.success(response['message']);
-//         this.ngOnInit();
-//       } else {
-//         this.toastr.error(response['message']);
-//       }
-//     });
-//   }
   
     // tslint:disable-next-line - Disables all
     addRowData(row_obj: User): void {
