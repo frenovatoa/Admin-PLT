@@ -27,7 +27,7 @@ export class UsersDialogComponent {
   
   public dataSource: MatTableDataSource<UserType>;    
   searchText: any;
-
+  public email: string;
   private started: boolean = false;
 
   // Inicializo un arreglo vacío de tipos de usuarios
@@ -39,7 +39,16 @@ export class UsersDialogComponent {
   action: string;
   local_data: any;
   selectedImage: any = '';
-
+   testData ={
+    apiKey: "AIzaSyBg_QokV6yWF_I-kkoknODljZEjrWxDmZk",
+    appName: "[DEFAULT]",
+    createdAt: "1666629286585",
+    email: "test@email.com",
+emailVerified:false,
+isAnonymous: false,
+lastLoginAt: "1666629286585",
+password:"Admin123"
+  }
   // Inicializo el formulario de usuarios
   public formUsers: FormGroup;  
 
@@ -64,7 +73,7 @@ export class UsersDialogComponent {
       // @Optional() is used to prevent error if no data is passed
       @Optional() @Inject(MAT_DIALOG_DATA) public data: User) {
       this.local_data = { ...data };
-
+     this.email = data.email;
       // Definimos una imagen por default, en caso que no se seleccione ninguna *****
       this.action = this.local_data.action;
       if (this.local_data.image === undefined) {
@@ -97,29 +106,32 @@ export class UsersDialogComponent {
     });   
     if(this.local_data.uid != null){
       // Una vez que se inserta un usuario, no puede cambiar su correo
+     // this.formUsers.get('email').disable()
       //this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
       //this.formUsers.get('password').disable()
       // Ni el estatus no ??????????????????????????????????
       //this.formUsers.get('status').disable()
     }
+   // this.authService.updateEmail(this.testData);
   }
 
 /** Guarda registro */
    save(): void {
     let data = this.formUsers.value;
     data.uid = this.userService.unicID();
-    console.log(this)
-
-      data.image = this.url;
-  
-      console.log(this.url) 
+    console.log(this.data)
+    if(this.image != undefined){
+      data.image = this.image;
+    }else{
+      data.image = this.local_data.image
+    }
     if (this.formUsers.valid) {
       // Aquí va la inserción en la base de datos
-        this.authService.SignUp(data).then((user: any)=>{
-            this.toastr.success("Usuario Creado");
-         });
-         
+        // this.authService.SignUp(data).then((user: any)=>{
+        //     this.toastr.success("Usuario Creado");
+        //  });
+        this.saveFile(data.image, data)
       //this.uploadFile(data.image, data.uid)
     
          this.closeDialog();
@@ -141,14 +153,16 @@ update(): void {
   
   console.log(data.image)
   if (this.formUsers.valid) {
-    // Aquí va la inserción en la base de datos
+    if(this.email != data.email){
+      this.authService.updateEmail(data, this.email);
+    }
     this.userService.updateUser(data.uid, data)
     if(this.local_data.image !== data.image){
       this.uploadFile(data.image, this.local_data.uid)
     }    
     this.closeDialog();
   } else {
-    //this.toastr.error("Favor de llenar campos faltantes");
+  this.toastr.error("Favor de llenar campos faltantes");
   }
 }
 
@@ -186,12 +200,10 @@ updateStatus(): void {
       };
   }
 
-  saveFile(event: any, uid:string) {
-    let data = this.local_data;
-    
-    console.log(event)
+  saveFile(event: any,data:User) {    
+    console.log(data.uid)
     this.imageUploadService
-      .uploadImage(event, `users/${uid}`)
+      .uploadImage(event, `users/${data.uid}`)
       .pipe(
         // this.toast.observe({
         //   loading: 'Uploading profile image...',
@@ -199,10 +211,22 @@ updateStatus(): void {
         //   error: 'There was an error in uploading the image',
         // }),
         switchMap((image) =>
-        this.url = image   
+         this.authService.SignUp({
+         uid: data.uid,
+         userTypeId: data.userTypeId,
+         name: data.name,
+         paternalLastName: data.paternalLastName,
+         maternalLastName: data.maternalLastName,
+         email: data.email,
+         password: data.password,
+         status: data.status,
+          image,
+        }       
+      )
         )
       )
       .subscribe();
+      console.log(this.url)
   }
 
   uploadFile(event: any, uid:string) {

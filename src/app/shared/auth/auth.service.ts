@@ -95,6 +95,7 @@ export class AuthService {
    return this.secondaryApp.auth().createUserWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
     console.log("User " + data.name + " created successfully!");
         //I don't know if the next statement is necessary 
+        console.log(firebaseUser)
        
         this.secondaryApp.auth().signOut();
       })
@@ -113,6 +114,17 @@ export class AuthService {
         window.alert(error.message);
       });*/
       
+  }
+  updateEmail(data:any, oldEmail:any){
+    this.secondaryApp = firebase.initializeApp(this.config, "Secondary");
+
+   return this.secondaryApp.auth().signInWithEmailAndPassword(oldEmail, data.password).then(function(firebaseUser) {    
+        firebaseUser.user.updateEmail(data.email);
+        this.secondaryApp.auth().signOut();
+      })
+      .catch((error) => {
+        console.log(error)
+      });
   }
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
@@ -174,6 +186,7 @@ export class AuthService {
       email: user.email,
       password: user.password,
       status: user.status,
+      image: user.image
     };
     return userRef.set(userData, {
       merge: true,
