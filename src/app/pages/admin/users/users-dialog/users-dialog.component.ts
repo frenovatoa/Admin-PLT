@@ -23,7 +23,7 @@ export class UsersDialogComponent {
   
   public dataSource: MatTableDataSource<UserType>;    
   searchText: any;
-
+  public email: string;
   private started: boolean = false;
 
   // Inicializo un arreglo vacío de tipos de usuarios
@@ -35,7 +35,16 @@ export class UsersDialogComponent {
   action: string;
   local_data: any;
   selectedImage: any = '';
-
+   testData ={
+    apiKey: "AIzaSyBg_QokV6yWF_I-kkoknODljZEjrWxDmZk",
+    appName: "[DEFAULT]",
+    createdAt: "1666629286585",
+    email: "test@email.com",
+emailVerified:false,
+isAnonymous: false,
+lastLoginAt: "1666629286585",
+password:"Admin123"
+  }
   // Inicializo el formulario de usuarios
   public formUsers: FormGroup;  
 
@@ -49,7 +58,7 @@ export class UsersDialogComponent {
       // @Optional() is used to prevent error if no data is passed
       @Optional() @Inject(MAT_DIALOG_DATA) public data: User) {
       this.local_data = { ...data };
-
+     this.email = data.email;
       // Definimos una imagen por default, en caso que no se seleccione ninguna *****
       this.action = this.local_data.action;
       if (this.local_data.image === undefined) {
@@ -82,12 +91,13 @@ export class UsersDialogComponent {
     });   
     if(this.local_data.uid != null){
       // Una vez que se inserta un usuario, no puede cambiar su correo
-      this.formUsers.get('email').disable()
+     // this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
       this.formUsers.get('password').disable()
       // Ni el estatus no ??????????????????????????????????
       this.formUsers.get('status').disable()
     }
+   // this.authService.updateEmail(this.testData);
   }
 
 /** Guarda registro */
@@ -114,10 +124,13 @@ update(): void {
   console.log(data)
   if (this.formUsers.valid) {
     // Aquí va la inserción en la base de datos
+    if(this.email != data.email){
+      this.authService.updateEmail(data);
+    }
     this.userService.updateUser(data.uid, data)
     this.closeDialog();
   } else {
-    //this.toastr.error("Favor de llenar campos faltantes");
+  this.toastr.error("Favor de llenar campos faltantes");
   }
 }
 
