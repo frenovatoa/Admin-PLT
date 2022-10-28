@@ -29,13 +29,13 @@
       <mat-card-content>
         <div class="table-responsive">
           <table mat-table [dataSource]="dataSource" class="table user-list no-wrap">
-
+            
             <!-- Sección de número de usuario -->
-            <ng-container matColumnDef="#">
+            <ng-container matColumnDef="#">              
               <th mat-header-cell *matHeaderCellDef> # </th>
-              <td mat-cell *matCellDef="let element"> {{element.uid}} </td>
+              <td mat-cell *matCellDef="let element"> {{ element.uid }} </td>              
             </ng-container>
-
+          
             <!-- Sección de nombres -->
             <ng-container matColumnDef="name">
               <th mat-header-cell *matHeaderCellDef> Nombre </th>
@@ -71,7 +71,7 @@
                 </a>
               </td>
             </ng-container>
-
+          
             <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
             <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
           </table>

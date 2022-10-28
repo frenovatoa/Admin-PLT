@@ -19,8 +19,9 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="name" name="name" 
-                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
-                    </mat-form-field>
+                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name" [formControl]="formUsers.controls['name']">
+                            <small *ngIf="formUsers.controls['name'].hasError('required') && formUsers.controls['name'].touched" class="text-danger support-text">El nombre es requerido.</small>
+                        </mat-form-field>
                 </div>
             </div>
             <!-- Espacio para escribir el apellido paterno del usuario -->
@@ -28,7 +29,8 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="paternalLastName" name="paternalLastName"
-                            [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName">
+                            [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName" [formControl]="formUsers.controls['paternalLastName']">
+                            <small *ngIf="formUsers.controls['paternalLastName'].hasError('required') && formUsers.controls['paternalLastName'].touched" class="text-danger support-text">El apellido paterno es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -37,7 +39,8 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="maternalLastName" name="maternalLastName" 
-                            [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName">
+                            [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formUsers.controls['maternalLastName']">
+                            <small *ngIf="formUsers.controls['maternalLastName'].hasError('required') && formUsers.controls['maternalLastName'].touched" class="text-danger support-text">El apellido materno es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -46,7 +49,8 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="email" name="email" 
-                            [(ngModel)]="local_data.email" placeholder="Correo" formControlName="email">
+                            [(ngModel)]="local_data.email" placeholder="Correo" formControlName="email" [formControl]="formUsers.controls['email']">
+                            <small *ngIf="formUsers.controls['email'].hasError('required') && formUsers.controls['email'].touched" class="text-danger support-text">El correo es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -56,11 +60,14 @@
                     <mat-form-field>
                         <div fxFlex="100" fxFlex.gt-md="75">
                             <input [type]="mostrar ? 'text' : 'password'" matInput required id="password" name="password" 
-                                [(ngModel)]="local_data.password" placeholder="Contraseña" formControlName="password">
+                                [(ngModel)]="local_data.password" placeholder="Contraseña" formControlName="password" [formControl]="formUsers.controls['password']">
+                                <small *ngIf="formUsers.controls['password'].hasError('required') && formUsers.controls['password'].touched" class="text-danger support-text">La contraseña es requerida.</small>
                         </div>
                         <div fxFlex="100" fxFlex.gt-md="25" class="text-right">
                             <div class="input-group-append">
+                                <!-- Al hacer click nos muestra la contraseña -->
                                 <span class="ojito" (click)="mostrarContrasena()">
+                                    <!-- Ícono del ojito para mostrar la contraseña -->
                                     <i [ngClass]="mostrar?'fa fa-eye-slash':'fa fa-eye'"></i>
                                 </span>
                             </div>

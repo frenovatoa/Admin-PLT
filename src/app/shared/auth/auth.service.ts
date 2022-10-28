@@ -99,7 +99,7 @@ export class AuthService {
         this.secondaryApp.auth().signOut();
       })
       .catch((error) => {
-        this.toastr.success("Usuario Creado");
+        //this.toastr.success("Usuario Creado");
       });
     /*this.afAuth
       .createUserWithEmailAndPassword(data.email, data.password)
@@ -127,7 +127,7 @@ export class AuthService {
     return this.afAuth
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
+        window.alert('El correo electrónico de restablecimiento de contraseña fue enviado, verifique su bandeja de entrada.');
       })
       .catch((error) => {
         window.alert(error);

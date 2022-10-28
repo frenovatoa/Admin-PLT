@@ -15,6 +15,7 @@ import { throwToolbarMixedModesError } from '@angular/material/toolbar';
 import { switchMap } from 'rxjs/operators';
 import { AngularFireStorage } from '@angular/fire/compat/storage';
 import { ImageUploadService } from 'src/app/shared/services/image-upload.service';
+import { user } from '@angular/fire/auth';
 //import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
@@ -47,7 +48,7 @@ export class UsersDialogComponent {
   public image: any;
   public showImage:any;
   // Un observable?
-  user$ = this.userService.currentUserProfile$;
+  //user$ = this.userService.currentUserProfile$;
   url: string;
 
   constructor(
@@ -106,25 +107,34 @@ export class UsersDialogComponent {
   }
 
 /** Guarda registro */
-   save(): void {
+  save(): void {
     let data = this.formUsers.value;
     data.uid = this.userService.unicID();
+    
+    // Obtengo el valor del email
+    const email = this.formUsers.value.email;
+
     console.log(this)
 
-      data.image = this.url;
+    data.image = this.url;
   
-      console.log(this.url) 
-    if (this.formUsers.valid) {
-      // Aquí va la inserción en la base de datos
-        this.authService.SignUp(data).then((user: any)=>{
-            this.toastr.success("Usuario Creado");
-         });
-         
-      //this.uploadFile(data.image, data.uid)
-    
-         this.closeDialog();
+    console.log(this.url) 
+    if (email != this.local_data.email){
+      //console.log(this.data.email)
+      if (this.formUsers.valid) {
+        // Aquí va la inserción en la base de datos
+          this.authService.SignUp(data).then((user: any)=>{
+              this.toastr.success("Usuario Creado");
+           });
+           
+        //this.uploadFile(data.image, data.uid)
+      
+           this.closeDialog();
+      } else {
+        this.toastr.error("Favor de llenar campos faltantes");
+      }
     } else {
-      this.toastr.error("Favor de llenar campos faltantes");
+    this.toastr.error("Uy no, ya hay un usuario con ese correo");
     }
   }
 
@@ -142,7 +152,8 @@ update(): void {
   console.log(data.image)
   if (this.formUsers.valid) {
     // Aquí va la inserción en la base de datos
-    this.userService.updateUser(data.uid, data)
+    this.userService.updateUser(data.uid, data);
+    this.toastr.success("Usuario Actualizado");
     if(this.local_data.image !== data.image){
       this.uploadFile(data.image, this.local_data.uid)
     }    
@@ -160,17 +171,17 @@ updateStatus(): void {
   console.log(data) 
   // Aquí va la inserción en la base de datos
   this.userService.updateUser(data.uid, data)
+  this.toastr.success("Usuario Eliminado");
   this.closeDialog();  
 }
 
   doAction(): void {
-      this.dialogRef.close({ event: this.action, data: this.local_data });
-      
+      this.dialogRef.close({ event: this.action, data: this.local_data });      
   }
 
   closeDialog(): void {
       this.dialogRef.close({ event: 'Cancelar' });
-      this.toastr.success("Usuario Creado");
+      //this.toastr.success("Usuario Creado");
   }
 
   setImage(event: any){
@@ -229,25 +240,25 @@ updateStatus(): void {
       console.log(this.url)
   }
 
-  selectFile(event: any): void {
-      if (!event.target.files[0] || event.target.files[0].length === 0) {
-          // this.msg = 'You must select an image';
-          return;
-      }
-      const mimeType = event.target.files[0].type;
-      if (mimeType.match(/image\/*/) == null) {
-          //this.msg = "Only images are supported";
-          return;
-      }
-      // tslint:disable-next-line - Disables all
-      const reader = new FileReader();
-      reader.readAsDataURL(event.target.files[0]);
-      // tslint:disable-next-line - Disables all
-      reader.onload = (_event) => {
-          // tslint:disable-next-line - Disables all
-          this.local_data.image = reader.result;
-      };
-  } 
+  // selectFile(event: any): void {
+  //     if (!event.target.files[0] || event.target.files[0].length === 0) {
+  //         // this.msg = 'You must select an image';
+  //         return;
+  //     }
+  //     const mimeType = event.target.files[0].type;
+  //     if (mimeType.match(/image\/*/) == null) {
+  //         //this.msg = "Only images are supported";
+  //         return;
+  //     }
+  //     // tslint:disable-next-line - Disables all
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(event.target.files[0]);
+  //     // tslint:disable-next-line - Disables all
+  //     reader.onload = (_event) => {
+  //         // tslint:disable-next-line - Disables all
+  //         this.local_data.image = reader.result;
+  //     };
+  // } 
  
   // Función para mostrar y ocultar el campo de contraseña
   mostrar: boolean = false;
