@@ -4,6 +4,7 @@ import { ClientsComponent } from './clients/clients.component';
 import { ProductsComponent } from './products/products.component';
 import { TypeOfProductsComponent } from './type-of-products/type-of-products.component';
 import { CatalogsRoutingModule } from './catalogs-routing.module';
+import { ProductsDialogComponent } from './products/products-dialog/products-dialog.component';
 import { TypeOfProductsDialogComponent } from './type-of-products/type-of-products-dialog/type-of-products-dialog.component';
 import {MatDialogModule} from '@angular/material/dialog';
 import { DemoMaterialModule } from 'src/app/demo-material-module';
@@ -20,6 +21,7 @@ import { ClientsDialogComponent } from './clients/clients-dialog/clients-dialog.
     ClientsComponent,
     ProductsComponent,
     TypeOfProductsComponent,
+    ProductsDialogComponent,
     TypeOfProductsDialogComponent,
     ClientsDialogComponent
   ],
