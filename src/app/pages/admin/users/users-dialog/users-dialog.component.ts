@@ -107,36 +107,36 @@ export class UsersDialogComponent {
   }
 
 /** Guarda registro */
-  save(): void {
-    let data = this.formUsers.value;
-    data.uid = this.userService.unicID();
-    
-    // Obtengo el valor del email
-    const email = this.formUsers.value.email;
-
-    console.log(this)
-
-    data.image = this.url;
+save(): void {
+  let data = this.formUsers.value;
+  data.uid = this.userService.unicID();
   
-    console.log(this.url) 
-    if (email != this.local_data.email){
-      //console.log(this.data.email)
-      if (this.formUsers.valid) {
-        // Aquí va la inserción en la base de datos
-          this.authService.SignUp(data).then((user: any)=>{
-              this.toastr.success("Usuario Creado");
-           });
-           
-        //this.uploadFile(data.image, data.uid)
-      
-           this.closeDialog();
-      } else {
-        this.toastr.error("Favor de llenar campos faltantes");
-      }
+  // Obtengo el valor del email
+  const email = this.formUsers.value.email;
+  
+  console.log(this)
+
+  data.image = this.url;
+
+  console.log(this.url) 
+  if (email != 'claudiafl2002@outlook.com'){
+    //console.log(this.data.email)
+    if (this.formUsers.valid) {
+      // Aquí va la inserción en la base de datos
+        this.authService.SignUp(data).then((user: any)=>{
+            this.toastr.success("Usuario Creado");
+         });
+         
+      //this.uploadFile(data.image, data.uid)
+    
+         this.closeDialog();
     } else {
-    this.toastr.error("Uy no, ya hay un usuario con ese correo");
+      this.toastr.error("Favor de llenar campos faltantes");
     }
+  } else {
+  this.toastr.error("Ya existe un usuario registrado con ese correo");
   }
+}
 
   /** Actualiza registro */
 update(): void {
