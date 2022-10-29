@@ -34,6 +34,10 @@ export class UsersDialogComponent {
   // Inicializo un arreglo vacío de tipos de usuarios
   public userType: UserType[]=[];
 
+  // Inicializo un arreglo vacío de usuarios
+  public user: User[]=[];
+  public dataSourceU: MatTableDataSource<User>;
+
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
@@ -45,10 +49,10 @@ export class UsersDialogComponent {
     appName: "[DEFAULT]",
     createdAt: "1666629286585",
     email: "test@email.com",
-emailVerified:false,
-isAnonymous: false,
-lastLoginAt: "1666629286585",
-password:"Admin123"
+    emailVerified:false,
+    isAnonymous: false,
+    lastLoginAt: "1666629286585",
+    password:"Admin123"
   }
   // Inicializo el formulario de usuarios
   public formUsers: FormGroup;  
@@ -74,7 +78,7 @@ password:"Admin123"
       // @Optional() is used to prevent error if no data is passed
       @Optional() @Inject(MAT_DIALOG_DATA) public data: User) {
       this.local_data = { ...data };
-     this.email = data.email;
+      this.email = data.email;
       // Definimos una imagen por default, en caso que no se seleccione ninguna *****
       this.action = this.local_data.action;
       if (this.local_data.image === undefined) {
@@ -88,14 +92,14 @@ password:"Admin123"
         userTypeId: [''],
         // Valida que el nombre y apellidos solo contengan letras y/o espacios
         //name: ['', Validators.required, Validators.pattern('[a-zA-Z ]*')],
-        name: ['', Validators.required],
-        paternalLastName: ['', Validators.required],
-        maternalLastName: ['', Validators.required],
-        email: ['', Validators.required],
-        password: ['', Validators.required],
+        name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ],        
+        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
+        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
+        email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ], 
+        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)] ], 
         status: ['', Validators.required],
         // La imagen no es requerida *****
-        image: ['']
+        image: ['', ],
     });
   }
 
@@ -115,6 +119,10 @@ password:"Admin123"
       //this.formUsers.get('status').disable()
     }
    // this.authService.updateEmail(this.testData);
+   this.userService.getUser().subscribe((user: any)=>{
+    console.log(user)
+    this.user=user
+});  
   }
 
 /** Guarda registro */
@@ -122,30 +130,40 @@ password:"Admin123"
     let data = this.formUsers.value;
     data.uid = this.userService.unicID();
     console.log(this.data)
+    var emailExistente = false
 
     // Obtengo el valor del email
     const email = this.formUsers.value.email;
-    if (email != 'claudiafl2002@outlook.com'){
-    if(this.image != undefined){
-      data.image = this.image;
+    // Traemos todos los emails de la base de datos
+    this.user.forEach(data => {
+      if(data.email == email){
+        // Si hay un email igual al que pusimos en el dialog, es un email existente y lo marca como true
+        emailExistente = true
+        //console
+      }
+    })
+    // Si el email no existe, hace todo lo demás
+    if (emailExistente == false){
+      if(this.image != undefined){
+        data.image = this.image;
+      }else{
+        data.image = this.local_data.image
+      }
+      if (this.formUsers.valid) {
+        // Aquí va la inserción en la base de datos
+          // this.authService.SignUp(data).then((user: any)=>{
+          //     this.toastr.success("Usuario Creado");
+          //  });
+          this.saveFile(data.image, data)
+        //this.uploadFile(data.image, data.uid)
+      
+           this.closeDialog();
+      } else {
+        this.toastr.error("Favor de llenar campos faltantes");
+      }
     }else{
-      data.image = this.local_data.image
+      this.toastr.error("Ya hay un usuario registrado con ese correo");
     }
-    if (this.formUsers.valid) {
-      // Aquí va la inserción en la base de datos
-        // this.authService.SignUp(data).then((user: any)=>{
-        //     this.toastr.success("Usuario Creado");
-        //  });
-        this.saveFile(data.image, data)
-      //this.uploadFile(data.image, data.uid)
-    
-         this.closeDialog();
-    } else {
-      this.toastr.error("Favor de llenar campos faltantes");
-    }
-  } else {
-  this.toastr.error("Ya existe un usuario registrado con ese correo");
-  }
 }
 
 
@@ -172,6 +190,7 @@ update(): void {
       
     }    
     this.closeDialog();
+    this.toastr.success("Usuario Actualizado");
   } else {
   this.toastr.error("Favor de llenar campos faltantes");
   }
@@ -261,7 +280,7 @@ updateStatus(): void {
         )
       )
       .subscribe();
-      this.toastr.success("Usuario Actualizado");
+      
       console.log(this.url)
   }
 
