@@ -51,7 +51,7 @@
             </div>
         </div>
         <div formArrayName="address" *ngFor="let add of address.controls; index as i">
-            <div fxLayout="row wrap" class="align-items-center" [formGroup]="add">
+            <div fxLayout="row wrap" class="align-items-center" [formGroup]="add" *ngIf="add.get('status').value == true">
                 <!-- Direcciones -->
                 <div fxFlex="100" fxFlex.gt-md="50">
                     <div class="m-r-15 m-l-15">
@@ -117,16 +117,21 @@
         </div>
         <div mat-dialog-actions align="center" class="pt-3">
             <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-            <button mat-button (click)="save()" mat-flat-button color="primary">Guardar</button>
+            <button *ngIf="action == 'Nuevo Cliente'" mat-button (click)="save()" mat-flat-button color="primary">Guardar</button>
+            <!-- Botón para actualizar -->
+            <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary">Actualizar</button>
             <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
             <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
         </div>
     </form>
 </mat-dialog-content>
 <ng-template #elseTemplate>
-    <p>Sure to delete <b>{{local_data.Name}}</b> ?</p>
+    <div align="center">
+        <p>¿Estas seguro que deseas eliminarlo?<br>
+            <b>{{local_data.name}}</b></p>
+    </div>
     <div mat-dialog-actions align="end" class="pt-3">
-        <button mat-button (click)="doAction()" mat-flat-button color="warn">{{action}}</button>
-        <button mat-button (click)="closeDialog()">Cancel</button>
+        <button mat-button (click)="doAction()" mat-flat-button color="warn">Eliminar</button>
+        <button mat-button (click)="closeDialog()">Cancelar</button>
     </div>
 </ng-template>

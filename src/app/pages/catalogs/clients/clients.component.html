@@ -1,79 +1,81 @@
-<div fxLayout="row wrap"> 
+<div fxLayout="row wrap">
     <!-- El div del encabezado cubre el 100% del ancho de la pantalla-->
     <div fxFlex="100">
-      <mat-card>
-        <mat-card-content>
-          <div fxLayout="row wrap" class="align-items-center">
-            <!-- El buscador ocupa el 25% del espacio de la pantalla -->
-            <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
-              <mat-form-field>
-                <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar Cliente">
-              </mat-form-field>
-            </div>
-            <!-- Botón alineado a la derecha, colocado en el otro lado del 75% de la pantalla -->
-            <div fxFlex.gt-md="75" class="text-right">
-              <!-- Botón de pantalla de clientes para agregar un cliente nuevo -->
-              <!-- openDialog() se encuentra en clients.components.ts -->
-              <button mat-raised-button (click)="openDialog('Nuevo Cliente',{})" color="primary">Nuevo Cliente</button>
-            </div>
-          </div>
-        </mat-card-content>
-      </mat-card>
+        <mat-card>
+            <mat-card-content>
+                <div fxLayout="row wrap" class="align-items-center">
+                    <!-- El buscador ocupa el 25% del espacio de la pantalla -->
+                    <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
+                        <mat-form-field>
+                            <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Buscar Cliente">
+                        </mat-form-field>
+                    </div>
+                    <!-- Botón alineado a la derecha, colocado en el otro lado del 75% de la pantalla -->
+                    <div fxFlex.gt-md="75" class="text-right">
+                        <!-- Botón de pantalla de clientes para agregar un cliente nuevo -->
+                        <!-- openDialog() se encuentra en clients.components.ts -->
+                        <button mat-raised-button (click)="openDialog('Nuevo Cliente',{})" color="primary">Nuevo Cliente</button>
+                    </div>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
-  </div>
-  <div fxLayout="row wrap">
+</div>
+<div fxLayout="row wrap">
     <!-- El div de lista de clientes cubre el 100% del ancho de la pantalla-->
     <div fxFlex="100">
-      <mat-card>
-        <mat-card-content>
-          <div class="table-responsive">
-            <table mat-table [dataSource]="dataSource" class="table customer-list no-wrap">
-  
-              <!-- Sección de número de cliente -->
-              <ng-container matColumnDef="#">
-                <th mat-header-cell *matHeaderCellDef> # </th>
-                <td mat-cell *matCellDef="let element"> {{element.id}} </td>
-              </ng-container>
-  
-              <!-- Sección de nombres -->
-              <ng-container matColumnDef="name">
-                <th mat-header-cell *matHeaderCellDef> Nombre </th>
-                <td mat-cell *matCellDef="let element">
-                  <div class="d-flex">
-                    <!-- Margen -->
-                    <div class="m-l-15">
-                      <!-- Hacemos la letra un poco más obscura con el font-medium-->
-                      <p class="font-medium">{{ element.name }} {{ element.paternalLastName }} {{ element.maternalLastName }}</p>
-                    </div>
-                  </div>
-                </td>
-              </ng-container> 
-  
-              <ng-container matColumnDef="phone">
-                <th mat-header-cell *matHeaderCellDef> Teléfono </th>
-                <td mat-cell *matCellDef="let element"> {{element.phone}}  </td>
-              </ng-container>
-              
-              <ng-container matColumnDef="action">
-                <th mat-header-cell *matHeaderCellDef> Acciones </th>
-                <td mat-cell *matCellDef="let element" class="action-link">
-                  <a (click)="openDialog('Actualizar',element)" class="m-r-10 cursor-pointer">
-                    <!-- Símbolo de editar -->
-                    <i class="fa fa-pencil"></i>
-                  </a>
-                  <a (click)="openDialog('Confirmación',element)" class="m-r-10 cursor-pointer">
-                    <!-- Símbolo de eliminar --> 
-                    <i class="fa fa-trash text-danger"></i>
-                  </a>
-                </td>
-              </ng-container>
-  
-              <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-              <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
-            </table>
-            <mat-paginator [pageSizeOptions]="[5, 10, 20]" showFirstLastButtons></mat-paginator>
-          </div>
-        </mat-card-content> 
-      </mat-card>
+        <mat-card>
+            <mat-card-content>
+                <div class="table-responsive">
+                    <table mat-table [dataSource]="dataSource" class="table customer-list no-wrap">
+
+                        <!-- Sección de número de cliente -->
+                        <ng-container matColumnDef="#">
+                            <th mat-header-cell *matHeaderCellDef> # </th>
+                            <td mat-cell *matCellDef="let element; let i = index">
+                                {{ i + 1 }}
+                            </td>
+                        </ng-container>
+
+                        <!-- Sección de nombres -->
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef> Nombre </th>
+                            <td mat-cell *matCellDef="let element">
+                                <div class="d-flex">
+                                    <!-- Margen -->
+                                    <div class="m-l-15">
+                                        <!-- Hacemos la letra un poco más obscura con el font-medium-->
+                                        <p class="font-medium">{{ element.name }} {{ element.paternalLastName }} {{ element.maternalLastName }}</p>
+                                    </div>
+                                </div>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="phone">
+                            <th mat-header-cell *matHeaderCellDef> Teléfono </th>
+                            <td mat-cell *matCellDef="let element"> {{element.phone}} </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                            <td mat-cell *matCellDef="let element" class="action-link">
+                                <a (click)="openDialog('Actualizar',element)" class="m-r-10 cursor-pointer">
+                                    <!-- Símbolo de editar -->
+                                    <i class="fa fa-pencil"></i>
+                                </a>
+                                <a (click)="openDialog('Confirmación',element)" class="m-r-10 cursor-pointer">
+                                    <!-- Símbolo de eliminar -->
+                                    <i class="fa fa-trash text-danger"></i>
+                                </a>
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                    </table>
+                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+                </div>
+            </mat-card-content>
+        </mat-card>
     </div>
-  </div>
+</div>

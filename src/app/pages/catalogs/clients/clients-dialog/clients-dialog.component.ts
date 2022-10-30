@@ -51,7 +51,7 @@ export class ClientsDialogComponent {
         maternalLastName: ['', Validators.required],
         phone: ['', Validators.required],
         alternativePhone: ['', Validators.required],
-        status: ['', Validators.required],
+        status: [true, Validators.required],
        address:this.fb.array([])
       });
       this.addAddress();
@@ -61,11 +61,9 @@ export class ClientsDialogComponent {
     async ngOnInit() {
       if(this.local_data.id != null){
         await this.customerService.getAddress(this.local_data.id).subscribe((address: Address[])=>{
-          console.log(address)
-          this.addressData = address;
-          console.log(address.length)
-         for(let i=1; i< address.length; i++){
-          this.addAddress();
+          this.addressData= address;
+          for(let i=1; i< address.length; i++){
+            this.addAddress();
          }
           this.address.patchValue(this.addressData)
       });
@@ -79,7 +77,7 @@ export class ClientsDialogComponent {
     }
     newAddress(): FormGroup {
       return this.fb.group({
-        id: [''],
+        id: [null],
         customerId: ['', Validators.required],
         postCode: ['', Validators.required],
         street: ['', Validators.required],
@@ -87,7 +85,7 @@ export class ClientsDialogComponent {
         outsideNumber: ['', Validators.required],
         neighborhood: ['', Validators.required],
         city: ['', Validators.required],
-        status: ['', Validators.required],
+        status: [true, Validators.required],
       })
    }
 
@@ -97,7 +95,10 @@ addAddress(): void {
 }
 //?? Remueve el detalle de la req en la alta
 removeAddress(rowIndex: number): void {
-  this.address.removeAt(rowIndex);
+ // this.local_data.address.splice(rowIndex,1)
+ // console.log(this.formCustomer.get(['address', 0]).value)
+  this.address.controls[rowIndex].patchValue({"status":"false"})
+  //this.address.removeAt(rowIndex);
 }
 
  
@@ -118,6 +119,22 @@ save(): void {
       //this.toastr.error("Favor de llenar campos faltantes");
    // }
   }
+//Actualiza
+  update(): void {
+    let id = this.local_data.id
+    let data = this.formCustomer.value;
+    console.log(data)
+  //  if (this.formCustomer.valid) {
+      // Aquí va la inserción en la base de datos
+        this.customerService.updateCustomer(id, data).then((custom)=>{
+          this.toastr.success("Usuario creado exitosamente");
+          this.closeDialog();
+        })
+    //} else {
+      //this.toastr.error("Favor de llenar campos faltantes");
+   // }
+  }
+
 
   // ??????????????????????????????????
 /** Guarda registro de dirección de un cliente */
@@ -136,6 +153,10 @@ saveAddress(): void {
 
   doAction(): void {
       this.dialogRef.close({ event: this.action, data: this.local_data });
+      this.local_data.status = false;
+      this.customerService.deleteCustomer(this.local_data.id, this.local_data).subscribe(res =>{
+        this.toastr.success('Cliente eliminado correctamente')
+      })
   }
   closeDialog(): void {
       this.dialogRef.close({ event: 'Cancelar' });
