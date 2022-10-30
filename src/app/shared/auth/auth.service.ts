@@ -14,11 +14,22 @@ import { environment } from 'src/environments/environment';
 //import { ToastrService } from 'ngx-toastr';
 import { ThrowStmt } from '@angular/compiler';
 import { ToastrService } from 'ngx-toastr';
+import {
+  Auth,
+  signInWithEmailAndPassword,
+  authState,
+  createUserWithEmailAndPassword,
+  updateProfile,
+  UserInfo,
+  UserCredential,
+} from '@angular/fire/auth';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
+  currentUser$ = authState(this.auth);
+
   userData: any; // Save logged in user data
   loggedIn: boolean = false;
   config = {apiKey: "AIzaSyBg_QokV6yWF_I-kkoknODljZEjrWxDmZk",
@@ -31,7 +42,10 @@ export class AuthService {
     public afAuth: AngularFireAuth, // Inject Firebase auth service
     public router: Router,
     public ngZone: NgZone,
-    public toastr: ToastrService// NgZone service to remove outside scope warning
+    public toastr: ToastrService,// NgZone service to remove outside scope warning
+    // IMAGEN
+    private auth: Auth,
+    
   ) {
     
     /* Saving user data in localstorage when 
@@ -70,7 +84,7 @@ export class AuthService {
         });
       })
       .catch((error) => {
-       this.toastr.warning(error.message);
+       this.toastr.error('Usuario o contraseña inválido');
       });
   }
   // Sign up with email/password
@@ -81,11 +95,12 @@ export class AuthService {
    return this.secondaryApp.auth().createUserWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
     console.log("User " + data.name + " created successfully!");
         //I don't know if the next statement is necessary 
+        console.log(firebaseUser)
        
         this.secondaryApp.auth().signOut();
       })
       .catch((error) => {
-        this.toastr.success("Usuario Creado");
+        //this.toastr.success("Usuario Creado");
       });
     /*this.afAuth
       .createUserWithEmailAndPassword(data.email, data.password)
@@ -100,6 +115,17 @@ export class AuthService {
       });*/
       
   }
+  updateEmail(data:any, oldEmail:any){
+    this.secondaryApp = firebase.initializeApp(this.config, "Secondary");
+
+   return this.secondaryApp.auth().signInWithEmailAndPassword(oldEmail, data.password).then(function(firebaseUser) {    
+        firebaseUser.user.updateEmail(data.email);
+        this.secondaryApp.auth().signOut();
+      })
+      .catch((error) => {
+        console.log(error)
+      });
+  }
   // Send email verfificaiton when new user sign up
   SendVerificationMail() {
     return this.afAuth.currentUser
@@ -113,7 +139,7 @@ export class AuthService {
     return this.afAuth
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        window.alert('Password reset email sent, check your inbox.');
+        window.alert('El correo electrónico de restablecimiento de contraseña fue enviado, verifique su bandeja de entrada.');
       })
       .catch((error) => {
         window.alert(error);
@@ -160,7 +186,7 @@ export class AuthService {
       email: user.email,
       password: user.password,
       status: user.status,
-      image: user.image,
+      image: user.image
     };
     return userRef.set(userData, {
       merge: true,

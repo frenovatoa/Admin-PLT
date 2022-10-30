@@ -12,6 +12,11 @@ import { UserType } from 'src/app/shared/interfaces/user.type';
 import { MatSort } from '@angular/material/sort';
 import { ToastrService } from 'ngx-toastr';
 import { throwToolbarMixedModesError } from '@angular/material/toolbar';
+import { switchMap } from 'rxjs/operators';
+import { AngularFireStorage } from '@angular/fire/compat/storage';
+import { ImageUploadService } from 'src/app/shared/services/image-upload.service';
+import { user } from '@angular/fire/auth';
+//import { HotToastService } from '@ngneat/hot-toast';
 
 @Component({
   selector: 'app-users-dialog',
@@ -23,11 +28,15 @@ export class UsersDialogComponent {
   
   public dataSource: MatTableDataSource<UserType>;    
   searchText: any;
-
+  public email: string;
   private started: boolean = false;
 
   // Inicializo un arreglo vacío de tipos de usuarios
   public userType: UserType[]=[];
+
+  // Inicializo un arreglo vacío de usuarios
+  public user: User[]=[];
+  public dataSourceU: MatTableDataSource<User>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -35,9 +44,25 @@ export class UsersDialogComponent {
   action: string;
   local_data: any;
   selectedImage: any = '';
-
+   testData ={
+    apiKey: "AIzaSyBg_QokV6yWF_I-kkoknODljZEjrWxDmZk",
+    appName: "[DEFAULT]",
+    createdAt: "1666629286585",
+    email: "test@email.com",
+    emailVerified:false,
+    isAnonymous: false,
+    lastLoginAt: "1666629286585",
+    password:"Admin123"
+  }
   // Inicializo el formulario de usuarios
   public formUsers: FormGroup;  
+
+  // Para la imagen
+  public image: any;
+  public showImage:any;
+  // Un observable?
+  //user$ = this.userService.currentUserProfile$;
+  url: string;
 
   constructor(
       public datePipe: DatePipe,
@@ -46,14 +71,18 @@ export class UsersDialogComponent {
       public userService: UserService,
       public authService : AuthService,
       public toastr :ToastrService,
+      // IMAGENES
+      private storage: AngularFireStorage,
+      private imageUploadService: ImageUploadService,
+      //private toast: HotToastService,
       // @Optional() is used to prevent error if no data is passed
       @Optional() @Inject(MAT_DIALOG_DATA) public data: User) {
       this.local_data = { ...data };
-
+      this.email = data.email;
       // Definimos una imagen por default, en caso que no se seleccione ninguna *****
       this.action = this.local_data.action;
       if (this.local_data.image === undefined) {
-          this.local_data.image = 'gs://admin-plt.appspot.com/usuarioDefault.png';
+          this.local_data.image = 'assets/images/users/default.png';
       }
       console.log(this.local_data)
       // Formulario del diálogo, para insertar un nuevo registro
@@ -63,14 +92,14 @@ export class UsersDialogComponent {
         userTypeId: [''],
         // Valida que el nombre y apellidos solo contengan letras y/o espacios
         //name: ['', Validators.required, Validators.pattern('[a-zA-Z ]*')],
-        name: ['', Validators.required],
-        paternalLastName: ['', Validators.required],
-        maternalLastName: ['', Validators.required],
-        email: ['', Validators.required],
-        password: ['', Validators.required],
+        name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ],        
+        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
+        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
+        email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ], 
+        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)] ], 
         status: ['', Validators.required],
         // La imagen no es requerida *****
-        image: ['']
+        image: ['', ],
     });
   }
 
@@ -82,42 +111,88 @@ export class UsersDialogComponent {
     });   
     if(this.local_data.uid != null){
       // Una vez que se inserta un usuario, no puede cambiar su correo
-      this.formUsers.get('email').disable()
+     // this.formUsers.get('email').disable()
+      //this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
-      this.formUsers.get('password').disable()
+      //this.formUsers.get('password').disable()
       // Ni el estatus no ??????????????????????????????????
-      this.formUsers.get('status').disable()
+      //this.formUsers.get('status').disable()
     }
+   // this.authService.updateEmail(this.testData);
+   this.userService.getUser().subscribe((user: any)=>{
+    console.log(user)
+    this.user=user
+});  
   }
 
 /** Guarda registro */
-save(): void {
+   save(): void {
     let data = this.formUsers.value;
     data.uid = this.userService.unicID();
-    console.log(data)
-    if (this.formUsers.valid) {
-      // Aquí va la inserción en la base de datos
-        this.authService.SignUp(data).then((user: any)=>{
-            console.log(user)
-            this.toastr.success("Usuario Creado");
-         });
-         this.closeDialog();
-    } else {
-      this.toastr.error("Favor de llenar campos faltantes");
+    console.log(this.data)
+    var emailExistente = false
+
+    // Obtengo el valor del email
+    const email = this.formUsers.value.email;
+    // Traemos todos los emails de la base de datos
+    this.user.forEach(data => {
+      if(data.email == email){
+        // Si hay un email igual al que pusimos en el dialog, es un email existente y lo marca como true
+        emailExistente = true
+        //console
+      }
+    })
+    // Si el email no existe, hace todo lo demás
+    if (emailExistente == false){
+      if(this.image != undefined){
+        data.image = this.image;
+      }else{
+        data.image = this.local_data.image
+      }
+      if (this.formUsers.valid) {
+        // Aquí va la inserción en la base de datos
+          // this.authService.SignUp(data).then((user: any)=>{
+          //     this.toastr.success("Usuario Creado");
+          //  });
+          this.saveFile(data.image, data)
+        //this.uploadFile(data.image, data.uid)
+      
+           this.closeDialog();
+      } else {
+        this.toastr.error("Favor de llenar campos faltantes");
+      }
+    }else{
+      this.toastr.error("Ya hay un usuario registrado con ese correo");
     }
-  }
+}
+
+
 
   /** Actualiza registro */
 update(): void {
   this.formUsers.get('uid').setValue(this.local_data.uid)
   let data = this.formUsers.value;
   console.log(data)
+  if(this.image != undefined){
+    data.image = this.image;
+  }else{
+    data.image = this.local_data.image
+  }
+  
+  console.log(data.image)
   if (this.formUsers.valid) {
-    // Aquí va la inserción en la base de datos
+    if(this.email != data.email){
+      this.authService.updateEmail(data, this.email);
+    }
     this.userService.updateUser(data.uid, data)
+    if(this.local_data.image !== data.image){
+      this.uploadFile(data.image, this.local_data.uid)
+      
+    }    
     this.closeDialog();
+    this.toastr.success("Usuario Actualizado");
   } else {
-    //this.toastr.error("Favor de llenar campos faltantes");
+  this.toastr.error("Favor de llenar campos faltantes");
   }
 }
 
@@ -129,38 +204,105 @@ updateStatus(): void {
   console.log(data) 
   // Aquí va la inserción en la base de datos
   this.userService.updateUser(data.uid, data)
+  this.toastr.success("Usuario Eliminado");
   this.closeDialog();  
 }
 
   doAction(): void {
-      this.dialogRef.close({ event: this.action, data: this.local_data });
-      
+      this.dialogRef.close({ event: this.action, data: this.local_data });      
   }
 
   closeDialog(): void {
       this.dialogRef.close({ event: 'Cancelar' });
-      this.toastr.success("Usuario Creado");
+      //this.toastr.success("Usuario Creado");
   }
 
-  selectFile(event: any): void {
-      if (!event.target.files[0] || event.target.files[0].length === 0) {
-          // this.msg = 'You must select an image';
-          return;
-      }
-      const mimeType = event.target.files[0].type;
-      if (mimeType.match(/image\/*/) == null) {
-          //this.msg = "Only images are supported";
-          return;
-      }
-      // tslint:disable-next-line - Disables all
-      const reader = new FileReader();
+  setImage(event: any){
+    console.log(event.target.files[0])
+    this.image = event.target.files[0];
+    this.showImage = event.target.files[0].type;
+
+    // Vista previa de la imagen en el dialog
+    const reader = new FileReader();
       reader.readAsDataURL(event.target.files[0]);
-      // tslint:disable-next-line - Disables all
       reader.onload = (_event) => {
-          // tslint:disable-next-line - Disables all
           this.local_data.image = reader.result;
       };
-  } 
+  }
+
+  saveFile(event: any,data:User) {    
+    console.log(data.uid)
+    this.imageUploadService
+      .uploadImage(event, `users/${data.uid}`)
+      .pipe(
+        // this.toast.observe({
+        //   loading: 'Uploading profile image...',
+        //   success: 'Image uploaded successfully',
+        //   error: 'There was an error in uploading the image',
+        // }),
+        switchMap((image) =>
+         this.authService.SignUp({
+         uid: data.uid,
+         userTypeId: data.userTypeId,
+         name: data.name,
+         paternalLastName: data.paternalLastName,
+         maternalLastName: data.maternalLastName,
+         email: data.email,
+         password: data.password,
+         status: data.status,
+          image,
+        }       
+      )
+        )
+      )
+      .subscribe();
+      console.log(this.url)
+  }
+
+  uploadFile(event: any, uid:string) {
+    let data = this.local_data;
+    
+    console.log(uid)
+    this.imageUploadService
+      .uploadImage(event, `users/${uid}`)
+      .pipe(
+        // this.toast.observe({
+        //   loading: 'Uploading profile image...',
+        //   success: 'Image uploaded successfully',
+        //   error: 'There was an error in uploading the image',
+        // }),
+        switchMap((image) =>
+         this.userService.updateUserTest({
+          uid,
+          image,
+        }       
+      )
+        )
+      )
+      .subscribe();
+      
+      console.log(this.url)
+  }
+
+  // selectFile(event: any): void {
+  //     if (!event.target.files[0] || event.target.files[0].length === 0) {
+  //         // this.msg = 'You must select an image';
+  //         return;
+  //     }
+  //     const mimeType = event.target.files[0].type;
+  //     if (mimeType.match(/image\/*/) == null) {
+  //         //this.msg = "Only images are supported";
+  //         return;
+  //     }
+  //     // tslint:disable-next-line - Disables all
+  //     const reader = new FileReader();
+  //     reader.readAsDataURL(event.target.files[0]);
+  //     // tslint:disable-next-line - Disables all
+  //     reader.onload = (_event) => {
+  //         // tslint:disable-next-line - Disables all
+  //         this.local_data.image = reader.result;
+  //     };
+  // } 
  
   // Función para mostrar y ocultar el campo de contraseña
   mostrar: boolean = false;
