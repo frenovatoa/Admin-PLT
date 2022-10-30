@@ -56,8 +56,10 @@
         <!-- mat-dialog-actions dará un espaciado entre los botones -->
         <div mat-dialog-actions align="center" class="pt-3">
             <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-            <button mat-button (click)="save()" mat-flat-button color="primary"
+            <button *ngIf="action == 'Nuevo Producto'" mat-button (click)="save()" mat-flat-button color="primary"
                 [disabled]="!formProducts.valid">Guardar</button>
+            <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary"
+                [disabled]="!formProducts.valid">Actualizar</button>
                 <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
             <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
         </div>
@@ -68,7 +70,7 @@
     <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
     <p>¿Estás seguro que deseas eliminarlo? <br><div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div></p>
     <div mat-dialog-actions align="center" class="pt-3">
-        <button mat-button (click)="doAction()" mat-flat-button color="primary">Si</button>
+        <button mat-button (click)="updateStatus()" mat-flat-button color="primary">Si</button>
         <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
         <button mat-button mat-flat-button color="warn" (click)="closeDialog()">No</button>
     </div>

@@ -29,7 +29,7 @@
                         <!-- # -->
                         <ng-container matColumnDef="#">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>#</th>
-                            <td mat-cell *matCellDef="let element">{{ element.id }}</td>
+                            <td mat-cell *matCellDef="let element; let i = index">{{i+1}}</td>
                         </ng-container>
                         
 
@@ -41,7 +41,7 @@
                                 <img class="mat-card-avatar" [src]='element.image'>
                                 <!-- Margen -->
                                 <div class="m-l-15">
-                                <!-- Hacemos la letra un poco más obscura con el font-medium-->
+                                <!-- Hacemos la letra un poco más oscura con el font-medium-->
                                 <p class="font-medium">{{ element.description }}</p>
                                 </div>
                             </div>
@@ -52,7 +52,23 @@
                         <ng-container matColumnDef="productType">
                             <th mat-header-cell *matHeaderCellDef mat-sort-header>Tipo de Producto</th>
                             <td mat-cell *matCellDef="let element">{{ element.productType }}</td>
+                            <!-- <td mat-cell *ngFor="let productType of productType" [value]="productType.id">
+                                {{productType.description}}</td> -->
                         </ng-container>
+                        
+                        <!-- <div fxFlex="100" fxFlex.gt-md="50">
+                            <div class="m-r-15 m-l-15">
+                                <mat-form-field>
+                                    <mat-label>Tipo de Producto</mat-label>
+                                    <mat-select matInput required id="productTypeId" name="productTypeId" 
+                                     formControlName="productTypeId">
+                                        <mat-option *ngFor="let productType of productType" [value]="productType.id">
+                                            {{productType.description}}
+                                        </mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div> -->
 
                         <!-- Cantidad -->
                         <ng-container matColumnDef="quantity">
@@ -73,7 +89,7 @@
                         <ng-container matColumnDef="action">
                             <th mat-header-cell *matHeaderCellDef> Acciones </th>
                             <td mat-cell *matCellDef="let element" class="action-link">
-                            <a (click)="update()" class="m-r-10 cursor-pointer">
+                            <a (click)="openDialog('Actualizar',element)" class="m-r-10 cursor-pointer">
                                 <!-- Símbolo de editar -->
                                 <i class="fa fa-pencil"></i>
                             </a>
@@ -83,6 +99,7 @@
                             </a>
                             </td>
                         </ng-container>
+
                         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
                     </table>

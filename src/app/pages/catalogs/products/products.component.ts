@@ -23,7 +23,7 @@ export interface Product {
   templateUrl: './products.component.html',
   styleUrls: ['./products.component.scss']
 })
-export class ProductsComponent implements OnInit, AfterViewInit {
+export class ProductsComponent implements OnInit {
 
   public products: Product[];
   // public firstFormGroup: FormGroup = Object.create(null);
@@ -41,9 +41,9 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
       // Obtener los documentos de la colección indicada en la función getUser()
-      this.fb.getProducts().subscribe((user: any)=>{
-        console.log(user)
-        this.products=user
+      this.fb.getProducts().subscribe((product: any)=>{
+        console.log(product)
+        this.products=product
         this.dataSource = new MatTableDataSource < Product > (this.products);
         console.log(this.dataSource);
         this.dataSource.paginator =this.paginator;
@@ -58,70 +58,71 @@ export class ProductsComponent implements OnInit, AfterViewInit {
 
   openDialog(action: string, obj: any): void {
     obj.action = action;
-    //obj.type = action == 'Nuevo' ? 1 : 2;
-    //obj.uId = AuthService.getUser().id;
     const dialogRef = this.dialog.open(ProductsDialogComponent, {
         data: obj
     });
     dialogRef.afterClosed().subscribe(result => {
         if (result.event === 'Nuevo Producto') {
-            // this.addRowData(result.data);
+            this.addRowData(result.data);
         } else if (result.event === 'Actualizar') {
-            // this.updateRowData(result.data);
+            this.updateRowData(result.data);
         } else if (result.event === 'Eliminar') {
-            // this.deleteRowData(result.data);
+            this.deleteRowData(result.data);
         }
     }); 
 }
 
-  ngAfterViewInit(): void {
-    // this.insurerService.getInsurer().subscribe(response => {
-    //   if (!response['success'] == true) {
-    //     this.toastr.success(response['message']);
-    //   } else {
-    //     this.toastr.error(response['message']);
-    //   }
-    //   this.insurers = response['data'];
-    //   let i = 1;
-    //   this.insurers.forEach(element => {
-    //     element.position = i++;
-    //   });
-    //   this.dataSource = new MatTableDataSource<Insurer>(this.insurers);
-    //   this.dataSource.paginator = this.paginator;
-    //   this.dataSource.sort = this.sort;
-    // });
-    // Mandar llamar el servicio para rellenar el arreglo de productos (productos a mostrar)
-  }
+/** Llama api para eliminar un registro */
+//   delete(local_data): void {
+//     local_data.type = 3;
+//     local_data.uId = AuthService.getUser().id;
 
-  confirmDialog(element) {
-    // const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    //   data: {
-    //     message: '¿Estas seguro que deseas eliminarlo?',
-    //     name: element.description,
-    //   }
-    // })
-    //   .afterClosed()
-    //   .subscribe((confirm: Boolean) => {
-    //     if (confirm) {
-    //       this.delete(element);
-    //     } else {
-    //       this.toastr.error('Cancelado');
-    //     }
-    //   });
-    this.delete(element);
-  }
+//     this.movementTypeService.crudMovementType(element).subscribe(response => {
+//       if (response['success']) {
+//         this.toastr.success(response['message']);
+//         this.ngOnInit();
+//       } else {
+//         this.toastr.error(response['message']);
+//       }
+//     });
+//   }
 
-  delete(data) {
-    // data.type = 3;
-    // data.userId = this.userData.id;
-    // this.insurerService.crudInsurer(data).subscribe(response => {
-    //   if (response.success == true) {
-    //     this.toastr.warning(response.message);
-    //     this.ngAfterViewInit();
-    //   } else {
-    //     this.toastr.error(response.message);
-    //   }
-    // });
-  }
+// tslint:disable-next-line - Disables all
+addRowData(row_obj: Product): void {
+    //this.dataSource.data.push({
+        //uid: user.length + 1,
+        //userTypeId: row_obj.userTypeId,
+        //name: row_obj.name,
+        //paternalLastName: row_obj.paternalLastName,
+        //maternalLastName: row_obj.maternalLastName,
+        //email: row_obj.email
+        //password: row_obj.password,
+        //status: row_obj.status,
+        //image: row_obj.image
+    //});
+    //this.dialog.open(AddComponent);
+    //this.table.renderRows();
+}
+
+// tslint:disable-next-line - Disables all
+updateRowData(row_obj: Product): boolean | any {
+    this.dataSource.data = this.dataSource.data.filter((value: any) => {
+        if (value.id === row_obj.id) {
+            value.productTypeId = row_obj.productTypeId;
+            value.description = row_obj.description;
+            value.quantity = row_obj.quantity;
+            value.status = row_obj.status;
+            value.image = row_obj.image;
+        }
+        return true;
+    });
+}
+
+// tslint:disable-next-line - Disables all
+deleteRowData(row_obj: Product): boolean | any {
+    this.dataSource.data = this.dataSource.data.filter((value: any) => {
+        return value.id !== row_obj.id;
+    });
+}
 
 }

@@ -36,6 +36,7 @@ export class ProductsDialogComponent implements OnInit {
   selectedImage: any = '';
 
   public formProducts: FormGroup;
+  image: any;
 
   constructor(
     public datePipe: DatePipe,
@@ -92,6 +93,33 @@ export class ProductsDialogComponent implements OnInit {
     }
   }
 
+/** Actualiza registro */
+update(): void {
+  this.formProducts.get('id').setValue(this.local_data.id)
+  let data = this.formProducts.value;
+  data.image = this.image;
+  console.log(data)
+  if (this.formProducts.valid) {
+    // Inserción en la base de datos
+    this.productService.updateProduct(data.id, data)
+    this.uploadFile(data.image)
+    this.closeDialog();
+  } else {
+    //this.toastr.error("Favor de llenar campos faltantes");
+  }
+}
+
+/** Actualiza estatus del registro, de manera que pase a no estar activo */
+updateStatus(): void {  
+  let data = this.local_data;
+  // Todos los datos quedan igual excepto el estatus, que cambia a false
+  data.status = false;
+  console.log(data) 
+  // Aquí va la inserción en la base de datos
+  this.productService.updateProduct(data.id, data)
+  this.closeDialog();  
+}
+
   /** Cerrar diálogo/modal */
   // closeDialog(response?): void {
   //   if (response != undefined) {
@@ -133,6 +161,19 @@ export class ProductsDialogComponent implements OnInit {
   closeDialog(): void {
       this.dialogRef.close({ event: 'Cancelar.' });
       this.toastr.success("Producto Creado.");
+  }
+
+  setImage(event: any) {
+    this.image = event.target.files[0];
+  }
+
+  uploadFile(event: any) {
+    let data = this.local_data;
+    let id = this.local_data.id;
+    console.log(event.target.files[0])
+    // this.imageUploadService
+      // .uploadImage(event.target.files[0])
+      
   }
 
   selectFile(event: any): void {

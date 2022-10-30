@@ -13,7 +13,7 @@ export class ProductService {
   // Función que permite obtener los documentos (registros) de la coelcción (tabla) de productos
   getProducts() {
     return this.db
-   .collection("tbl_products")
+   .collection("tbl_products", ref => ref.where('status', '==', true))
    .valueChanges();
  }
 
@@ -42,7 +42,7 @@ export class ProductService {
   // Función que permite actualizar un documento (registro) en la coelcción (tabla) de productos
   updateProduct(id: any, data: any) {
     this.db
-    .doc(`tbl_product_types/${id}`)
+    .doc(`tbl_products/${id}`)
     .update({...data})
   }
 
