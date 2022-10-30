@@ -5,21 +5,24 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="description" name="description" [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description">
+                        <input type="text" matInput required pattern="[A-Za-z ]*" id="description" name="description" [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description">
+                        <small *ngIf="formTypeOfProduct.controls['description'].hasError('required') && formTypeOfProduct.controls['description'].touched" class="text-danger support-text">La descripcion es requerida.</small>
                     </mat-form-field>
                 </div>
             </div>
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="number" min="0" matInput required id="retailPrice" name="retailPrice" [(ngModel)]="local_data.retailPrice" placeholder="Precio Menudeo" formControlName="retailPrice">
+                        <input type="number" min="0" matInput required pattern="([1-9]\d*(\.\d+)?|0)$" id="retailPrice" name="retailPrice" [(ngModel)]="local_data.retailPrice" placeholder="Precio Menudeo" formControlName="retailPrice">
+                        <small *ngIf="formTypeOfProduct.controls['retailPrice'].hasError('required') && formTypeOfProduct.controls['retailPrice'].touched" class="text-danger support-text">El precio menudeo es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="number" min="0" matInput required id="wholesalePrice" name="wholesalePrice" [(ngModel)]="local_data.wholesalePrice" placeholder="Precio Mayoreo" formControlName="wholesalePrice">
+                        <input type="number" min="0" matInput required pattern="([1-9]\d*(\.\d+)?|0)$" sid="wholesalePrice" name="wholesalePrice" [(ngModel)]="local_data.wholesalePrice" placeholder="Precio Mayoreo" formControlName="wholesalePrice">
+                        <small *ngIf="formTypeOfProduct.controls['wholesalePrice'].hasError('required') && formTypeOfProduct.controls['wholesalePrice'].touched" class="text-danger support-text">El precio mayoreo es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>

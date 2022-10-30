@@ -39,6 +39,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     @ViewChild(MatSort) sort: MatSort;
       
     searchText: any;
+    local_data: any;
     // Columnas mostradas en la pantalla inicial de usuarios
     public displayedColumns: string[] = ['#', 'name','email', 'action']; 
     private started: boolean = false;
@@ -46,6 +47,7 @@ export class UserComponent implements OnInit, AfterViewInit {
     constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService, public _MatPaginatorIntl: MatPaginatorIntl) { 
         
     }
+
 
     ngOnInit(): void {
         // Obtener los documentos de la colección indicada en la función getUser()

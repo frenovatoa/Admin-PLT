@@ -16,6 +16,7 @@ import { collection } from 'firebase/firestore';
 import { ifStmt } from '@angular/compiler/src/output/output_ast';
 
 
+
 export interface TypeOfProduct{
   id?: string;
   description: string;
@@ -41,7 +42,7 @@ export class TypeOfProductsComponent implements OnInit, AfterViewInit {
   @ViewChild(MatSort) sort: MatSort;
     
   searchText: any;
-  public displayedColumns: string[] = ['description', 'retailPrice', 'wholesalePrice', 'action'];
+  public displayedColumns: string[] = ['#', 'description', 'retailPrice', 'wholesalePrice', 'action'];
   private started: boolean = false;
 
   constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: TypeOfProductService) { 
@@ -51,11 +52,8 @@ export class TypeOfProductsComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
      this.fb.getTypeOfProduct().subscribe((typeOfProduct: any)=>{      
-          
-        console.log(typeOfProduct)
         this.typeOfProduct=typeOfProduct
         this.dataSource = new MatTableDataSource < TypeOfProduct > (this.typeOfProduct);
-        console.log(this.dataSource);
         this.dataSource.paginator =this.paginator;
         this.dataSource.sort = this.sort;
     });       
