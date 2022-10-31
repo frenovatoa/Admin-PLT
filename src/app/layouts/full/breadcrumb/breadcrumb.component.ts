@@ -20,6 +20,7 @@ export class AppBreadcrumbComponent {
   // Declaramos variables vacías para los títulos
   public title: string = "";
   public route: string = "";
+  currentRoute
 
   constructor(
     private router: Router,
@@ -46,8 +47,15 @@ export class AppBreadcrumbComponent {
           this.pageInfo = event;
         });
   
-        this.route = this.router.url ;
-        this.asigneTitle();
+        router.events.filter((event:any) => event instanceof NavigationEnd)
+        .subscribe((event:any) => 
+         {
+            this.route  = event.url;          
+            this.asigneTitle();
+         });
+
+        //this.route = this.router.url ;
+        
         //console.log (this.route);
 
       }
