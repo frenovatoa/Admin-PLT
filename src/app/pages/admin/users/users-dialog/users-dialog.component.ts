@@ -92,7 +92,7 @@ export class UsersDialogComponent {
         userTypeId: [''],
         // Valida que el nombre y apellidos solo contengan letras y/o espacios
         //name: ['', Validators.required, Validators.pattern('[a-zA-Z ]*')],
-        name: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ],        
+        name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]+$')] ],        
         paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
         maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
         email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ], 
@@ -111,7 +111,6 @@ export class UsersDialogComponent {
     });   
     if(this.local_data.uid != null){
       // Una vez que se inserta un usuario, no puede cambiar su correo
-     // this.formUsers.get('email').disable()
       //this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
       //this.formUsers.get('password').disable()
@@ -191,6 +190,7 @@ update(): void {
     }    
     this.closeDialog();
     this.toastr.success("Usuario Actualizado");
+    this.formUsers.get('status').disable()
   } else {
   this.toastr.error("Favor de llenar campos faltantes");
   }
@@ -260,8 +260,7 @@ updateStatus(): void {
   }
 
   uploadFile(event: any, uid:string) {
-    let data = this.local_data;
-    
+    let data = this.local_data;    
     console.log(uid)
     this.imageUploadService
       .uploadImage(event, `users/${uid}`)

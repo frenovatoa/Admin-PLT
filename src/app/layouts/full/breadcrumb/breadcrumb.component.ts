@@ -48,7 +48,7 @@ export class AppBreadcrumbComponent {
   
         this.route = this.router.url ;
         this.asigneTitle();
-        //console.log (this.route);
+        console.log (this.route);
 
       }
 
