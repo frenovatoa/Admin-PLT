@@ -76,7 +76,11 @@ export class UserService {
   );
   }
 
-
+getUserByEmail(email:string){
+  return this.db
+  .collection("tbl_users", ref => ref.where('email', '==', email))
+  .valueChanges();
+}
   // get currentUserProfile$(): Observable<User | null> {
   //   return this.authService.currentUser$.pipe(
   //     switchMap((user) => {
