@@ -44,7 +44,7 @@ export class AuthService {
     public ngZone: NgZone,
     public toastr: ToastrService,// NgZone service to remove outside scope warning
     // IMAGEN
-    private auth: Auth,
+    private auth: Auth
     
   ) {
     
@@ -75,11 +75,21 @@ export class AuthService {
         console.log(result.user)
         this.afAuth.authState.subscribe((user) => {
           if (user) {
-            this.router.navigate(['dashboard']);
-            this.loggedIn = true;
+            console.log(user.email)
+            this.getUserByEmail(user.email).subscribe((data:any)=>{
+              console.log(data)
+              if(data[0].status===true){
+                this.router.navigate(['dashboard']);
+                this.loggedIn = true;
+              }else{
+                this.loggedIn = false;
+                //this.toastr.error('Usuario o contraseña inválido');
+              }
+            })
           }
           else{
             this.loggedIn = false;
+           // this.toastr.error('Usuario o contraseña inválido');
           }
         });
       })
@@ -204,9 +214,14 @@ return JSON.parse(localStorage.getItem('user')!);
     });
   }
 
-
+  getUserByEmail(email:string){
+    return this.afs
+    .collection("tbl_users", ref => ref.where('email', '==', email))
+    .valueChanges();
+  }
 
 }
+
 
 function unicID(): string {
   const today = moment();
