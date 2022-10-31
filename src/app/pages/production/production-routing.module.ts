@@ -9,6 +9,9 @@ const routes: Routes =[
   {
     path: 'production',
     component: ProductionComponent,
+    data: {
+      title: 'Employee List',   
+  }
   },
 ];
 

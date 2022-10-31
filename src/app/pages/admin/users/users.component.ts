@@ -60,7 +60,7 @@ export class UserComponent implements OnInit, AfterViewInit {
             this.dataSource.sort = this.sort;
         });  
         // Cambio texto de la paginación en la parte inferior 
-        this._MatPaginatorIntl.itemsPerPageLabel = 'Items por página';     
+        this._MatPaginatorIntl.itemsPerPageLabel = 'Elementos por página';     
     }
 
     ngAfterViewInit(): void {
