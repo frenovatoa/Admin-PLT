@@ -42,7 +42,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone" [maxLength]="10">
+                        <input type="text" matInput required id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone" [maxLength]="10">
                     </mat-form-field>
                     <small *ngIf="formCustomer.controls['alternativePhone'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El telefono es requerido</small>
                     <small *ngIf="formCustomer.controls['alternativePhone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
@@ -139,12 +139,14 @@
     </form>
 </mat-dialog-content>
 <ng-template #elseTemplate>
-    <div align="center">
-        <p>¿Estas seguro que deseas eliminarlo?<br>
-            <b>{{local_data.name}}</b></p>
-    </div>
-    <div mat-dialog-actions align="end" class="pt-3">
-        <button mat-button (click)="doAction()" mat-flat-button color="warn">Eliminar</button>
-        <button mat-button (click)="closeDialog()">Cancelar</button>
+    <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
+    <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
+    <p>¿Estás seguro que deseas eliminarlo? </p> <br>
+    <div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div>
+
+    <div mat-dialog-actions align="center" class="pt-3">
+        <button mat-button (click)="updateStatus()" mat-flat-button color="primary">Si</button>
+        <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+        <button mat-button mat-flat-button color="warn" (click)="closeDialog()">No</button>
     </div>
 </ng-template>

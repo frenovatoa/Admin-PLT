@@ -54,7 +54,6 @@ export class ClientsComponent implements OnInit {
     //obj.uId = AuthService.getUser().id;
     const dialogRef = this.dialog.open(ClientsDialogComponent, {
         data: obj,
-        width:'70%',
     });
     dialogRef.afterClosed().subscribe(result => {
         if (result.event === 'Nuevo Cliente') {
