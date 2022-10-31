@@ -158,7 +158,7 @@ save(): void {
           this.closeDialog();
         })
      // }else{
-        this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
+       // this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
      // }
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos
