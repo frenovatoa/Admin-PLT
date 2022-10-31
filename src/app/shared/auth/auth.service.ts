@@ -75,7 +75,6 @@ export class AuthService {
         console.log(result.user)
         this.afAuth.authState.subscribe((user) => {
           if (user) {
-            this.router.navigate(['dashboard']);
             console.log(user.email)
             this.getUserByEmail(user.email).subscribe((data:any)=>{
               console.log(data)
