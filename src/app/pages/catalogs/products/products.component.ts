@@ -2,21 +2,22 @@ import { DatePipe } from '@angular/common';
 import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
-// import { Product } from 'src/app/shared/interfaces/product';
+import { ProductType } from 'src/app/shared/interfaces/product.type';
+import { Product } from 'src/app/shared/interfaces/product';
 import { ProductService } from 'src/app/shared/services/product.service';
 import { ProductsDialogComponent } from './products-dialog/products-dialog.component';
 
-export interface Product {
-  id: string;
-  productTypeId: string;
-  description: string;
-  quantity: number;
-  image: string;
-  status: number;
-}
+// export interface Product {
+//   id: string;
+//   productTypeId: string;
+//   description: string;
+//   quantity: number;
+//   image: string;
+//   status: number;
+// }
 
 @Component({
   selector: 'app-products',
@@ -30,12 +31,13 @@ export class ProductsComponent implements OnInit {
   public dataSource: MatTableDataSource<Product>;
   public displayedColumns: string[] = ['#', 'description', 'productType', 'quantity', 'status', 'action'];
   // public userData: User;
+  public productType: ProductType[]=[];
 
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: ProductService) { 
+  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: ProductService, public _MatPaginatorIntl: MatPaginatorIntl) { 
 
   }
 
@@ -48,7 +50,28 @@ export class ProductsComponent implements OnInit {
         console.log(this.dataSource);
         this.dataSource.paginator =this.paginator;
         this.dataSource.sort = this.sort;
-    });        
+
+        this.fb.getProductTypes().subscribe((productType: any)=>{
+            console.log(productType)
+            this.productType=productType
+
+            let typeDescription
+            this.products.forEach((products, index) => {
+                this.productType.forEach(productType => {
+                    if(products.productTypeId == productType.id) {
+                        typeDescription = productType.description
+                    }
+                });
+                this.products[index].productTypeDescription = typeDescription
+            })
+          });
+    });
+    // Paginador        
+    this._MatPaginatorIntl.itemsPerPageLabel = 'Elementos por página';
+  }
+
+  ngAfterViewInit(): void {
+    
   }
 
   // Aplica filtro a la lista de productos

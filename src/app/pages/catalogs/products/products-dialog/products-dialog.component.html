@@ -2,10 +2,13 @@
 <mat-dialog-content class="pb-3" *ngIf="action != 'Confirmación' else elseTemplate">
     <form #productForm="ngForm" [formGroup]="formProducts">
         <div class="d-flex align-items-center m-b-15">
-            <img class="mat-card-avatar" [src]='local_data.image'>
+            <!-- <img class="mat-card-avatar" [src]='local_data.image'> -->
+            <!-- Si tiene una imagen definida, la muestra -->
+            <img *ngIf="local_data.image" class="mat-card-avatar" [src]='local_data.image'>
             <!-- Botón para agregar una imagen -->
             <button mat-raised-button color="primary" class="m-l-15 input-file-button">
-                <input type="file" (change)="selectFile($event)" #fileInput formControlName="image">
+               <!-- Con accept="image/*" validar que solo se puedan seleccionar imagenes -->
+                <input type="file" (change)="setImage($event)" [(ngModel)]="local_data.image" #fileInput formControlName="image" accept="image/*">
             </button>
         </div>
         <!-- Descripción -->
@@ -22,7 +25,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="quantity" name="quantity" 
+                        <input type="number" min="0" matInput required id="quantity" name="quantity" 
                             [(ngModel)]="local_data.quantity" placeholder="Cantidad" formControlName="quantity">
                     </mat-form-field>
                 </div>
