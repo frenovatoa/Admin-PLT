@@ -145,7 +145,7 @@
     <div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div>
 
     <div mat-dialog-actions align="center" class="pt-3">
-        <button mat-button (click)="updateStatus()" mat-flat-button color="primary">Si</button>
+        <button mat-button (click)="doAction()" mat-flat-button color="primary">Si</button>
         <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
         <button mat-button mat-flat-button color="warn" (click)="closeDialog()">No</button>
     </div>
