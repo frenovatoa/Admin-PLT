@@ -151,6 +151,10 @@ export class AuthService {
     console.log(user)
     return (user !== null) ? true : false;
   }
+get user(): User{
+return JSON.parse(localStorage.getItem('user')!);
+}
+
   // Sign in with Google
   GoogleAuth() {
     return this.AuthLogin(new auth.GoogleAuthProvider()).then((res: any) => {
