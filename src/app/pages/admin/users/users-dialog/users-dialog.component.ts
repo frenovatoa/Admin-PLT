@@ -92,9 +92,9 @@ export class UsersDialogComponent {
         userTypeId: [''],
         // Valida que el nombre y apellidos solo contengan letras y/o espacios
         //name: ['', Validators.required, Validators.pattern('[a-zA-Z ]*')],
-        name: ['', [Validators.required, Validators.pattern('[a-zA-Z ]+$')] ],        
-        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
-        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-Z]+$')] ], 
+        name: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ],        
+        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ]+$')] ], 
+        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ]+$')] ], 
         email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ], 
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)] ], 
         status: ['', Validators.required],
