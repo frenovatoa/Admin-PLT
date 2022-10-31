@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 //import { Customer } from '../../../shared/interfaces/customer';
@@ -30,7 +30,8 @@ export class ClientsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(public dialog: MatDialog,
-              public customerService:CustomerService) { }
+              public customerService:CustomerService,
+              public _MatPaginatorIntl: MatPaginatorIntl) { }
 
   ngOnInit(): void {
     this.customerService.getCustomer().subscribe((user: any)=>{
@@ -40,7 +41,9 @@ export class ClientsComponent implements OnInit {
       console.log(this.dataSource);
       this.dataSource.paginator =this.paginator;
       this.dataSource.sort = this.sort;
-  });      
+  });   
+  // Cambio texto de la paginación en la parte inferior 
+  this._MatPaginatorIntl.itemsPerPageLabel = 'Elementos por página';    
   }
 
   // Aplica filtro a la lista de clientes

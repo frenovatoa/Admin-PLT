@@ -37,24 +37,24 @@ export class TypeOfProductsDialogComponent {
 
 
   constructor(
-      public datePipe: DatePipe,
-      public dialogRef: MatDialogRef<TypeOfProductsDialogComponent>,
-      public fb: FormBuilder,
-      public typeOfProductService: TypeOfProductService,
-      public authService : AuthService,
-      public toastr :ToastrService,
-      @Optional() @Inject(MAT_DIALOG_DATA) public data: ProductType) {
-      this.local_data = { ...data };
-      this.action = this.local_data.action;
-      this.formTypeOfProduct = this.fb.group ({
-        id: [''],
-        description: ['', Validators.required],
-        retailPrice: ['', Validators.required],
-        wholesalePrice: ['', Validators.required],
-        status: ['', Validators.required],
-    });
-    console.log(this.local_data);
-  }
+    public datePipe: DatePipe,
+    public dialogRef: MatDialogRef<TypeOfProductsDialogComponent>,
+    public fb: FormBuilder,
+    public typeOfProductService: TypeOfProductService,
+    public authService : AuthService,
+    public toastr :ToastrService,
+    @Optional() @Inject(MAT_DIALOG_DATA) public data: ProductType) {
+    this.local_data = { ...data };
+    this.action = this.local_data.action;
+    this.formTypeOfProduct = this.fb.group ({
+      id: [''],
+      description: ['', Validators.required],
+      retailPrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')] ],
+      wholesalePrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')] ],
+      status: ['', Validators.required],
+  });
+  console.log(this.local_data);
+}
 
   ngOnInit() {    
     this.typeOfProductService.getTypeOfProduct().subscribe((productType: any)=>{      

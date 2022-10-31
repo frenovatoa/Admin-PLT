@@ -1,1 +1,39 @@
-<p>production works!</p>
+<div fxLayout="row wrap">
+    <!-- Card column -->
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+      <mat-card>
+        <mat-card-content>
+          <mat-card-title>Producción</mat-card-title>
+          <mat-horizontal-stepper [linear]="isLinear">
+            <!-- Producción -->
+            <mat-step [stepControl]="firstFormGroup">
+              <form [formGroup]="firstFormGroup">
+                <ng-template matStepLabel>Producción</ng-template>
+                <mat-form-field>
+                  <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
+                </mat-form-field>
+                <div>
+                  <button mat-raised-button color="warn" matStepperNext>Next</button>
+                </div>
+              </form>
+            </mat-step>
+            <!-- Reporte de producción -->
+            <mat-step [stepControl]="secondFormGroup">
+              <form [formGroup]="secondFormGroup">
+                <ng-template matStepLabel>Reporte de producción</ng-template>
+                <mat-form-field>
+                  <input matInput placeholder="Address" formControlName="secondCtrl" required>
+                </mat-form-field>
+                <div>
+                  <button mat-raised-button color="accent" matStepperPrevious>Back</button>
+                  <button mat-raised-button color="warn" matStepperNext>Next</button>
+                </div>
+              </form>
+            </mat-step>            
+          </mat-horizontal-stepper>
+  
+        </mat-card-content>
+  
+      </mat-card>
+    </div>
+  </div>

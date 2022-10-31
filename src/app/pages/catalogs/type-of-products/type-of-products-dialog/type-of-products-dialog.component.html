@@ -5,7 +5,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required pattern="[A-Za-z ]*" id="description" name="description" [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description">
+                        <input type="text" matInput required id="description" name="description" [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description" [formControl]="formTypeOfProduct.controls['description']">
                         <small *ngIf="formTypeOfProduct.controls['description'].hasError('required') && formTypeOfProduct.controls['description'].touched" class="text-danger support-text">La descripcion es requerida.</small>
                     </mat-form-field>
                 </div>
@@ -13,16 +13,18 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="number" min="0" matInput required pattern="([1-9]\d*(\.\d+)?|0)$" id="retailPrice" name="retailPrice" [(ngModel)]="local_data.retailPrice" placeholder="Precio Menudeo" formControlName="retailPrice">
-                        <small *ngIf="formTypeOfProduct.controls['retailPrice'].hasError('required') && formTypeOfProduct.controls['retailPrice'].touched" class="text-danger support-text">El precio menudeo es requerido.</small>
+                        <input type="number" min="0" matInput required id="retailPrice" name="retailPrice" [(ngModel)]="local_data.retailPrice" placeholder="Precio Menudeo" formControlName="retailPrice" [formControl]="formTypeOfProduct.controls['retailPrice']">
+                        <small *ngIf="formTypeOfProduct.controls['retailPrice'].hasError('required') && formTypeOfProduct.controls['retailPrice'].touched" class="text-danger support-text">El precio de menudeo es requerido.</small>
+                        <small *ngIf="formTypeOfProduct.controls['retailPrice'].hasError('pattern')" class="text-danger support-text">El precio de menudeo no es valido.</small>
                     </mat-form-field>
                 </div>
             </div>
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="number" min="0" matInput required pattern="([1-9]\d*(\.\d+)?|0)$" sid="wholesalePrice" name="wholesalePrice" [(ngModel)]="local_data.wholesalePrice" placeholder="Precio Mayoreo" formControlName="wholesalePrice">
-                        <small *ngIf="formTypeOfProduct.controls['wholesalePrice'].hasError('required') && formTypeOfProduct.controls['wholesalePrice'].touched" class="text-danger support-text">El precio mayoreo es requerido.</small>
+                        <input type="number" min="0" matInput required id="wholesalePrice" name="wholesalePrice" [(ngModel)]="local_data.wholesalePrice" placeholder="Precio Mayoreo" formControlName="wholesalePrice" [formControl]="formTypeOfProduct.controls['wholesalePrice']">
+                        <small *ngIf="formTypeOfProduct.controls['wholesalePrice'].hasError('required') && formTypeOfProduct.controls['wholesalePrice'].touched" class="text-danger support-text">El precio de mayoreo es requerido.</small>
+                        <small *ngIf="formTypeOfProduct.controls['wholesalePrice'].hasError('pattern')" class="text-danger support-text">El precio de mayoreo no es valido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -42,12 +44,12 @@
 </mat-dialog-content>
 
 <ng-template #elseTemplate>
-    <div align="center">
-        <p>¿Estas seguro que deseas eliminarlo?<br>
-            <b>{{local_data.description}}</b></p>
-    </div>
-    <div mat-dialog-actions align="end" class="pt-3">
-        <button mat-button (click)="doAction()" mat-flat-button color="warn">Eliminar</button>
-        <button mat-button (click)="closeDialog()">Cancelar</button>
+    <p>¿Estás seguro que deseas eliminarlo? </p> 
+    <div align="center"><b> {{local_data.description}}</b></div>
+
+    <div mat-dialog-actions align="center" class="pt-3">
+        <button mat-button (click)="doAction()" mat-flat-button color="primary">Si</button>
+        <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+        <button mat-button mat-flat-button color="warn" (click)="closeDialog()">No</button>
     </div>
 </ng-template>

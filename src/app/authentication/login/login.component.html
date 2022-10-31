@@ -31,7 +31,6 @@
                         <!-- Botón para recuperar contraseña -->
                         <div fxFlex.gt-sm="100" fxFlex.gt-xs="100" fxFlex="100">
                             <button mat-raised-button [disabled]="!form.controls['uname'].valid" (click)="ForgotPassword()">Recuperar contraseña</button>
-                            <small *ngIf="form.controls['uname'].hasError('required') && form.controls['uname'].touched" class="text-danger support-text">El usuario es requerido.</small>
                         </div>
                     </div>
                 </form>
