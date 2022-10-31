@@ -121,7 +121,7 @@ save(): void {
 
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos
-      let customerFound
+      let customerFound = false;
       this.customers.forEach(cus =>{
         if(this.data.phone == cus.phone){
           customerFound = true;
@@ -147,7 +147,7 @@ save(): void {
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos
         this.customerService.updateCustomer(id, data).then((custom)=>{
-          this.toastr.success("Usuario creado exitosamente");
+          this.toastr.success("Usuario actualizado exitosamente");
           this.closeDialog();
         })
     //} else {
