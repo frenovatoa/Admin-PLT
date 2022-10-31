@@ -3,13 +3,13 @@
     <form #userForm="ngForm" [formGroup]="formUsers">
         <div class="d-flex align-items-center m-b-15">
             <!-- Si no tiene imagen definida, muestra una por default -->
-            <img *ngIf="!local_data.image" class="mat-card-avatar" [src]="src/assets/images/users/default.png"> 
+            <!--img *ngIf="!local_data.image" class="mat-card-avatar" [src]="src/assets/images/users/default.png"-->
             <!-- Si tiene una imagen definida, la muestra -->
-            <img *ngIf="local_data.image" class="mat-card-avatar" [src]='local_data.image'> 
+            <img class="mat-card-avatar" [src]="local_data.image ?? 'src/assets/images/users/default.png'">
             <!-- Botón para agregar una imagen al usuario desde nuestro equipo -->
             <button mat-raised-button color="primary" class="m-l-15 input-file-button">
                 <!-- Con accept="image/*" valido que solo se puedan seleccionar imagenes -->
-                <input type="file" (change)="setImage($event)" [(ngModel)]="local_data.image" #fileInput formControlName="image" accept="image/*">
+                <input type="file"  (change)="selectFile($event)" [(ngModel)]="local_data.image" #fileInput formControlName="image" accept="image/*">
             </button>
             <!--button *ngIf="action == 'Nuevo Usuario'" mat-raised-button color="primary" class="m-l-15 input-file-button">
                 <input type="file" (change)="saveFile($event)" #fileInput formControlName="image">
@@ -20,35 +20,32 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="name" name="name" ng-pattern=" ^[a-zA-Z]+$" 
-                            [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name" [formControl]="formUsers.controls['name']">
-                            <!-- Ponemos un mensaje de error para cada validación -->
-                            <!-- Este campo es requerido -->
-                            <small *ngIf="formUsers.controls['name'].hasError('required') && formUsers.controls['name'].touched" class="text-danger support-text">El nombre es requerido.</small>
-                            <!-- Debe cumplir con el patrón asignado en validators (se encuentra en el constructor de user-dialog.component.ts) -->
-                            <small *ngIf="formUsers.controls['name'].hasError('pattern')" class="text-danger support-text">El nombre no es válido.</small>
-                        </mat-form-field>
+                        <input type="text" matInput required id="name" name="name" ng-pattern=" ^[a-zA-Z]+$" [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name" [formControl]="formUsers.controls['name']">
+                        <!-- Ponemos un mensaje de error para cada validación -->
+                        <!-- Este campo es requerido -->
+                        <small *ngIf="formUsers.controls['name'].hasError('required') && formUsers.controls['name'].touched" class="text-danger support-text">El nombre es requerido.</small>
+                        <!-- Debe cumplir con el patrón asignado en validators (se encuentra en el constructor de user-dialog.component.ts) -->
+                        <small *ngIf="formUsers.controls['name'].hasError('pattern')" class="text-danger support-text">El nombre no es válido.</small>
+                    </mat-form-field>
                 </div>
             </div>
             <!-- Espacio para escribir el apellido paterno del usuario -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="paternalLastName" name="paternalLastName"
-                            [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName" [formControl]="formUsers.controls['paternalLastName']">
-                            <small *ngIf="formUsers.controls['paternalLastName'].hasError('required') && formUsers.controls['paternalLastName'].touched" class="text-danger support-text">El apellido paterno es requerido.</small>
-                            <small *ngIf="formUsers.controls['paternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido paterno no es válido.</small>
-                        </mat-form-field>
+                        <input type="text" matInput required id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName" [formControl]="formUsers.controls['paternalLastName']">
+                        <small *ngIf="formUsers.controls['paternalLastName'].hasError('required') && formUsers.controls['paternalLastName'].touched" class="text-danger support-text">El apellido paterno es requerido.</small>
+                        <small *ngIf="formUsers.controls['paternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido paterno no es válido.</small>
+                    </mat-form-field>
                 </div>
             </div>
             <!-- Espacio para escribir el apellido materno del usuario -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" 
-                            [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formUsers.controls['maternalLastName']">
-                            <small *ngIf="formUsers.controls['maternalLastName'].hasError('required') && formUsers.controls['maternalLastName'].touched" class="text-danger support-text">El apellido materno es requerido.</small>
-                            <small *ngIf="formUsers.controls['maternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido materno no es válido.</small>
+                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formUsers.controls['maternalLastName']">
+                        <small *ngIf="formUsers.controls['maternalLastName'].hasError('required') && formUsers.controls['maternalLastName'].touched" class="text-danger support-text">El apellido materno es requerido.</small>
+                        <small *ngIf="formUsers.controls['maternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido materno no es válido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -56,10 +53,9 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="email" name="email" 
-                            [(ngModel)]="local_data.email" placeholder="Correo" formControlName="email" [formControl]="formUsers.controls['email']">
-                            <small *ngIf="formUsers.controls['email'].hasError('required') && formUsers.controls['email'].touched" class="text-danger support-text">El correo es requerido.</small>
-                            <small *ngIf="formUsers.controls['email'].hasError('pattern')" class="text-danger support-text">El correo no es válido.</small>
+                        <input type="text" matInput required id="email" name="email" [(ngModel)]="local_data.email" placeholder="Correo" formControlName="email" [formControl]="formUsers.controls['email']">
+                        <small *ngIf="formUsers.controls['email'].hasError('required') && formUsers.controls['email'].touched" class="text-danger support-text">El correo es requerido.</small>
+                        <small *ngIf="formUsers.controls['email'].hasError('pattern')" class="text-danger support-text">El correo no es válido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -68,11 +64,10 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <div fxFlex="100" fxFlex.gt-md="75">
-                            <input [type]="mostrar ? 'text' : 'password'" matInput required id="password" name="password" 
-                                [(ngModel)]="local_data.password" placeholder="Contraseña" formControlName="password" [formControl]="formUsers.controls['password']">
-                                <small *ngIf="formUsers.controls['password'].hasError('required') && formUsers.controls['password'].touched" class="text-danger support-text">La contraseña es requerida.</small>
-                                <small *ngIf="formUsers.controls['password'].hasError('minLength')" class="text-danger support-text">La contraseña debe contener mínimo 8 caracteres.</small>
-                                <small *ngIf="formUsers.controls['password'].hasError('maxLength')" class="text-danger support-text">La contraseña debe contener máximo 15 caracteres.</small>
+                            <input [type]="mostrar ? 'text' : 'password'" matInput required id="password" name="password" [(ngModel)]="local_data.password" placeholder="Contraseña" formControlName="password" [formControl]="formUsers.controls['password']">
+                            <small *ngIf="formUsers.controls['password'].hasError('required') && formUsers.controls['password'].touched" class="text-danger support-text">La contraseña es requerida.</small>
+                            <small *ngIf="formUsers.controls['password'].hasError('minLength')" class="text-danger support-text">La contraseña debe contener mínimo 8 caracteres.</small>
+                            <small *ngIf="formUsers.controls['password'].hasError('maxLength')" class="text-danger support-text">La contraseña debe contener máximo 15 caracteres.</small>
                         </div>
                         <div fxFlex="100" fxFlex.gt-md="25" class="text-right">
                             <div class="input-group-append">
@@ -126,7 +121,7 @@
 <ng-template #elseTemplate>
     <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
     <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
-    <p>¿Estás seguro que deseas eliminarlo? </p> 
+    <p>¿Estás seguro que deseas eliminarlo? </p>
     <div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div>
 
     <div mat-dialog-actions align="center" class="pt-3">
