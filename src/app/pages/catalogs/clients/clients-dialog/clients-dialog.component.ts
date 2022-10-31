@@ -145,21 +145,21 @@ save(): void {
     let id = this.local_data.id
     let data = this.formCustomer.value;
     console.log(data)
-    let customerFound = false;
-      this.customers.forEach(cus =>{
-        if(data.phone == cus.phone){
-          customerFound = true;
-          console.log("true")
-        }
-      })
-      if(customerFound == false){
+    // let customerFound = false;
+    //   this.customers.forEach(cus =>{
+    //     if(data.phone == cus.phone){
+    //       customerFound = true;
+    //       console.log("true")
+    //     }
+    //   })
+      //if(customerFound == false){
         this.customerService.updateCustomer(id, data).then((custom)=>{
           this.toastr.success("Usuario actualizado exitosamente");
           this.closeDialog();
         })
-      }else{
-        this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
-      }
+     // }else{
+       // this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
+     // }
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos
         

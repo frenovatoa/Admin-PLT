@@ -113,7 +113,7 @@ export class UsersDialogComponent {
       // Una vez que se inserta un usuario, no puede cambiar su correo
       //this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
-      //this.formUsers.get('password').disable()
+      this.formUsers.get('password').disable()
       // Ni el estatus no ??????????????????????????????????
       //this.formUsers.get('status').disable()
     }
@@ -170,7 +170,7 @@ export class UsersDialogComponent {
   /** Actualiza registro */
 update(): void {
   this.formUsers.get('uid').setValue(this.local_data.uid)
-  let data = this.formUsers.value;
+  let data = this.formUsers.getRawValue();
   console.log(data)
   if(this.image != undefined){
     data.image = this.image;
