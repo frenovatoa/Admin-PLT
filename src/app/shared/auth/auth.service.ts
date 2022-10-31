@@ -139,10 +139,10 @@ export class AuthService {
     return this.afAuth
       .sendPasswordResetEmail(passwordResetEmail)
       .then(() => {
-        window.alert('El correo electrónico de restablecimiento de contraseña fue enviado, verifique su bandeja de entrada.');
+        this.toastr.warning('El correo electrónico de restablecimiento de contraseña fue enviado, verifique su bandeja de entrada.');
       })
       .catch((error) => {
-        window.alert(error);
+      this.toastr.error('Ocurrio un error verificar correo');
       });
   }
   // Returns true when user is looged in and email is verified

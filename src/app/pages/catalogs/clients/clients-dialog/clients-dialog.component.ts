@@ -26,7 +26,7 @@ export class ClientsDialogComponent {
   // tslint:disable-next-line - Disables all
   local_data: any;
   selectedImage: any = '';
-
+  public customers:Customer[]=[];
   public formCustomer: FormGroup;
   public formAddress: FormGroup;
   public addressForm: FormArray;
@@ -45,12 +45,12 @@ export class ClientsDialogComponent {
       //     this.local_data.imagePath = 'assets/images/users/default.png';
       // }
       this.formCustomer = this.fb.group ({
-        id: [''],
-        name: ['', Validators.required],
-        paternalLastName: ['', Validators.required],
-        maternalLastName: ['', Validators.required],
-        phone: ['', Validators.required],
-        alternativePhone: ['', Validators.required],
+        id: [null],
+        name: [null, Validators.required],
+        paternalLastName: [null],
+        maternalLastName: [null],
+        phone: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(10), Validators.maxLength(10)]],
+        alternativePhone: [null,[Validators.minLength(10),Validators.maxLength(10)]],
         status: [true, Validators.required],
        address:this.fb.array([])
       });
@@ -68,7 +68,10 @@ export class ClientsDialogComponent {
           this.address.patchValue(this.addressData)
       });
       }
-     
+      this.customerService.getCustomer().subscribe((customer: any)=>{
+        //console.log(user)
+        this.customers=customer
+    });   
     }
   
      
@@ -78,14 +81,14 @@ export class ClientsDialogComponent {
     newAddress(): FormGroup {
       return this.fb.group({
         id: [null],
-        customerId: ['', Validators.required],
-        postCode: ['', Validators.required],
-        street: ['', Validators.required],
-        insideNumber: ['', Validators.required],
-        outsideNumber: ['', Validators.required],
-        neighborhood: ['', Validators.required],
-        city: ['', Validators.required],
-        status: [true, Validators.required],
+        customerId: [null],
+        postCode: [null,[Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(5), Validators.maxLength(5)]],
+        street: [null, Validators.required],
+        insideNumber: [null],
+        outsideNumber: [null,Validators.required],
+        neighborhood: [null, Validators.required],
+        city: [null, Validators.required],
+        status: [true],
       })
    }
 
@@ -95,10 +98,16 @@ addAddress(): void {
 }
 //?? Remueve el detalle de la req en la alta
 removeAddress(rowIndex: number): void {
+  console.log(this.address.controls[rowIndex].valid)
+  if(!this.address.controls[rowIndex].valid){
+    this.address.removeAt(rowIndex);
+    console.log("borre")
+  }else{
  // this.local_data.address.splice(rowIndex,1)
  // console.log(this.formCustomer.get(['address', 0]).value)
   this.address.controls[rowIndex].patchValue({"status":"false"})
   //this.address.removeAt(rowIndex);
+  }
 }
 
  
@@ -108,13 +117,24 @@ removeAddress(rowIndex: number): void {
 /** Guarda registro de cliente */
 save(): void {
     let data = this.formCustomer.value;
-    console.log(data)
+    console.log(this.formCustomer.valid)
+
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos
+      let customerFound
+      this.customers.forEach(cus =>{
+        if(this.data.phone == cus.phone){
+          customerFound = true;
+        }
+      })
+      if(customerFound == false){
         this.customerService.addClient(data).then((custom)=>{
           this.toastr.success("Usuario creado exitosamente");
           this.closeDialog();
         })
+      }else{
+        this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
+      }
     //} else {
       //this.toastr.error("Favor de llenar campos faltantes");
    // }

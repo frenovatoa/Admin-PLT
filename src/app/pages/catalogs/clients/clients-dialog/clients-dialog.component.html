@@ -1,6 +1,6 @@
 <h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2>
 <mat-dialog-content class="pb-3" *ngIf="action != 'Confirmación' else elseTemplate">
-    <form #userForm="ngForm" [formGroup]="formCustomer">
+    <form #customerForm="ngForm" [formGroup]="formCustomer">
         <div fxLayout="row wrap" class="align-items-center">
             <!-- Espacio para escribir el nombre del cliente -->
             <div fxFlex="100" fxFlex.gt-md="50">
@@ -8,6 +8,7 @@
                     <mat-form-field>
                         <input type="text" matInput required id="name" name="name" [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
                     </mat-form-field>
+                    <small *ngIf="formCustomer.controls['name'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El nombre es requerido</small>
                 </div>
             </div>
             <!-- Espacio para escribir el apellido paterno del cliente -->
@@ -30,16 +31,21 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="phone" name="phone" [(ngModel)]="local_data.phone" placeholder="Teléfono 1" formControlName="phone">
+                        <input type="text" matInput required id="phone" name="phone" [(ngModel)]="local_data.phone" placeholder="Teléfono 1" formControlName="phone" [maxLength]="10">
                     </mat-form-field>
+                    <small *ngIf="formCustomer.controls['phone'].hasError('required') && formCustomer.controls['phone'].touched" class="text-danger support-text">El telefono es requerido</small>
+                    <small *ngIf="formCustomer.controls['phone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
+                    <small *ngIf="formCustomer.controls['phone'].hasError('minLength')" class="text-danger support-text">El telefono debe contener mínimo 10 digitos.</small>
                 </div>
             </div>
             <!-- Espacio para escribir el teléfono 1 del cliente -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone">
+                        <input type="text" matInput id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone" [maxLength]="10">
                     </mat-form-field>
+                    <small *ngIf="formCustomer.controls['alternativePhone'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El telefono es requerido</small>
+                    <small *ngIf="formCustomer.controls['alternativePhone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
                 </div>
             </div>
             <!-- Checkbox para seleccionar si el cliente está o no activo -->
@@ -47,6 +53,7 @@
                 <div class="m-r-15 m-l-15">
                     <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
                     <label for="status">Activo</label>
+                    <small *ngIf="formCustomer.controls['status'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El status activo es requerido</small>
                 </div>
             </div>
         </div>
@@ -70,6 +77,7 @@
                         <mat-form-field>
                             <input type="text" matInput required id="city" name="city" placeholder="Ciudad" formControlName="city">
                         </mat-form-field>
+                        <small *ngIf="add.controls['city'].hasError('required') && add.controls['city'].touched" class="text-danger support-text">El campo de ciudad es requerido</small>
                     </div>
                 </div>
                 <!-- Espacio para escribir la colonia del cliente -->
@@ -78,6 +86,7 @@
                         <mat-form-field>
                             <input type="text" matInput required id="neighborhood" name="neighborhood" placeholder="Colonia" formControlName="neighborhood">
                         </mat-form-field>
+                        <small *ngIf="add.controls['neighborhood'].hasError('required') && add.controls['neighborhood'].touched" class="text-danger support-text">El campo de colonia es requerido</small>
                     </div>
                 </div>
                 <!-- Espacio para escribir la calle del cliente -->
@@ -86,14 +95,17 @@
                         <mat-form-field>
                             <input type="text" matInput required id="street" name="street" placeholder="Calle" formControlName="street">
                         </mat-form-field>
+                        <small *ngIf="add.controls['street'].hasError('required') && add.controls['street'].touched" class="text-danger support-text">El campo de calle es requerido</small>
                     </div>
                 </div>
                 <!-- Espacio para escribir el código postal del cliente -->
                 <div fxFlex="100" fxFlex.gt-md="50">
                     <div class="m-r-15 m-l-15">
                         <mat-form-field>
-                            <input type="text" matInput required id="postCode" name="postCode" placeholder="Código Postal" formControlName="postCode">
+                            <input type="text" matInput required id="postCode" name="postCode" placeholder="Código Postal" formControlName="postCode" [maxLength]="5">
                         </mat-form-field>
+                        <small *ngIf="add.controls['postCode'].hasError('required') && add.controls['postCode'].touched" class="text-danger support-text">El campo de calle es requerido</small>
+                        <small *ngIf="add.controls['postCode'].hasError('minLength')" class="text-danger support-text">EL CP debe contener mínimo 5 digitos.</small>
                     </div>
                 </div>
                 <!-- Espacio para escribir el número exterior del cliente -->
@@ -102,13 +114,14 @@
                         <mat-form-field>
                             <input type="text" matInput required id="outsideNumber" name="outsideNumber" placeholder="No. Exterior" formControlName="outsideNumber">
                         </mat-form-field>
+                        <small *ngIf="add.controls['outsideNumber'].hasError('required') && add.controls['outsideNumber'].touched" class="text-danger support-text">El campo de numero exterior es requerido</small>
                     </div>
                 </div>
                 <!-- Espacio para escribir el número interior del cliente -->
                 <div fxFlex="100" fxFlex.gt-md="50">
                     <div class="m-r-15 m-l-15">
                         <mat-form-field>
-                            <input type="text" matInput required id="insideNumber" name="insideNumber" placeholder="No. Interior" formControlName="insideNumber">
+                            <input type="text" matInput id="insideNumber" name="insideNumber" placeholder="No. Interior" formControlName="insideNumber">
                         </mat-form-field>
                     </div>
                 </div>
@@ -117,7 +130,7 @@
         </div>
         <div mat-dialog-actions align="center" class="pt-3">
             <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-            <button *ngIf="action == 'Nuevo Cliente'" mat-button (click)="save()" mat-flat-button color="primary">Guardar</button>
+            <button *ngIf="action == 'Nuevo Cliente'" mat-button (click)="save()" mat-flat-button color="primary" [disabled]="!this.formCustomer.valid"> Guardar</button>
             <!-- Botón para actualizar -->
             <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary">Actualizar</button>
             <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
