@@ -24,6 +24,7 @@ export class TypeOfProductsDialogComponent {
 
   private started: boolean = false;
   public productType: ProductType[]=[];
+  public dataSourceP: MatTableDataSource<ProductType>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
@@ -56,22 +57,39 @@ export class TypeOfProductsDialogComponent {
   }
 
   ngOnInit() {    
+    this.typeOfProductService.getTypeOfProduct().subscribe((productType: any)=>{      
+    this.productType=productType
+  });  
 }
 
 /** Guarda registro */
 save(): void {
+  let descriptionExistente = false;
   let data = this.formTypeOfProduct.value;
-  console.log(data)
+  //console.log(data)  
+
+  //obtiene el valor de la descripcion
+  const description = this.formTypeOfProduct.value.description;
+  //se traen todas las descripciones de la BD
+  this.productType.forEach(data =>{
+    if(data.description == description){
+      descriptionExistente = true    
+    }
+  })
+  if( descriptionExistente == false){  
   if (this.formTypeOfProduct.valid) {
-    // Aquí va la inserción en la base de datos
-      this.typeOfProductService.addTypeOfProduct(data).then((typeOfProduct: any)=>{
-          console.log(typeOfProduct)
-          this.toastr.success("Tipo de producto creado");
-          this.closeDialog();
-       });
-  } else {
-    this.toastr.error("Favor de llenar campos faltantes");
-  }
+      // Aquí va la inserción en la base de datos
+        this.typeOfProductService.addTypeOfProduct(data).then((typeOfProduct: any)=>{
+        console.log(typeOfProduct)
+        this.toastr.success("Tipo de producto creado");
+        this.closeDialog();
+      });
+    } else {
+      this.toastr.error("Favor de verificar los datos ingresados");
+    }
+  }else{
+    this.toastr.error("Ya existe un tipo de producto con la misma descripcion");
+  }    
 }
 
 /** Actualiza registro */

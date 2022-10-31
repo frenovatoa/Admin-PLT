@@ -8,6 +8,7 @@ import {
   Validators
 } from '@angular/forms';
 import { AngularFireAuth } from '@angular/fire/compat/auth';
+import { timeStamp } from 'console';
 
 
 
@@ -46,14 +47,7 @@ export class LoginComponent implements OnInit {
   }
 
   // Restablecer contraseña
-  ForgotPassword(passwordResetEmail: string) {
-    return this.afAuth
-      .sendPasswordResetEmail(passwordResetEmail)
-      .then(() => {
-        window.alert('El correo electrónico de restablecimiento de contraseña fue enviado, verifique su bandeja de entrada.');
-      })
-      .catch((error) => {
-        window.alert(error);
-      });
+  ForgotPassword() {
+    this.authService.ForgotPassword(this.form.controls.uname.value);
   }
 }

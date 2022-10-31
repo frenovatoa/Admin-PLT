@@ -1,7 +1,7 @@
 export interface ProductType {
-    id: string;
+    id?: string;
     description: string;
-    retailPrice: number;
-    wholesalePrice: number;
-    status: number;
+    retailPrice?: number;
+    wholesalePrice?: number;
+    status?: number;
  }
