@@ -7,5 +7,5 @@ export interface Address {
     outsideNumber: string;
     neighborhood: string;
     city: string;
-    status: number;
+    status: boolean;
  }
