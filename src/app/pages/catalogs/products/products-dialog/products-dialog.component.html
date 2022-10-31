@@ -17,8 +17,10 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required  
-                            [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description">
-                    </mat-form-field>
+                            [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description" [formControl]="formProducts.controls['description']">
+                    <!-- Este campo es requerido -->
+                    <small *ngIf="formProducts.controls['description'].hasError('required') && formProducts.controls['description'].touched" class="text-danger support-text">La descripción es requerida.</small>
+                </mat-form-field>
                 </div>
             </div>
             <!-- Cantidad -->
@@ -26,7 +28,9 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="number" min="0" matInput required id="quantity" name="quantity" 
-                            [(ngModel)]="local_data.quantity" placeholder="Cantidad" formControlName="quantity">
+                            [(ngModel)]="local_data.quantity" placeholder="Cantidad" formControlName="quantity" [formControl]="formProducts.controls['quantity']">
+                            <!-- Este campo es requerido -->
+                            <small *ngIf="formProducts.controls['quantity'].hasError('required') && formProducts.controls['quantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -37,12 +41,14 @@
                         <mat-label>Tipo de Producto</mat-label>
                         <!-- Lo que voy a guardar es el ID -->
                         <mat-select matInput required id="productTypeId" name="productTypeId" 
-                        [(ngModel)]="local_data.productTypeId" formControlName="productTypeId">
+                        [(ngModel)]="local_data.productTypeId" formControlName="productTypeId" [formControl]="formProducts.controls['productTypeId']">
                             <!-- Muestro la descripción de los tipos de usuarios en el select -->
                             <mat-option *ngFor="let productType of productType" [value]="productType.id">
                                 {{productType.description}}
                             </mat-option>
                         </mat-select>
+                        <!-- Este campo es requerido -->
+                        <small *ngIf="formProducts.controls['productTypeId'].hasError('required') && formProducts.controls['productTypeId'].touched" class="text-danger support-text">El tipo de producto es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -71,7 +77,9 @@
 <ng-template #elseTemplate>
     <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
     <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
-    <p>¿Estás seguro que deseas eliminarlo? <br><div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div></p>
+    <p>¿Estás seguro que deseas eliminarlo? </p> 
+    <div align="center"><b> {{local_data.description}}</b></div>
+
     <div mat-dialog-actions align="center" class="pt-3">
         <button mat-button (click)="updateStatus()" mat-flat-button color="primary">Si</button>
         <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->

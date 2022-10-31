@@ -1,6 +1,6 @@
 import { Component, OnInit, Inject, Optional, ViewChild, AfterViewInit, Type} from '@angular/core';
 import { MatTableDataSource, MatTable } from '@angular/material/table';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, MatPaginatorIntl } from '@angular/material/paginator';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { DatePipe } from '@angular/common';
 import { TypeOfProductsDialogComponent } from './type-of-products-dialog/type-of-products-dialog.component';
@@ -45,7 +45,7 @@ export class TypeOfProductsComponent implements OnInit, AfterViewInit {
   public displayedColumns: string[] = ['#', 'description', 'retailPrice', 'wholesalePrice', 'action'];
   private started: boolean = false;
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: TypeOfProductService) { 
+  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: TypeOfProductService, public _MatPaginatorIntl: MatPaginatorIntl) { 
 
   }
 
@@ -56,7 +56,9 @@ export class TypeOfProductsComponent implements OnInit, AfterViewInit {
         this.dataSource = new MatTableDataSource < TypeOfProduct > (this.typeOfProduct);
         this.dataSource.paginator =this.paginator;
         this.dataSource.sort = this.sort;
-    });       
+    });   
+    // Cambio texto de la paginación en la parte inferior 
+    this._MatPaginatorIntl.itemsPerPageLabel = 'Elementos por página';     
 }
 
 ngAfterViewInit(): void {

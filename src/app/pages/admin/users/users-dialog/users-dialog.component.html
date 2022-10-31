@@ -92,12 +92,13 @@
                     <mat-form-field>
                         <mat-label>Tipo Usuario</mat-label>
                         <!-- Lo que voy a guardar es el ID -->
-                        <mat-select matInput required id="userTypeId" name="userTypeId" [(ngModel)]="local_data.userTypeId" formControlName="userTypeId">
+                        <mat-select matInput required id="userTypeId" name="userTypeId" [(ngModel)]="local_data.userTypeId" formControlName="userTypeId" [formControl]="formUsers.controls['userTypeId']">
                             <!-- Muestro la descripción de los tipos de usuarios en el select -->
                             <mat-option *ngFor="let userType of userType" [value]="userType.id">
                                 {{userType.description}}
                             </mat-option>
                         </mat-select>
+                        <small *ngIf="formUsers.controls['userTypeId'].hasError('required') && formUsers.controls['userTypeId'].touched" class="text-danger support-text">El tipo de usuario es requerido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -125,7 +126,7 @@
 <ng-template #elseTemplate>
     <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
     <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
-    <p>¿Estás seguro que deseas eliminarlo? </p> <br>
+    <p>¿Estás seguro que deseas eliminarlo? </p> 
     <div align="center"><b> {{local_data.name}} {{local_data.paternalLastName}} {{local_data.maternalLastName}}</b></div>
 
     <div mat-dialog-actions align="center" class="pt-3">
