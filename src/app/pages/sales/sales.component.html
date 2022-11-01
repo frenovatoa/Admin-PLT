@@ -1,1 +1,118 @@
-<p>sales works!</p>
+<mat-horizontal-stepper>
+    <!--     <mat-step label="Venta del dia">
+        <p>work</p>
+    </mat-step> -->
+    <mat-step label="Reporte de venta">
+        <div fxLayout="row wrap">
+            <div fxFlex="100">
+                <!--                 <div>
+                    <mat-hint>Filtrado por rango de fechas:</mat-hint>
+                    <form [formGroup]="multasVideo" (ngSubmit)="doMultasVideo()" class="demo-button">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter a date range</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate formControlName="StartDate" placeholder="Start date">
+                                <input matEndDate formControlName="EndtDate" placeholder="End date">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+
+                            <mat-error *ngIf="multasVideo.controls.StartDate.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                            <mat-error *ngIf="multasVideo.controls.EndtDate.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                        </mat-form-field>
+
+                        <mat-card-actions class="child">
+                            <button class="button" type="submit" mat-raised-button color="accent">Calcular</button>
+                        </mat-card-actions>
+                    </form>
+                </div>
+ -->
+                <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
+                    <mat-hint>Filtrado por rango de fechas:</mat-hint>
+                    <form [formGroup]="formSale" (ngSubmit)="applyFilter($event.target.value)" class="demo-button">
+                        <mat-form-field appearance="fill">
+                            <mat-label>Enter a date range</mat-label>
+                            <mat-date-range-input [rangePicker]="picker">
+                                <input matStartDate formControlName="StartDate" placeholder="Start date">
+                                <input matEndDate formControlName="EndDate" placeholder="End date">
+                            </mat-date-range-input>
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-date-range-picker #picker></mat-date-range-picker>
+
+                            <mat-error *ngIf="formSale.controls.StartDate.hasError('matStartDateInvalid')">Invalid start date</mat-error>
+                            <mat-error *ngIf="formSale.controls.EndDate.hasError('matEndDateInvalid')">Invalid end date</mat-error>
+                        </mat-form-field>
+                    </form>
+                </div>
+                <div class="text-right">
+                    <mat-card actions class="child" style="margin: 45%; margin-left: 5%;">
+                        <!-- <button mat-raised-buttons type="submit" (click)="applyFilter($event.target.value)" color="accent">Buscar</button> -->
+                        <button class="button-form" mat-raised-button color="accent" (click)="applyFilter($event.target.value)" [disabled]="formSale.invalid">Buscar</button>
+                    </mat-card>
+                </div>
+                <!--                 <div class="json">
+                    <pre>{{formSale.value | json}}</pre>
+                </div> -->
+            </div>
+        </div>
+        <div fxLayout="row wrap">
+            <div fxFlex="100">
+                <mat-card>
+                    <mat-card-content>
+                        <div class="table-responsive">
+                            <table mat-table [dataSource]="dataSource" class="table sale-list no-wrap" *ngIf="dataSource">
+                                <ng-container matColumnDef="saleDate">
+                                    <th mat-header-cell *matHeaderCellDef> Fecha de venta </th>
+                                    <td mat-cell *matCellDef="let element">
+                                        <p>{{ element.saleDate?.toDate() | date:'d/MMM/y' }}</p>
+                                    </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="orderId">
+                                    <th mat-header-cell *matHeaderCellDef> Venta/Pedido </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.orderId}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="saleTypeId">
+                                    <th mat-header-cell *matHeaderCellDef> Tipo de venta </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.saleTypeDescription}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="totalCost">
+                                    <th mat-header-cell *matHeaderCellDef> Costo Total </th>
+                                    <td mat-cell *matCellDef="let element"><a>$</a> {{element.totalCost}} </td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="userId">
+                                    <th mat-header-cell *matHeaderCellDef> Realizada por </th>
+                                    <td mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}}</td>
+                                </ng-container>
+
+                                <ng-container matColumnDef="action">
+                                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                                    <td mat-cell *matCellDef="let element" class="action-link">
+                                        <!-- <a (click)="openDialog('Actualizar',element)" class="m-r-10 cursor-pointer">
+                                            //Símbolo de editar
+                                           <i class="fa fa-eye"></i> -->
+                                        <!-- </a> -->
+                                        <a (click)="openDialog('Eliminar',element)" class="m-r-10 cursor-pointer">
+                                            <!-- Símbolo de eliminar -->
+                                            <i class="fa fa-eye-slash"></i>
+                                        </a>
+                                    </td>
+                                </ng-container>
+
+                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                            </table>
+                            <mat-paginator [pageSizeOptions]="[5, 8, 12]" showFirstLastButtons></mat-paginator>
+                        </div>
+                    </mat-card-content>
+                </mat-card>
+            </div>
+        </div>
+    </mat-step>
+    <mat-step label="Completado">
+        <p>work</p>
+    </mat-step>
+</mat-horizontal-stepper>
