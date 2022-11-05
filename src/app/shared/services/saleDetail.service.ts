@@ -1,15 +1,24 @@
-import { Injectable } from '@angular/core';
+/* import { Injectable } from '@angular/core';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/compat/firestore';
-import { orderBy } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  docData,
+  Firestore,
+  getDoc,
+  setDoc,
+  updateDoc,
+} from '@angular/fire/firestore';
 import moment from 'moment';
 import { SaleDetail } from '../interfaces/sale.detail';
+import { from, Observable, of } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SaleDetailService {
 
-  constructor(private db: AngularFirestore) { }
+  constructor(private db: AngularFirestore, private firestore: Firestore) { }
 
   // Función que permite obtener los documentos (registros)
   getSaleDetails() {
@@ -27,6 +36,7 @@ export class SaleDetailService {
     const saleDetail: SaleDetail = {
       id: id,
       saleId: data.saleId,
+      saleTypeId: data.saleTypeId,
       productId: data.prorductId,
       requestedQuantity: data.requestedQuantity,
       amount: data.amount,
@@ -37,15 +47,22 @@ export class SaleDetailService {
     })
   }
 
-  getSaleTypes() {
+  getTypeOfProduct() {
     return this.db
-   .collection("tbl_sale_types")
+   .collection("tbl_product_types", ref => ref.where('status', '==', true))
+   //.collection("tbl_product_types", ref => ref.orderBy('description', 'asc'))
    .valueChanges();
  }
-
+ 
  getProducts() {
   return this.db
- .collection("tbl_products")
+ .collection("tbl_products", ref => ref.where('status', '==', true))
+ .valueChanges();
+}
+
+getSaleTypes() {
+  return this.db
+ .collection("tbl_sale_types")
  .valueChanges();
 }
 
@@ -67,4 +84,4 @@ export class SaleDetailService {
       Math.random().toString(36).substring(2, 15)
     );
     }
-}
+} */

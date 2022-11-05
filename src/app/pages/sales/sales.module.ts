@@ -31,7 +31,8 @@ import { MatTabsModule } from '@angular/material/tabs';
 import { MatTableModule } from '@angular/material/table';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
-
+import { MatInputModule } from '@angular/material/input';
+import { MatFormFieldModule } from "@angular/material/form-field";
 
 @NgModule({
   declarations: [SalesComponent
@@ -63,9 +64,15 @@ import { MatNativeDateModule } from '@angular/material/core';
     MatTabsModule,
     MatTableModule,
     MatDatepickerModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    MatInputModule,
+    MatFormFieldModule
   ],
-  exports: [MatStepperModule]
+  exports: [
+  MatStepperModule,
+  MatFormFieldModule, 
+  MatInputModule 
+  ]
 })
 
 export class SalesModule { }
