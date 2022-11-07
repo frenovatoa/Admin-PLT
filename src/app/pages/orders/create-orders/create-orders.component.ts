@@ -67,7 +67,7 @@ export class CreateOrdersComponent implements OnInit {
   local_data: any;
   action: string;   
   searchText: any;
-
+  public notShow = true;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public displayedColumns: string[] = ['#', 'solDate', 'deliveryDate', 'customer', 'address', 'note', 'total', 'saleType', 'status', 'action'];
@@ -117,21 +117,27 @@ export class CreateOrdersComponent implements OnInit {
   
 
   async ngOnInit() {
-    this.ordService.getOrders().subscribe(async (order: any)=>{     
+    setTimeout(() => {
+     this.notShow = false;
+      console.log("Delayed for 1 second.");
+    }, 2000)
 
-      await order.forEach( async (order)=>{
+    this.ordService.getOrders().subscribe(async (order: any)=>{     
+      console.log(this.order)
+      this.order=order  
+     
+      await this.order.forEach( async (order, index)=>{
       await this.ordService.getCustumer(order.customerId).subscribe(async (customer: any)=>{ 
-        order.customer=customer;
+        this.order[index].customer=customer;
         await this.ordService.getAddress(order.customerId, order.addressId).subscribe((address: any)=>{ 
-        order.address = address;
+          this.order[index].address = address;
         });
       });
+      this.dataSource = new MatTableDataSource < Order > (this.order);
+      this.dataSource.paginator =this.paginator;
+      this.dataSource.sort = this.sort;
     })
-    console.log(this.order)
-    this.order=order  
-    this.dataSource = new MatTableDataSource < Order > (this.order);
-    this.dataSource.paginator =this.paginator;
-    this.dataSource.sort = this.sort;
+
     
 
     this.datePipe = new DatePipe('en');
