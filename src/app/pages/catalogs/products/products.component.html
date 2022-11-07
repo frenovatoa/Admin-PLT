@@ -38,7 +38,8 @@
                             <th mat-header-cell *matHeaderCellDef> Descripción </th>
                             <td mat-cell *matCellDef="let element">
                                 <div class="d-flex">
-                                    <img class="mat-card-avatar" [src]='element.image'>
+                                    <img width="150" height="150" [src]='element.image'>
+                                    <!-- <img width="15%" [src]="local_data.image ?? 'src/assets/images/products/slider-icon.png'"> -->
                                     <!-- Margen -->
                                     <div class="m-l-15">
                                     <!-- Hacemos la letra un poco más oscura con el font-medium-->

@@ -93,8 +93,8 @@ export class UsersDialogComponent {
         // Valida que el nombre y apellidos solo contengan letras y/o espacios
         //name: ['', Validators.required, Validators.pattern('[a-zA-Z ]*')],
         name: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ],        
-        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ]+$')] ], 
-        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ]+$')] ], 
+        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
+        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
         email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ], 
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)] ], 
         status: ['', Validators.required],
@@ -113,7 +113,7 @@ export class UsersDialogComponent {
       // Una vez que se inserta un usuario, no puede cambiar su correo
       //this.formUsers.get('email').disable()
       // La contraseña tampoco se puede modificar ??????????????????????????????????
-      //this.formUsers.get('password').disable()
+      this.formUsers.get('password').disable()
       // Ni el estatus no ??????????????????????????????????
       //this.formUsers.get('status').disable()
     }
@@ -122,6 +122,7 @@ export class UsersDialogComponent {
     console.log(user)
     this.user=user
 });  
+
   }
 
 /** Guarda registro */
@@ -154,6 +155,7 @@ export class UsersDialogComponent {
           //     this.toastr.success("Usuario Creado");
           //  });
           this.saveFile(data.image, data)
+          this.toastr.success("Usuario Creado");
         //this.uploadFile(data.image, data.uid)
       
            this.closeDialog();
@@ -170,7 +172,7 @@ export class UsersDialogComponent {
   /** Actualiza registro */
 update(): void {
   this.formUsers.get('uid').setValue(this.local_data.uid)
-  let data = this.formUsers.value;
+  let data = this.formUsers.getRawValue();
   console.log(data)
   if(this.image != undefined){
     data.image = this.image;
@@ -202,9 +204,17 @@ updateStatus(): void {
   // Todos los datos quedan igual excepto el estatus, que cambia a false
   data.status = false;
   console.log(data) 
+  let email = this.authService.userData.multiFactor.user.email
+  console.log(this.authService.userData.multiFactor.user)
+  if(email != data.email){
+ this.authService.deleteUser(data);
   // Aquí va la inserción en la base de datos
   this.userService.updateUser(data.uid, data)
-  this.toastr.success("Usuario Eliminado");
+  this.toastr.success("Usuario actualizado correctamente");
+  }else{
+    this.toastr.error("El usuario no puede eliminarse ya que esta en sesión");
+  }
+
   this.closeDialog();  
 }
 
@@ -283,25 +293,29 @@ updateStatus(): void {
       console.log(this.url)
   }
 
-  // selectFile(event: any): void {
-  //     if (!event.target.files[0] || event.target.files[0].length === 0) {
-  //         // this.msg = 'You must select an image';
-  //         return;
-  //     }
-  //     const mimeType = event.target.files[0].type;
-  //     if (mimeType.match(/image\/*/) == null) {
-  //         //this.msg = "Only images are supported";
-  //         return;
-  //     }
-  //     // tslint:disable-next-line - Disables all
-  //     const reader = new FileReader();
-  //     reader.readAsDataURL(event.target.files[0]);
-  //     // tslint:disable-next-line - Disables all
-  //     reader.onload = (_event) => {
-  //         // tslint:disable-next-line - Disables all
-  //         this.local_data.image = reader.result;
-  //     };
-  // } 
+ 
+  selectFile(event: any): void {
+    console.log(event.target.files[0])
+    this.image = event.target.files[0];
+    this.showImage = event.target.files[0].type;
+    if (!event.target.files[0] || event.target.files[0].length === 0) {
+        // this.msg = 'You must select an image';
+        return;
+    }
+    const mimeType = event.target.files[0].type;
+    if (mimeType.match(/image\/*/) == null) {
+        // this.msg = "Only images are supported";
+        return;
+    }
+    // tslint:disable-next-line - Disables all
+    const reader = new FileReader();
+    reader.readAsDataURL(event.target.files[0]);
+    // tslint:disable-next-line - Disables all
+    reader.onload = (_event) => {
+        // tslint:disable-next-line - Disables all
+        this.local_data.image = reader.result;
+    };
+}
  
   // Función para mostrar y ocultar el campo de contraseña
   mostrar: boolean = false;

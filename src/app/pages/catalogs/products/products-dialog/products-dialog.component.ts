@@ -81,7 +81,10 @@ export class ProductsDialogComponent implements OnInit {
     this.productService.getProductTypes().subscribe((productType: any)=>{
       console.log(productType)
       this.productType=productType
-    });     
+    });   
+    if(this.local_data.id != null) {
+      this.formProducts.get('quantity').disable()
+    }  
     // this.toastr.success("Producto Creado");
     this.productService.getProducts().subscribe((product: any)=>{
       console.log(product)
@@ -114,21 +117,24 @@ export class ProductsDialogComponent implements OnInit {
     data.id = this.productService.unicID();
     console.log(data)
     var productoExistente = false
+    var tipoExistente = false
 
-    // Obtener valor de la descripción del producto
+    // Obtener valor de la descripción y el tipo del producto
     const description = this.formProducts.value.description;
+    const productTypeId = this.formProducts.value.productTypeId;
 
     // Traer todos los productos de la base de datos
     this.product.forEach(data => {
-      if(data.description == description){
+      if(data.description == description && data.productTypeId == productTypeId){
         // Si hay un producto igual al colocado en el dialog, es un producto existente y lo marca como true
         productoExistente = true
+        tipoExistente = true
       }
     })
 
 
     // Si el producto no existe
-    if (productoExistente == false){
+    if (productoExistente == false && tipoExistente == false){
       if(this.image != undefined){
         data.image = this.image;
       } else {
@@ -147,7 +153,7 @@ export class ProductsDialogComponent implements OnInit {
         this.toastr.error("Favor de llenar campos faltantes.");
       }
     }else{
-      this.toastr.error("Ya hay un producto registrado con esa descripción.");
+      this.toastr.error("Ya hay un producto registrado con ese tipo y descripción.");
     }
   }
 
@@ -168,8 +174,24 @@ export class ProductsDialogComponent implements OnInit {
 // }
 
 update(): void {
+  // var productoExistente = false
+  // var tipoExistente = false
+
+  // Obtener valor de la descripción y el tipo del producto
+  // const description = this.formProducts.value.description;
+  // const productTypeId = this.formProducts.value.productTypeId;
+
+  // Traer todos los productos de la base de datos
+  // this.product.forEach(data => {
+  //   if(data.description == description && data.productTypeId == productTypeId){
+  //     // Si hay un producto igual al colocado en el dialog, es un producto existente y lo marca como true
+  //     productoExistente = true
+  //     tipoExistente = true
+  //   }
+  // })
+
   this.formProducts.get('id').setValue(this.local_data.id)
-  let data = this.formProducts.value;
+  let data = this.formProducts.getRawValue();
   console.log(data)
   if(this.image != undefined){
     data.image = this.image;
@@ -188,6 +210,32 @@ update(): void {
   } else {
   this.toastr.error("Favor de llenar campos faltantes");
   }
+
+  // Si el producto no existe
+  // if (productoExistente == false && tipoExistente == false){
+  //   this.formProducts.get('id').setValue(this.local_data.id)
+  //   let data = this.formProducts.getRawValue();
+  //   console.log(data)
+  //   if(this.image != undefined){
+  //     data.image = this.image;
+  //   }else{
+  //     data.image = this.local_data.image
+  //   }
+    
+  //   console.log(data.image)
+  //   if (this.formProducts.valid) {
+  //     this.productService.updateProduct(data.id, data)
+  //     if(this.local_data.image !== data.image){
+  //       this.uploadFile(data.image, this.local_data.id)
+  //     }    
+  //     this.closeDialog();
+  //     this.toastr.success("Producto Actualizado");
+  //   } else {
+  //   this.toastr.error("Favor de llenar campos faltantes");
+  //   }
+  // }else{
+  //   this.toastr.error("Ya hay un producto registrado con ese tipo y descripción.");
+  // }
 }
 
 /** Actualiza estatus del registro, de manera que pase a no estar activo */

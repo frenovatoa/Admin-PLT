@@ -82,7 +82,7 @@ export class ProductService {
   // Función que permite obtener los documentos (registros) de la coelcción (tabla) de productos
   getProductTypes() {
     return this.db
-    .collection("tbl_product_types")
+    .collection("tbl_product_types", ref => ref.where('status', '==', true))
     .valueChanges();
   }
 

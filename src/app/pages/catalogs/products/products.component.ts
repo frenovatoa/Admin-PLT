@@ -29,7 +29,7 @@ export class ProductsComponent implements OnInit {
   public products: Product[];
   // public firstFormGroup: FormGroup = Object.create(null);
   public dataSource: MatTableDataSource<Product>;
-  public displayedColumns: string[] = ['#', 'description', 'productType', 'quantity', 'status', 'action'];
+  public displayedColumns: string[] = ['#', 'description', 'productType', 'quantity', 'action'];
   // public userData: User;
   public productType: ProductType[]=[];
 

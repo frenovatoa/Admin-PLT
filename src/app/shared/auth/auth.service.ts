@@ -12,7 +12,8 @@ import { initializeApp } from '@angular/fire/app';
 import firebase from 'firebase/compat/app';
 import { environment } from 'src/environments/environment';
 //import { ToastrService } from 'ngx-toastr';
-import { ThrowStmt } from '@angular/compiler';
+import { deleteUser, getAuth } from '@angular/fire/auth';
+import { ThisReceiver, ThrowStmt } from '@angular/compiler';
 import { ToastrService } from 'ngx-toastr';
 import {
   Auth,
@@ -76,16 +77,16 @@ export class AuthService {
         this.afAuth.authState.subscribe((user) => {
           if (user) {
             console.log(user.email)
-            this.getUserByEmail(user.email).subscribe((data:any)=>{
-              console.log(data)
-              if(data[0].status===true){
+           // this.getUserByEmail(user.email).subscribe((data:any)=>{
+             // console.log(data)
+              if(user){
                 this.router.navigate(['dashboard']);
                 this.loggedIn = true;
               }else{
                 this.loggedIn = false;
                 //this.toastr.error('Usuario o contraseña inválido');
               }
-            })
+            //})
           }
           else{
             this.loggedIn = false;
@@ -105,24 +106,13 @@ export class AuthService {
    return this.secondaryApp.auth().createUserWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
     console.log("User " + data.name + " created successfully!");
         //I don't know if the next statement is necessary 
-        console.log(firebaseUser)
+        this.toastr.success("Usuario Creado");
        
         this.secondaryApp.auth().signOut();
       })
       .catch((error) => {
         //this.toastr.success("Usuario Creado");
       });
-    /*this.afAuth
-      .createUserWithEmailAndPassword(data.email, data.password)
-      .then((result) => {
-        /* Call the SendVerificaitonMail() function when new user sign 
-        up and returns promise */
-        /*this.SendVerificationMail();
-        this.SetUserData(data);
-      })
-      .catch((error) => {
-        window.alert(error.message);
-      });*/
       
   }
   updateEmail(data:any, oldEmail:any){
@@ -219,7 +209,27 @@ return JSON.parse(localStorage.getItem('user')!);
     .collection("tbl_users", ref => ref.where('email', '==', email))
     .valueChanges();
   }
-
+deleteUser(data){
+  
+  this.secondaryApp = firebase.initializeApp(this.config, "Secondary");
+  //this.setUserData(data);
+  this.SetUserData(data);
+   return this.secondaryApp.auth().signInWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
+    console.log("User " + data.name + " created successfully!");
+        //I don't know if the next statement is necessary 
+        console.log(firebaseUser)
+       deleteUser(firebaseUser.user).then(()=>{
+    this.toastr.success("Usuario eliminado correctamente");
+  })
+        this.secondaryApp.auth().signOut();
+      })
+      .catch((error) => {
+        //this.toastr.success("Usuario Creado");
+      });
+  // deleteUser(user).then(()=>{
+  //   this.toastr.success("Usuario eliminado correctamente");
+  // })
+}
 }
 
 

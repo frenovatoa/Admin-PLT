@@ -4,7 +4,7 @@
         <div class="d-flex align-items-center m-b-15">
             <!-- <img class="mat-card-avatar" [src]='local_data.image'> -->
             <!-- Si tiene una imagen definida, la muestra -->
-            <img *ngIf="local_data.image" class="mat-card-avatar" [src]='local_data.image'>
+            <img width="75" height="75" [src]="local_data.image ?? 'src/assets/images/products/slider-icon.png'">
             <!-- Botón para agregar una imagen -->
             <button mat-raised-button color="primary" class="m-l-15 input-file-button">
                <!-- Con accept="image/*" validar que solo se puedan seleccionar imagenes -->
@@ -55,6 +55,7 @@
             <!-- Checkbox para seleccionar si el usuario está o no activo -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
+                    <mat-icon class="material-symbols-outlined" [routerLink]="['/pages/catalogs/typeOfProducts']" (click)="this.closeDialog()" style="cursor: pointer;">add_circle</mat-icon>
                     <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
                         <label for="status">Activo</label>
                 </div>
