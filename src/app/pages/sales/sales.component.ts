@@ -14,6 +14,7 @@ import { collection } from 'firebase/firestore';
 import { ifStmt } from '@angular/compiler/src/output/output_ast';
 import { SaleService } from 'src/app/shared/services/sale.service';
 //import { SaleDetailService } from 'src/app/shared/services/saleDetail.service';
+import { UserService } from 'src/app/shared/services/user.service';
 import { User } from 'src/app/shared/interfaces/user';
 import { Sale } from 'src/app/shared/interfaces/sale';
 import { SaleType } from 'src/app/shared/interfaces/sale.type';
@@ -25,12 +26,19 @@ import { Observable } from 'rxjs/Observable';
 import { ConstantPool } from '@angular/compiler';
 import { Product } from 'src/app/shared/interfaces/product';
 import { SaleDetail } from 'src/app/shared/interfaces/sale.detail';
+import { animate, state, style, transition, trigger } from '@angular/animations';
 
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
-  styleUrls: ['./sales.component.scss']
-  
+  styleUrls: ['./sales.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+],
 })
 export class SalesComponent implements OnInit, AfterViewInit {
   
@@ -67,18 +75,38 @@ export class SalesComponent implements OnInit, AfterViewInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   public displayedColumns: string[] = ['#', 'saleDate', 'orderId', 'saleTypeId', 'totalCost', 'userId', 'action'];
+  isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
+  expandedElement: any;
+
   private started: boolean = false;
 
+  public id
+
   constructor(
-    private fs: FormBuilder,
+
+     private fs: FormBuilder,
      public dialog: MatDialog, 
      public datePipe: DatePipe, 
      public fb: SaleService, 
+     public us: UserService,
      public _MatPaginatorInt1: MatPaginatorIntl,
      //public dialogRef: MatDialogRef<SalesComponent>,
      public authService : AuthService,
      public toastr :ToastrService,
      @Optional() @Inject(MAT_DIALOG_DATA) public data: Sale) { 
+
+     let email = this.authService.user
+
+     this.fb.getUsers().subscribe((user: any) =>{
+      user.forEach(data =>{
+        if(data.email == email.email){
+          this.id = data.uid
+        }
+      })
+      console.log("1",this.id)
+     })
+    
+
      this.local_data = { ...data };
      this.action = this.local_data.action;
      this.filterForm = this.fs.group({
@@ -102,15 +130,57 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.dataSource.filter = ''+Math.random();
   }
 
-  currentDate = new Date();
 
-  calculateResultForm()
-  {
-    //this.formSaleDetail.get('amount').setValue(+this.formSaleDetail.value.requestedQuantity*(+this.formSaleDetail.value.saleDetailRetailPrice))
+  currentDate = new Date();
+  public amount
+  calculateResultForm(index : number, product ?: Product)
+  {  
+    let retail
+    let wholesale
+    //let amount
+    let id = this.formSale.get('saleTypeId').value
+    if(product.productTypeId != undefined){
+
+    this.productType.forEach((productType, index) =>{
+        if(productType.id == product.productTypeId){
+          if(id == 'yhl8Slx8goioNHV0OAGo'){
+            this.amount=productType.retailPrice
+          }else{
+            this.amount=productType.wholesalePrice
+          }
+          //retail = productType.retailPrice
+          //wholesale = productType.wholesalePrice
+          console.log(productType)
+        }
+    })
+    }
+    console.log(product)
+    //let price = 
+    //let amount = retail
+    //console.log("cantidad", cantidad)
+    //if(cantidad != null){
+    //  cantidad = this.saleDetail.controls[index].get('requestedQuantity')
+    //  amount = cantidad*amount
+    //}
+    //this.saleDetail.controls[index].patchValue({"amount":amount})
+    //this.formSaleDetail.get('amount').setValue(2);
+    //return amount
   }
   
+  multiplicar(cantid : any, index){
+    cantid = cantid*this.amount
+    console.log("cantid",cantid)
+    console.log("amount",this.amount)
+    //this.saleDetail.controls[index].patchValue({"amount":cantid})
+    //this.saleDetail.controls[index].get('amount').setValue(cantid)
+  }
 
+
+    
   async ngOnInit() {
+
+    
+
     //console.log(this.currentDate)
     if(this.local_data.id != null){
       await this.fb.getSaleDetail(this.local_data.id).subscribe((saleDetail: SaleDetail[])=>{
@@ -122,7 +192,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
     });
     }
 
-    this.calculateResultForm()
+    //this.calculateResultForm()
 
     //Form Sale
     //llamada de la BD de ventas
@@ -138,7 +208,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       this.dataSource.filterPredicate = (data, filter) =>{
         if (this.StartDate && this.EndDate) {
           //let date = data.saleDate.toDate();
-          return data.saleDate.toDate() >= this.StartDate && data.saleDate.toDate() <= this.EndDate;
+          return data.saleDate.toDate() >= this.StartDate || data.saleDate.toDate() <= this.EndDate;
         }
         return true;
       }
@@ -197,7 +267,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
               
               this.productType.forEach((productType, index) =>{
                 this.product.forEach(product =>{
-                  if(productType.id = product.productTypeId){
+                  if(productType.id == product.productTypeId){
                     productTypeRetailPrice = productType.retailPrice
                     productTypeWholesalePrice = productType.wholesalePrice
                   }
@@ -222,11 +292,14 @@ export class SalesComponent implements OnInit, AfterViewInit {
       id: [null],
       saleId: [null],
       productId: [null, Validators.required],
-      requestedQuantity: [null,[Validators.required, Validators.pattern('^[0-9]+?$')] ],
+      requestedQuantity: [null, [Validators.required, Validators.pattern('^[0-9]+?$')] ],
       amount: [null],
       isCourtesy: [null],
       status: [true],
     })
+
+  //this.formSale.get(['saleDetails'])
+
   } 
   //?? Crea otro detalle de req en la alta 
   addSaleDetail(): void {
@@ -252,6 +325,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   save(): void {
     let data = this.formSale.value;
+    data.userId = this.id
     console.log(this.formSale.valid)
     if (this.formSale.valid) {
       //Aquí va la inserción en la base de datos

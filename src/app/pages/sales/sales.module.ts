@@ -13,8 +13,8 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { SharedModule } from 'src/app/shared/shared.module';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
-import { BrowserModule } from '@angular/platform-browser';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+//import { BrowserModule } from '@angular/platform-browser';
+//import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatLineModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatButtonToggle } from '@angular/material/button-toggle';
@@ -38,13 +38,14 @@ import { MatFormFieldModule } from "@angular/material/form-field";
   declarations: [SalesComponent
   ],
   imports: [
+    //BrowserAnimationsModule,
     CommonModule,
     SalesRoutingModule,
-    CommonModule,
     MatDialogModule,
     DemoMaterialModule,
     FlexLayoutModule,
     FormsModule,
+    MatTableModule,
     MatListModule,
     ReactiveFormsModule,
     NgxDatatableModule,
@@ -62,11 +63,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     MatExpansionModule,
     MatCardModule,
     MatTabsModule,
-    MatTableModule,
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    MatLineModule
   ],
   exports: [
   MatStepperModule,
