@@ -174,7 +174,22 @@ export class SalesComponent implements OnInit, AfterViewInit {
     //this.saleDetail.controls[index].patchValue({"amount":cantid})
     //this.saleDetail.controls[index].get('amount').setValue(cantid)
   }
+  
 
+  async expandir(sale: any){
+    this.expandedElement = sale
+    this.local_data = sale
+
+    if(this.local_data.id != null){
+      await this.fb.getSaleDetail(this.local_data.id).subscribe((saleDetail: SaleDetail[])=>{
+        this.saleDetailData= saleDetail;
+        for(let i=1; i< saleDetail.length; i++){
+          this.addSaleDetail();
+        }
+      this.saleDetail.patchValue(this.saleDetailData)
+    });
+    }
+  }
 
     
   async ngOnInit() {

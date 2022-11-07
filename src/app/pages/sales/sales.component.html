@@ -192,15 +192,68 @@
 
                         <!-- Expanded Content Column - The detail row is made up of this one column -->
                         <ng-container matColumnDef="expandedDetail">
-                            <mat-cell *matCellDef="let detail">
-                                prueba
+                            <mat-cell *matCellDef="let detail" [attr.colspan]="displayedColumns.length">
+                                <form #saleForm="ngForm" [formGroup]="formSale">
+                                    <div fxLayout="row wrap" class="align-items-center">
+                                        <div formArrayName="saleDetails" *ngFor="let add of saleDetail.controls; index as i">
+                                            <div fxLayout="row wrap" class="align-items-center" [formGroup]="add" *ngIf="add.get('status').value == true">
+                                                <!-- Productos -->
+                                                <div fxFlex="100" fxFlex.gt-md="100">
+                                                    <div class="m-r-15 m-l-15">
+                                                        <mat-label><b>Producto {{i+1}}</b></mat-label>
+                                                    </div>
+                                                </div>
+                                                <!-- Tipo De Producto -->
+                                                <div fxFlex="100" fxFlex.gt-md="15">
+                                                    <div class="m-r-15 m-l-15">
+                                                        <mat-form-field>
+                                                            <mat-label>Producto</mat-label>
+                                                            <mat-select matInput required id="productId" [(ngModel)]="local_data.productId" name="productId" formControlName="productId">
+                                                                <mat-option *ngFor="let product of product" [value]="product.id" (click)="calculateResultForm(i,product)">
+                                                                    {{product.description}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <small *ngIf="add.controls['productId'].hasError('required') && add.controls['productId'].touched" class="text-danger support-text">El producto es requerido.</small>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <!-- Cantidad solicitada -->
+                                                <div fxFlex="100" fxFlex.gt-md="15">
+                                                    <div class="m-r-15 m-l-15">
+                                                        <mat-form-field>
+                                                            <input type="number" min="0" matInput required id="requestedQuantity" [(ngModel)]="local_data.requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity" (click)="multiplicar($event.target.value, index)">
+                                                            <small *ngIf="add.controls['requestedQuantity'].hasError('required') && add.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
+                                                            <small *ngIf="add.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <!-- Importe -->
+                                                <div fxFlex="100" fxFlex.gt-md="15">
+                                                    <div class="m-r-15 m-l-15">
+                                                        <mat-form-field>
+                                                            <input type="number" min="0" matInput required id="amount" [(ngModel)]="local_data.amount" name="amount" placeholder="Importe" formControlName="amount">
+                                                            <small *ngIf="add.controls['amount'].hasError('required') && add.controls['amount'].touched" class="text-danger support-text">El importe es requerido.</small>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                                <!-- Cortesia -->
+                                                <div fxFlex="100" fxFlex.gt-md="8">
+                                                    <div class="m-r-15 m-l-15">
+                                                        <input type="checkbox" id="isCourtesy" [(ngModel)]="local_data.isCourtesy" value="isCourtesy" formControlName="isCourtesy">
+                                                        <label for="isCourtesy">Cortesia</label>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </form>
                             </mat-cell>
                         </ng-container>
 
                         <ng-container matColumnDef="action">
                             <mat-header-cell *matHeaderCellDef> Accion </mat-header-cell>
                             <mat-cell *matCellDef="let element">
-                                <button mat-icon-button *ngIf="expandedElement != element" [class.expanded]="expandedElement == element" (click)="expandedElement = element">
+                                <button mat-icon-button *ngIf="expandedElement != element" [class.expanded]="expandedElement == element" (click)="expandir(element)">
                                 <!-- <button mat-icon-button *ngIf="expandedElement != element" [class.expanded]="expandedElement == element" (click)="openDialog('Actualizar',element)"> -->
                                         <mat-icon>keyboard_arrow_down</mat-icon>
                                 </button>
