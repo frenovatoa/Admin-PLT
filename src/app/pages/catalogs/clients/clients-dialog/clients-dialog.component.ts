@@ -46,12 +46,12 @@ export class ClientsDialogComponent {
       // }
       this.formCustomer = this.fb.group ({
         id: [null],
-        name: [null, Validators.required],
-        paternalLastName: [null],
-        maternalLastName: [null],
+        name: [null, [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
+        paternalLastName: [null, [Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
+        maternalLastName: [null, [Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
         phone: [null, [Validators.required, Validators.pattern("^[0-9]*$"), Validators.minLength(10), Validators.maxLength(10)]],
         alternativePhone: [null,[Validators.minLength(10),Validators.maxLength(10)]],
-        status: [true, Validators.required],
+        status: [true],
        address:this.fb.array([])
       });
       this.addAddress();
@@ -118,6 +118,20 @@ removeAddress(rowIndex: number): void {
 save(): void {
     let data = this.formCustomer.value;
     console.log(this.formCustomer.valid)
+
+    // Al dar de alta un cliente, su estatus es true
+    data.status = true;
+    
+  // Si los apellido o el teléfono 2 vienen sin información, ya que no son requeridas, los manda en null
+  if(data.paternalLastName == undefined){
+    data.paternalLastName = null;
+  }
+  if(data.maternalLastName == undefined){
+    data.maternalLastName = null;
+  }
+  if(data.alternativePhone == undefined){
+    data.alternativePhone = null;
+  }
 
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos

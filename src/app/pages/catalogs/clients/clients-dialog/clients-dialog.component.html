@@ -6,16 +6,18 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="name" name="name" [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name">
+                        <input type="text" matInput required id="name" name="name" [(ngModel)]="local_data.name" placeholder="Nombre" formControlName="name" [formControl]="formCustomer.controls['name']">
+                        <small *ngIf="formCustomer.controls['name'].hasError('required') && formCustomer.controls['name'].touched" class="text-danger support-text">El nombre es requerido</small>
+                        <small *ngIf="formCustomer.controls['name'].hasError('pattern')" class="text-danger support-text">El nombre no es válido.</small>
                     </mat-form-field>
-                    <small *ngIf="formCustomer.controls['name'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El nombre es requerido</small>
                 </div>
             </div>
             <!-- Espacio para escribir el apellido paterno del cliente -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName">
+                        <input type="text" matInput id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName" [formControl]="formCustomer.controls['paternalLastName']">
+                        <small *ngIf="formCustomer.controls['paternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido paterno no es válido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -23,7 +25,8 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName">
+                        <input type="text" matInput id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formCustomer.controls['paternalLastName']">
+                        <small *ngIf="formCustomer.controls['paternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido materno no es válido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -32,30 +35,29 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="phone" name="phone" [(ngModel)]="local_data.phone" placeholder="Teléfono 1" formControlName="phone" [maxLength]="10">
-                    </mat-form-field>
                     <small *ngIf="formCustomer.controls['phone'].hasError('required') && formCustomer.controls['phone'].touched" class="text-danger support-text">El telefono es requerido</small>
                     <small *ngIf="formCustomer.controls['phone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
                     <small *ngIf="formCustomer.controls['phone'].hasError('minLength')" class="text-danger support-text">El telefono debe contener mínimo 10 digitos.</small>
-                </div>
+                </mat-form-field>
             </div>
-            <!-- Espacio para escribir el teléfono 1 del cliente -->
+            </div>
+            <!-- Espacio para escribir el teléfono 2 del cliente -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone" [maxLength]="10">
-                    </mat-form-field>
-                    <small *ngIf="formCustomer.controls['alternativePhone'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El telefono es requerido</small>
+                        <input type="text" matInput id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone" [maxLength]="10">
                     <small *ngIf="formCustomer.controls['alternativePhone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
+                    </mat-form-field>
                 </div>
             </div>
             <!-- Checkbox para seleccionar si el cliente está o no activo -->
-            <div fxFlex="100" fxFlex.gt-md="50">
+            <!--<div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
                     <label for="status">Activo</label>
                     <small *ngIf="formCustomer.controls['status'].hasError('required') && formCustomer.controls['alternativePhone'].touched" class="text-danger support-text">El status activo es requerido</small>
                 </div>
-            </div>
+            </div> -->
         </div>
         <div formArrayName="address" *ngFor="let add of address.controls; index as i">
             <div fxLayout="row wrap" class="align-items-center" [formGroup]="add" *ngIf="add.get('status').value == true">

@@ -71,7 +71,7 @@ export class ProductsDialogComponent implements OnInit {
       description: ['', Validators.required],
       quantity: ['', Validators.required],
       image: [''],
-      status: ['', Validators.required],
+      status: [''],
 
       /*userId: this.userData.id,*/ // Se debe de obtener al hacer patchValue()
     });
@@ -118,6 +118,9 @@ export class ProductsDialogComponent implements OnInit {
     console.log(data)
     var productoExistente = false
     var tipoExistente = false
+
+    // Al dar de alta un producto, su estatus es true
+    data.status = true;
 
     // Obtener valor de la descripción y el tipo del producto
     const description = this.formProducts.value.description;
