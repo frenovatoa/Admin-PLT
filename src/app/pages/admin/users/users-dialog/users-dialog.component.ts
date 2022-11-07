@@ -91,13 +91,12 @@ export class UsersDialogComponent {
         uid: [''],
         userTypeId: [''],
         // Valida que el nombre y apellidos solo contengan letras y/o espacios
-        //name: ['', Validators.required, Validators.pattern('[a-zA-Z ]*')],
         name: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ],        
-        paternalLastName: ['',[Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
-        maternalLastName: ['', [Validators.required, Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
+        paternalLastName: [null, [Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
+        maternalLastName: [null, [Validators.pattern('[a-zA-ZáéíóúÁÉÍÓÚ ]+$')] ], 
         email: ['', [Validators.required, Validators.pattern('[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,3}$')] ], 
         password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(15)] ], 
-        status: ['', Validators.required],
+        status: [''],
         // La imagen no es requerida *****
         image: ['', ],
     });
@@ -131,6 +130,17 @@ export class UsersDialogComponent {
     data.uid = this.userService.unicID();
     console.log(this.data)
     var emailExistente = false
+
+    // Al dar de alta un usuario, su estatus es true
+    data.status = true;
+
+    // Si los apellido vienen sin información, ya que no son requeridas, los manda en null
+    if(data.paternalLastName == undefined){
+      data.paternalLastName = null;
+    }
+    if(data.maternalLastName == undefined){
+      data.maternalLastName = null;
+    }
 
     // Obtengo el valor del email
     const email = this.formUsers.value.email;
@@ -174,6 +184,10 @@ update(): void {
   this.formUsers.get('uid').setValue(this.local_data.uid)
   let data = this.formUsers.getRawValue();
   console.log(data)
+
+  // Al actualizar un usuario, su estatus es true
+  data.status = true;
+
   if(this.image != undefined){
     data.image = this.image;
   }else{
@@ -210,7 +224,7 @@ updateStatus(): void {
  this.authService.deleteUser(data);
   // Aquí va la inserción en la base de datos
   this.userService.updateUser(data.uid, data)
-  this.toastr.success("Usuario actualizado correctamente");
+  this.toastr.success("Usuario Eliminado");
   }else{
     this.toastr.error("El usuario no puede eliminarse ya que esta en sesión");
   }
@@ -321,5 +335,12 @@ updateStatus(): void {
   mostrar: boolean = false;
   mostrarContrasena() {
     this.mostrar = !this.mostrar;
+}
+
+public showDiv(): boolean {
+  const password = this.local_data?.password;
+  // Forzamos la variable a boolean
+  // Si password existe y no es un string vacío, entonces devuelve true
+  return !!password;
 }
 } 

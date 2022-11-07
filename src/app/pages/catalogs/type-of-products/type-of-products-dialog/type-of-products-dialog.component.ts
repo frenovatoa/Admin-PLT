@@ -51,7 +51,7 @@ export class TypeOfProductsDialogComponent {
       description: ['', Validators.required],
       retailPrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')] ],
       wholesalePrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')] ],
-      status: ['', Validators.required],
+      status: [''],
   });
   console.log(this.local_data);
 }
@@ -67,6 +67,9 @@ save(): void {
   let descriptionExistente = false;
   let data = this.formTypeOfProduct.value;
   //console.log(data)  
+
+  // Al dar de alta un tipo de producto, su estatus es true
+  data.status = true;
 
   //obtiene el valor de la descripcion
   const description = this.formTypeOfProduct.value.description;

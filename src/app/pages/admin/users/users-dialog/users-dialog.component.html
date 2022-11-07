@@ -33,8 +33,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName" [formControl]="formUsers.controls['paternalLastName']">
-                        <small *ngIf="formUsers.controls['paternalLastName'].hasError('required') && formUsers.controls['paternalLastName'].touched" class="text-danger support-text">El apellido paterno es requerido.</small>
+                        <input type="text" matInput id="paternalLastName" name="paternalLastName" [(ngModel)]="local_data.paternalLastName" placeholder="Apellido Paterno" formControlName="paternalLastName" [formControl]="formUsers.controls['paternalLastName']">
                         <small *ngIf="formUsers.controls['paternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido paterno no es válido.</small>
                     </mat-form-field>
                 </div>
@@ -43,8 +42,7 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formUsers.controls['maternalLastName']">
-                        <small *ngIf="formUsers.controls['maternalLastName'].hasError('required') && formUsers.controls['maternalLastName'].touched" class="text-danger support-text">El apellido materno es requerido.</small>
+                        <input type="text" matInput id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formUsers.controls['maternalLastName']">
                         <small *ngIf="formUsers.controls['maternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido materno no es válido.</small>
                     </mat-form-field>
                 </div>
@@ -60,7 +58,7 @@
                 </div>
             </div>
             <!-- Espacio para escribir la contraseña del usuario -->
-            <div fxFlex="100" fxFlex.gt-md="50">
+            <div *ngIf="action == 'Nuevo Usuario'" fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <div fxFlex="100" fxFlex.gt-md="75">
@@ -98,12 +96,12 @@
                 </div>
             </div>
             <!-- Checkbox para seleccionar si el usuario está o no activo -->
-            <div fxFlex="100" fxFlex.gt-md="50">
+            <!-- div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <input type="checkbox" id="status" value="status" [(ngModel)]="local_data.status" formControlName="status">
                     <label for="status">Activo</label>
-                </div>
-            </div>
+                </div> 
+            </div>-->
         </div>
         <!-- Botón de guardar registro de un nuevo usuario -->
         <!-- mat-flat-button es para dar marco al botón -->
