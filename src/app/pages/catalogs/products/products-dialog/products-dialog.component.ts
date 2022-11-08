@@ -150,7 +150,7 @@ export class ProductsDialogComponent implements OnInit {
           //  });
           this.saveFile(data.image, data)
           //this.uploadFile(data.image, data.id)
-          this.toastr.success("Producto creado.");
+          this.toastr.success("Producto Creado.");
           this.closeDialog();
       } else {
         this.toastr.error("Favor de llenar campos faltantes.");
@@ -196,6 +196,10 @@ update(): void {
   this.formProducts.get('id').setValue(this.local_data.id)
   let data = this.formProducts.getRawValue();
   console.log(data)
+
+  // Al actualizar un producto, su estatus es true
+  data.status = true;
+
   if(this.image != undefined){
     data.image = this.image;
   }else{
