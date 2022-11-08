@@ -1,1 +1,313 @@
-<p>create-orders works!</p>
+<div fxLayout="row wrap">
+    <div fxFlex.gt-sm="100%" fxFlex="100">
+        <mat-card>
+            <mat-card-content>
+                <mat-horizontal-stepper>
+                    <!-- Primer Stepper Ventas -->
+                    <mat-step label="Crear Pedido">
+                        <h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2>
+                        <div fxLayout="row wrap">
+                            <div fxFlex="100">
+                                <form [formGroup]="formOrder">
+                                    <div fxLayout="row wrap">
+                                        <div fxFlex="100">
+                                            <div fxLayout="row wrap" class="align-items-center m-t-15 m-b-15">
+                                                <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
+                                                    <div fxFlex="100" fxFlex.gt-md="30">
+                                                        <mat-form-field appearance="outline">
+                                                            <mat-label>Tipo de Venta</mat-label>
+                                                            <mat-select matInput required id="saleTypeId" name="saleTypeId" ngDefaultControl [(ngModel)]="local_data.saleTypeId" formControlName="saleTypeId" [formControl]="formOrder.controls['saleTypeId']">
+                                                                <mat-option *ngFor="let saleType of saleType" [value]="saleType.id">
+                                                                    {{saleType.description}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                            <small *ngIf="formOrder.controls['saleTypeId'].hasError('required') && formOrder.controls['saleTypeId'].touched" class="text-danger support-text">El tipo de venta es requerido.</small>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <!-- Fecha actual -->
+                                                    <div fxFlex.gt-md="100" class="text-right">
+                                                        <span class="font-medium"> Fecha de la orden: </span>
+                                                        <h6 name="date" class="m-t-10 m-b-0" ngDefaultControl>
+                                                            {{ currentDate | date:'dd/MM/yyyy' }}
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div fxLayout="row wrap" class="align-items-center m-t-30 m-b-15">
+                                                <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
+                                                    <div fxFlex="100" fxFlex.gt-md="25">
+
+                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                            <mat-label>Cliente</mat-label>
+                                                            <mat-select matInput required id="customerId" name="customerId" formControlName="customerId">
+                                                                <mat-option *ngFor="let cust of customers" [value]="cust.id" (click)="getAddress(cust.address)">
+                                                                    {{cust.name}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                    </div>
+                                                    <div fxFlex="100" fxFlex.gt-md="25">
+
+                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                            <mat-label>Dirección</mat-label>
+                                                            <mat-select matInput required id="addressId" name="addressId" formControlName="addressId">
+                                                                <mat-option *ngFor="let address of address" [value]="address.id">
+                                                                    {{address.street}} &nbsp; {{address.neighborhood}} &nbsp; {{address.outsideNumber}}
+                                                                </mat-option>
+                                                            </mat-select>
+                                                        </mat-form-field>
+
+                                                    </div>
+                                                    <div fxFlex="100" fxFlex.gt-md="25">
+                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                            <mat-label>Fecha de entrega</mat-label>
+                                                            <input matInput [matDatepicker]="date" formControlName="deliveryDate">
+                                                            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                                                            <mat-datepicker #date></mat-datepicker>
+                                                        </mat-form-field>
+                                                    </div>
+                                                    <div fxFlex="100" fxFlex.gt-md="25">
+                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                            <mat-label>Notas: </mat-label>
+                                                            <textarea matInput formControlName="orderNotes"></textarea>
+                                                        </mat-form-field>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div fxLayout="row wrap">
+                                        <div fxFlex="100">
+                                            <div formArrayName="orderDetails" *ngFor="let order of orderDetail.controls; index as i">
+                                                <div fxLayout="row wrap" class="align-items-center" [formGroup]="order" *ngIf="order.get('status').value == true">
+                                                    <div fxLayout="row wrap" class="align-items-center m-t-20 m-b-10">
+                                                        <div fxFlex="100">
+                                                            <div fxLayout="row wrap" class="align-items-center m-t-15 m-b-15">
+                                                                <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
+                                                                    <div fxFlex="100" fxFlex.gt-md="30">
+                                                                        <mat-label><b>Producto {{i+1}}</b></mat-label>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div fxLayout="row wrap" class="align-items-center m-t-20 m-b-10">
+                                                                <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
+                                                                    <!-- Tipo De Producto -->
+                                                                    <div fxFlex="100" fxFlex.gt-md="30">
+
+                                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                                            <mat-label>Producto</mat-label>
+                                                                            <mat-select matInput required id="productId" name="productId" formControlName="productId">
+                                                                                <mat-option *ngFor="let product of product" [value]="product.id">
+                                                                                    {{product.description}}
+                                                                                </mat-option>
+                                                                            </mat-select>
+                                                                            <!--small *ngIf="add.controls['productId'].hasError('required') && add.controls['productId'].touched" class="text-danger support-text">El producto es requerido.</small-->
+                                                                        </mat-form-field>
+
+                                                                    </div>
+                                                                    <!-- Cantidad solicitada -->
+                                                                    <div fxFlex="100" fxFlex.gt-md="30">
+
+                                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                                            <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity">
+                                                                            <!---small *ngIf="add.controls['requestedQuantity'].hasError('required') && add.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
+        <small *ngIf="add.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small-->
+                                                                        </mat-form-field>
+
+                                                                    </div>
+                                                                    <!-- Importe -->
+                                                                    <div fxFlex="100" fxFlex.gt-md="30">
+
+                                                                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                                                                            <input type="number" min="0" matInput required id="amount" name="amount" placeholder="Importe" formControlName="amount">
+                                                                            <!--small *ngIf="add.controls['amount'].hasError('required') && add.controls['amount'].touched" class="text-danger support-text">El importe es requerido.</small-->
+                                                                        </mat-form-field>
+
+                                                                    </div>
+                                                                    <!-- Cortesia -->
+                                                                    <div fxFlex="100" fxFlex.gt-md="10">
+
+                                                                        <input type="checkbox" id="isCourtesy" value="isCourtesy" formControlName="isCourtesy">
+                                                                        <label for="isCourtesy">Cortesia</label>
+
+                                                                    </div>
+                                                                    <div fxFlex="100" fxFlex.gt-md="5">
+                                                                        <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
+                                                                        <!-- <button mat-button (click)="addSaleDetail()" mat-flat-button color="primary">Agregar</button> -->
+                                                                        <button mat-icon-button color="primary" matTooltip="Agregar" [matTooltipPosition]="'above'" (click)="addOrderDetail()">
+        <mat-icon>add_circle</mat-icon>
+        </button>
+                                                                        <!--  -->
+                                                                        <!-- <button *ngIf="i != 0" mat-button mat-flat-button color="warn" (click)="removeSaleDetail(i)">Eliminar</button> -->
+                                                                        <button *ngIf="i != 0" mat-icon-button color="warn" matTooltip="Eliminar" [matTooltipPosition]="'above'" (click)="removeOrderDetail(i)">
+        <mat-icon>delete_sweep</mat-icon>
+        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div fxLayout="row wrap" class="align-items-center">
+                                        <!-- totalCost -->
+                                        <div fxFlex="100" fxFlex.gt-md="45">
+                                            <div class="m-r-15 m-l-15">
+                                                <mat-form-field>
+                                                    <input type="number" min="0" matInput required id="totalCost" name="totalCost" placeholder="Costo Total" formControlName="totalCost">
+                                                    <!--small *ngIf="formOrder.controls['totalCost'].hasError('required') && formOrder.controls['totalCost'].touched" class="text-danger support-text">El costo total es requerido.</small-->
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div mat-dialog-actions align="center" class="pt-3">
+                                            <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
+                                            <!-- <button mat-button (click)="save()" mat-flat-button color="primary"> Guardar</button> -->
+                                            <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="save()" [disabled]="!formOrder.valid">
+                                            <mat-icon>save</mat-icon>
+                                        </button>
+                                            <!-- Botón para actualizar -->
+                                            <!-- <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary">Actualizar</button> -->
+                                            <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+                                            <!-- <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button> -->
+                                        </div>
+                                    </div>
+                                </form>
+
+                            </div>
+
+                        </div>
+                    </mat-step>
+                    <!-- Segundo Stepper Reporte de venta -->
+                    <mat-step label="Reporte de venta">
+                        <div fxLayout="row wrap">
+                            <div fxFlex="100">
+                                <!-- Filtrado de rangos por fechas -->
+                                <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
+                                    <mat-hint>Filtrado por rango de fechas:</mat-hint>
+                                    <form [formGroup]="filterForm" class="demo-button">
+                                        <mat-form-field appearance="fill">
+                                            <mat-label>Ingrese rango de fechas</mat-label>
+                                            <mat-date-range-input [rangePicker]="picker">
+                                                <input matStartDate formControlName="StartDate" placeholder="Start date">
+                                                <input matEndDate formControlName="EndDate" placeholder="End date">
+                                            </mat-date-range-input>
+                                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                                            <mat-date-range-picker #picker></mat-date-range-picker>
+                                            <mat-error *ngIf="filterForm.controls.StartDate.hasError('required') && filterForm.controls['StartDate'].touched">Fecha inicial requerida</mat-error>
+                                            <mat-error *ngIf="filterForm.controls.EndDate.hasError('required') && filterForm.controls['EndDate'].touched">Fecha final requerida</mat-error>
+                                        </mat-form-field>
+                                    </form>
+                                </div>
+                                <div class="text-right">
+                                    <mat-card actions class="child" style="margin: 45%; margin-left: 5%;">
+                                        <button class="button-form" mat-raised-button color="accent" (click)="applyFilter()" [disabled]="filterForm.invalid">Buscar</button>
+                                    </mat-card>
+                                </div>
+                            </div>
+                        </div>
+                        <div fxLayout="row wrap">
+                            <!-- Tabla de reportes de venta -->
+                            <div fxFlex="100">
+                                <mat-card>
+                                    <mat-card-content>
+                                        <div class="table-responsive">
+                                            <table *ngIf="notShow == false" mat-table [dataSource]="dataSource" class="table sale-list no-wrap">
+
+                                                <!-- Sección de número de venta -->
+                                                <ng-container matColumnDef="#">
+                                                    <th mat-header-cell *matHeaderCellDef> # </th>
+                                                    <td mat-cell *matCellDef="let element; let i = index"> {{ i + 1 }} </td>
+                                                </ng-container>
+                                                <!-- Sección de fecha -->
+                                                <ng-container matColumnDef="solDate">
+                                                    <th mat-header-cell *matHeaderCellDef> Fecha de venta </th>
+                                                    <td mat-cell *matCellDef="let element"> {{ element.requestDate?.toDate() | date:'dd/MM/yyyy' }} </td>
+                                                </ng-container>
+                                                <!-- Sección de venta/pedido -->
+                                                <ng-container matColumnDef="deliveryDate">
+                                                    <th mat-header-cell *matHeaderCellDef> Fecha de entrega </th>
+                                                    <td mat-cell *matCellDef="let element"> {{ element.deliveryDate?.toDate() | date:'dd/MM/yyyy' }} </td>
+                                                </ng-container>
+                                                <!-- Sección de tipo de venta -->
+                                                <ng-container matColumnDef="customer">
+                                                    <th mat-header-cell *matHeaderCellDef>Cliente </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.customer.name}} &nbsp; {{element.customer.paternalLastName}} </td>
+                                                </ng-container>
+                                                <!-- Sección de costo total -->
+                                                <ng-container matColumnDef="address">
+                                                    <th mat-header-cell *matHeaderCellDef> Dirección </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.address.street}} &nbsp; {{element.address.neighborhood}} &nbsp; {{element.address.outsideNumber}}</td>
+                                                </ng-container>
+                                                <!-- Sección de usuario -->
+                                                <ng-container matColumnDef="note">
+                                                    <th mat-header-cell *matHeaderCellDef> Realizada por </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="total">
+                                                    <th mat-header-cell *matHeaderCellDef> Costo Total </th>
+                                                    <td mat-cell *matCellDef="let element"><a>$</a> {{element.totalCost}} </td>
+                                                </ng-container>
+                                                <!-- Sección de usuario -->
+                                                <ng-container matColumnDef="saleType">
+                                                    <th mat-header-cell *matHeaderCellDef> Realizada por </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </td>
+                                                </ng-container>
+                                                <ng-container matColumnDef="status">
+                                                    <th mat-header-cell *matHeaderCellDef> Realizada por </th>
+                                                    <td mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </td>
+                                                </ng-container>
+                                                <!-- Sección de acciones -->
+                                                <ng-container matColumnDef="action">
+                                                    <th mat-header-cell *matHeaderCellDef> Acciones </th>
+                                                    <td mat-cell *matCellDef="let element" class="action-link">
+                                                        <!-- <a (click)="openDialog('Actualizar',element)" class="m-r-10 cursor-pointer">
+                                                            //Símbolo de editar
+                                                           <i class="fa fa-eye"></i> -->
+                                                        <!-- </a> -->
+                                                        <a (click)="openDialog('Eliminar',element)" class="m-r-10 cursor-pointer">
+                                                            <!-- Símbolo de eliminar -->
+                                                            <i class="fa fa-eye-slash"></i>
+                                                        </a>
+                                                    </td>
+                                                </ng-container>
+
+                                                <!--                                 <ng-container matColumnDef="action">
+                                                    <th mat-header-cell *matHeaderCellDef>&nbsp;</th>
+                                                    <td mat-cell *matCellDef="let element">
+                                                        <button mat-icon-button aria-label="expand row" (click)="element.isExpanded = !element.isExpanded">
+                                                        <mat-icon *ngIf="!element.isExpanded">keyboard_arrow_down</mat-icon>
+                                                        <mat-icon *ngIf="element.isExpanded">keyboard_arrow_up</mat-icon>
+                                                      </button>
+                                                        <button mat-icon-button color="primary" matTooltip="Editar" [matTooltipPosition]="'above'" (click)="openDialog('Editar', element)">
+                                                        <mat-icon>edit</mat-icon>
+                                                      </button>
+                                                        <button mat-icon-button color="warn" matTooltip="Eliminar" (click)="confirmDialog(element)" [matTooltipPosition]="'above'">
+                                                        <mat-icon>deleted</mat-icon>
+                                                      </button>
+                                                    </td>
+                                                </ng-container> -->
+
+
+
+
+                                                <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                                                <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                                            </table>
+                                            <mat-paginator [pageSizeOptions]="[5, 8, 12]" showFirstLastButtons></mat-paginator>
+                                        </div>
+                                    </mat-card-content>
+                                </mat-card>
+                            </div>
+                        </div>
+                    </mat-step>
+                </mat-horizontal-stepper>
+            </mat-card-content>
+        </mat-card>
+    </div>
+</div>
