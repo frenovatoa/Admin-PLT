@@ -84,7 +84,7 @@ save(): void {
       // Aquí va la inserción en la base de datos
         this.typeOfProductService.addTypeOfProduct(data).then((typeOfProduct: any)=>{
         console.log(typeOfProduct)
-        this.toastr.success("Tipo de producto creado");
+        this.toastr.success("Tipo de Producto Creado");
         this.closeDialog();
       });
     } else {
@@ -100,10 +100,14 @@ update(): void {
 this.formTypeOfProduct.get("id").setValue(this.local_data.id)  
 let data = this.formTypeOfProduct.value;
 console.log(data)
+
+// Al actualizar un tipo de producto, su estatus es true
+data.status = true;
+
 if (this.formTypeOfProduct.valid) {
 // Aquí va la inserción en la base de datos
   this.typeOfProductService.updateTypeOfProduct(data.id, data)
-  this.toastr.success("Actualizacion realizada");
+  this.toastr.success("Tipo de Producto Actualizado");
   this.closeDialog();
 } else {
  this.toastr.error("Favor de llenar campos faltantes");

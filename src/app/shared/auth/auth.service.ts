@@ -209,11 +209,8 @@ return JSON.parse(localStorage.getItem('user')!);
     .collection("tbl_users", ref => ref.where('email', '==', email))
     .valueChanges();
   }
-deleteUser(data){
-  
+deleteUser(data){  
   this.secondaryApp = firebase.initializeApp(this.config, "Secondary");
-  //this.setUserData(data);
-  this.SetUserData(data);
    return this.secondaryApp.auth().signInWithEmailAndPassword(data.email, data.password).then(function(firebaseUser) {    
     console.log("User " + data.name + " created successfully!");
         //I don't know if the next statement is necessary 
