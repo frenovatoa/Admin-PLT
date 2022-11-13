@@ -95,6 +95,10 @@ export class AppBreadcrumbComponent {
             this.title = 'Agenda de pedidos';
             break;
           }
+          case '/pages/production': {
+            this.title = 'Producción';
+            break;
+          }
           case '/pages/production/production': {
             this.title = 'Producción';
             break;
