@@ -473,10 +473,6 @@ openDialog(action: string, obj: any): void {
 
   // tslint:disable-next-line - Disables all
   deleteRowData(row_obj: Sale): boolean | any {
-/*       this.dataSource.data = this.dataSource.data.filter((value: any) => {
-          return value.id !== row_obj.id;
-      });
-  }
- */
+
 }
 }
