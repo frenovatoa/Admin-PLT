@@ -144,7 +144,7 @@ save(): void {
       })
       if(customerFound == false){
         this.customerService.addClient(data).then((custom)=>{
-          this.toastr.success("Usuario creado exitosamente");
+          this.toastr.success("Cliente Creado");
           this.closeDialog();
         })
       }else{
@@ -159,6 +159,9 @@ save(): void {
     let id = this.local_data.id
     let data = this.formCustomer.value;
     console.log(data)
+
+    // Al actualizar un cliente, su estatus es true
+    data.status = true;
     // let customerFound = false;
     //   this.customers.forEach(cus =>{
     //     if(data.phone == cus.phone){
@@ -168,7 +171,7 @@ save(): void {
     //   })
       //if(customerFound == false){
         this.customerService.updateCustomer(id, data).then((custom)=>{
-          this.toastr.success("Usuario actualizado exitosamente");
+          this.toastr.success("Cliente Actualizado");
           this.closeDialog();
         })
      // }else{
@@ -202,7 +205,7 @@ saveAddress(): void {
       this.dialogRef.close({ event: this.action, data: this.local_data });
       this.local_data.status = false;
       this.customerService.deleteCustomer(this.local_data.id, this.local_data).subscribe(res =>{
-        this.toastr.success('Cliente eliminado correctamente')
+        this.toastr.success('Cliente Eliminado')
       })
   }
   closeDialog(): void {

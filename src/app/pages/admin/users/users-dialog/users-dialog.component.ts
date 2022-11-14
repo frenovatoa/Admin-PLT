@@ -126,6 +126,7 @@ export class UsersDialogComponent {
 
 /** Guarda registro */
    save(): void {
+    console.log('GUARDA USUARIO NORMAL');
     let data = this.formUsers.value;
     data.uid = this.userService.unicID();
     console.log(this.data)
@@ -181,6 +182,7 @@ export class UsersDialogComponent {
 
   /** Actualiza registro */
 update(): void {
+  console.log('ACTUALIZA NORMAL');
   this.formUsers.get('uid').setValue(this.local_data.uid)
   let data = this.formUsers.getRawValue();
   console.log(data)
@@ -214,6 +216,7 @@ update(): void {
 
 /** Actualiza estatus del registro, de manera que pase a no estar activo */
 updateStatus(): void {  
+  console.log('BORRA');
   let data = this.local_data;
   // Todos los datos quedan igual excepto el estatus, que cambia a false
   data.status = false;
