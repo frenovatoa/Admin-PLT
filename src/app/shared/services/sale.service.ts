@@ -155,7 +155,7 @@ export class SaleService {
   //Funcion que obtiene los datos de productos de la base de datos.  
   getProducts() {
   return this.db
-  .collection("tbl_products", ref => ref.where('status', '==', true))
+  .collection("tbl_products", ref => ref.orderBy('description', 'asc'))
   .valueChanges();
   }
 

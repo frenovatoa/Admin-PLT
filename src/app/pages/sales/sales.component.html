@@ -6,8 +6,13 @@
             <form #saleForm="ngForm" [formGroup]="formSale">
                 <div fxLayout="row wrap" class="align-items-center">
                     <!-- Tipo De Venta -->
+                    <div fxFlex="100" fxFlex.gt-md="35">
+                        <div class="m-r-15 m-l-15">
+                            <mat-label><b>Tipo De Venta</b></mat-label>
+                        </div>
+                    </div>
                     <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
-                        <div fxFlex="100" fxFlex.gt-md="30">
+                        <div fxFlex="100" fxFlex.gt-md="30" style="margin-left: 15px;">
                             <mat-form-field appearance="outline">
                                 <mat-label>Tipo de Venta</mat-label>
                                 <mat-select matInput required id="saleTypeId" name="saleTypeId" ngDefaultControl [(ngModel)]="local_data.saleTypeId" formControlName="saleTypeId" [formControl]="formSale.controls['saleTypeId']">
@@ -77,6 +82,7 @@
                             <div class="m-r-15 m-l-15">
                                 <mat-form-field appearance="outline">
                                     <input type="number" min="0" matInput required id="price" name="price" placeholder="Precio" formControlName="price" [readonly]="true">
+                                    <small *ngIf="add.controls['price'].hasError('required') && add.controls['price'].touched" class="text-danger support-text">El precio es requerido.</small>
                                 </mat-form-field>
                             </div>
                         </div>
