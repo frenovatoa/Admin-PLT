@@ -20,7 +20,7 @@ export class OrdersService {
   // Función que permite obtener los documentos (registros) de la tabla de clientes en la base de datos
   getOrders() {
     return this.db
-   .collection("tbl_orders", ref => ref.where('status', '==', true))
+   .collection("tbl_orders")
    .valueChanges();
  }
  getCustumer(id:string){
@@ -84,7 +84,16 @@ deleteOrder(id:any, data:any): Observable<void>{
       status:data.status}))
 }
 
-
+async updateStatus(id:any, data:any): Promise<Observable<void>>{
+  const ref = doc(this.firestore, `tbl_orders`, id)
+   return await from(updateDoc(ref, {
+    status:data.status}))
+}
+getOrderDetail(id:string){
+  return this.db
+  .collection("tbl_orders").doc(id).collection("orderDetails")
+  .valueChanges();
+}
    // Función que me da un id automático para los usuarios
    unicID(): string {
     const today = moment();

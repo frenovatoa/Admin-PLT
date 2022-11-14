@@ -82,9 +82,11 @@ export class ProductsDialogComponent implements OnInit {
       console.log(productType)
       this.productType=productType
     });   
-    if(this.local_data.id != null) {
+    if(this.local_data.id == null) {
+      this.local_data.quantity =0;
       this.formProducts.get('quantity').disable()
     }  
+    this.formProducts.get('quantity').disable()
     // this.toastr.success("Producto Creado");
     this.productService.getProducts().subscribe((product: any)=>{
       console.log(product)
@@ -118,10 +120,12 @@ export class ProductsDialogComponent implements OnInit {
     console.log(data)
     var productoExistente = false
     var tipoExistente = false
-
+  
+    
+    
     // Al dar de alta un producto, su estatus es true
     data.status = true;
-
+    
     // Obtener valor de la descripción y el tipo del producto
     const description = this.formProducts.value.description;
     const productTypeId = this.formProducts.value.productTypeId;
