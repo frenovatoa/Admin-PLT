@@ -12,7 +12,7 @@ export interface Order {
     deliveryDate: Timestamp;
     orderNotes: string;
     totalCost: number;
-    status: number;
+    status: string;
     orderDetails?:OrderDetail[],
     saleTypeDescription?:string
     customer?:Customer,

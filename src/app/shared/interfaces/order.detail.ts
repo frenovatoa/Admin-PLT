@@ -5,4 +5,6 @@ export interface OrderDetail {
     requestedQuantity: number;
     amount: number;
     isCourtesy: number;
+    productDescription?:string;
+    productTypeDescription?:string;
  }

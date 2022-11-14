@@ -1,0 +1,20 @@
+<h1 mat-dialog-title class="title-custom" fxLayoutAlign="center center">
+    Advertencia
+</h1>
+<mat-progress-bar mode="query"></mat-progress-bar>
+
+<div mat-dialog-content>
+    <h4 [innerHTML]="message" fxLayoutAlign="center center"></h4>
+    <div fxLayoutAlign="center center">
+        <span><b [innerHTML]="name"></b></span>
+    </div>
+</div>
+<br />
+<div fxLayoutAlign="center center" mat-dialog-actions>
+    <button class="mat-success" [disabled]="clicked" clicked="true;" mat-raised-button color="primary" (click)="confirm()">
+      <b>{{this.btnName}}</b>
+    </button>
+    <button type="button" mat-raised-button class="mat-red" style="background: #E71F63;" (click)="close()" cdkFocusInitial>
+      <b style="color: white;">{{this.btnName2 }}</b>
+    </button>
+</div>
