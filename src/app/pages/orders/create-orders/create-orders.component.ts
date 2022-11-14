@@ -30,11 +30,21 @@ import { CustomerService } from '../../../shared/services/customer.service';
 import { Address } from '../../../shared/interfaces/address';
 import { OrdersService } from '../../../shared/services/orders.service';
 import { Order } from '../../../shared/interfaces/order';
+import { animate, state, style, transition, trigger } from '@angular/animations';
+import { OrderDetail } from 'src/app/shared/interfaces/order.detail';
+import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'app-create-orders',
   templateUrl: './create-orders.component.html',
-  styleUrls: ['./create-orders.component.scss']
+  styleUrls: ['./create-orders.component.scss'],
+  animations: [
+    trigger('detailExpand', [
+        state('collapsed', style({height: '0px', minHeight: '0'})),
+        state('expanded', style({height: '*'})),
+        transition('expanded <=> collapsed', animate('225ms cubic-bezier(0.4, 0.0, 0.2, 1)')),
+    ]),
+],
 })
 export class CreateOrdersComponent implements OnInit {
 
@@ -53,7 +63,8 @@ export class CreateOrdersComponent implements OnInit {
   public formOrder: FormGroup;
   public formSaleDetail: FormGroup;
   public saleDetailForm: FormArray;
-  public saleDetailData: SaleDetail[];
+  public orderDetailData: OrderDetail[];
+  
   
   //Form de filtro de rango de fechas.
   filterForm = new FormGroup({
@@ -70,8 +81,11 @@ export class CreateOrdersComponent implements OnInit {
   public notShow = true;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  public displayedColumns: string[] = ['#', 'solDate', 'deliveryDate', 'customer', 'address', 'note', 'total', 'saleType', 'status', 'action'];
+  public displayedColumns: string[] = ['#', 'reqDate', 'delDate', 'customer', 'address', 'totalCost', 'saleType', 'status', 'actions'];
+  isExpansionDetailRow = (i: number, row: Object) => row.hasOwnProperty('detailRow');
+  expandedElement: any;
 
+  public amount
 
   constructor(
     private fs: FormBuilder,
@@ -102,7 +116,7 @@ export class CreateOrdersComponent implements OnInit {
       saleTypeId:[null, Validators.required],
       userId: [null],
       totalCost: [null],
-      status: [true, Validators.required],
+      status: ['pendiente', Validators.required],
       orderDetails: this.fs.array([])
      });
      this.addOrderDetail();
@@ -114,33 +128,56 @@ export class CreateOrdersComponent implements OnInit {
 
   currentDate = new Date();
 
-  
+  async expandir(sale: any){
+    this.expandedElement = sale
+    this.local_data = sale
+    //console.log("Sale:",sale)
+    if(this.local_data.id != null){
+      await this.ordService.getOrderDetail(this.local_data.id).subscribe((orderDetail: OrderDetail[])=>{
+        console.log("p",orderDetail)
+        this.orderDetailData= orderDetail;
+        //console.log("saleData:",this.saleDetailData)
+        for(let i=0; i< orderDetail.length; i++){
+          //console.log("saleData(i):",this.saleDetailData[i]) 
+        this.product.forEach(product =>{
+          if(product.id == orderDetail[i].productId){
+            orderDetail[i].productDescription = product.description
+          }
+        })
+        this.productType.forEach(productType =>{
+          if(productType.id == this.product[i].productTypeId){
+            orderDetail[i].productTypeDescription = productType.description
+          }
+        })
+        }
+        console.log("saleData",this.orderDetailData)
+    });
+    }
+  }
 
   async ngOnInit() {
+    this.orderDetail.valueChanges.subscribe((datas: Array<any>) => {
+      var total = 0;
+      datas.forEach((data, index) => {
+        const sub = data.requestedQuantity * data.price;
+        total = total + sub;
+        this.orderDetail.controls[index].get('amount').patchValue(sub, { emitEvent: false });
+      });
+      this.formOrder.get('totalCost').patchValue(total);
+    });
+
     setTimeout(() => {
      this.notShow = false;
       console.log("Delayed for 1 second.");
     }, 2000)
 
     this.ordService.getOrders().subscribe(async (order: any)=>{     
-      console.log(this.order)
       this.order=order  
-     
-      await this.order.forEach( async (order, index)=>{
-      await this.ordService.getCustumer(order.customerId).subscribe(async (customer: any)=>{ 
-        this.order[index].customer=customer;
-        await this.ordService.getAddress(order.customerId, order.addressId).subscribe((address: any)=>{ 
-          this.order[index].address = address;
-        });
-      });
       this.dataSource = new MatTableDataSource < Order > (this.order);
       this.dataSource.paginator =this.paginator;
       this.dataSource.sort = this.sort;
-    })
-
-    
-
-    this.datePipe = new DatePipe('en');
+      console.log(this.order)
+      this.datePipe = new DatePipe('en');
     this.dataSource.filterPredicate = (data, filter) =>{
       if (this.StartDate && this.EndDate) {
         //let date = data.saleDate.toDate();
@@ -148,6 +185,14 @@ export class CreateOrdersComponent implements OnInit {
       }
       return true;
     }
+      await this.order.forEach( async (order, index)=>{
+      await this.ordService.getCustumer(order.customerId).subscribe(async (customer: any)=>{ 
+        this.order[index].customer=customer;
+        await this.ordService.getAddress(order.customerId, order.addressId).subscribe((address: any)=>{ 
+          this.order[index].address = address;
+        });
+      });
+    })
     }); 
     
     
@@ -188,7 +233,35 @@ export class CreateOrdersComponent implements OnInit {
           this.product=product
       });    
   }
+  obtenerPrecios(index : number, product ?: Product)
+  {  
+    console.log(product)
+    let retail
+    let wholesale
+    let amount
+    let id = this.formOrder.get('saleTypeId').value
+    if(product.productTypeId != undefined){
 
+    this.productType.forEach((productType, index) =>{
+        if(productType.id == product.productTypeId){
+          if(id == 'yhl8Slx8goioNHV0OAGo'){
+            this.amount=productType.retailPrice
+            retail = productType.retailPrice
+            amount = retail
+          }else{
+            this.amount=productType.wholesalePrice
+            wholesale = productType.wholesalePrice
+            amount = wholesale
+          }
+          console.log(productType)
+        }
+    })
+    }
+    console.log(product)
+    this.orderDetail.controls[index].patchValue({"price":amount})
+    this.orderDetail.controls[index].patchValue({"amount":amount})
+
+  }
   getAddress(addres:Address[]){
     this.address = addres;
   }
@@ -200,11 +273,12 @@ export class CreateOrdersComponent implements OnInit {
   newOrderDetail(): FormGroup {
     return this.fs.group({
       id: [null],
-      orderId: [null],
+      saleId: [null],
       productId: [null, Validators.required],
-      requestedQuantity: [null,[Validators.required, Validators.pattern('^[0-9]+?$')] ],
-      amount: [null],
-      isCourtesy: [null],
+      requestedQuantity: [1, Validators.required],
+      price: [""],
+      amount: [""],
+      isCourtesy: [""],
       status: [true],
     })
   } 
@@ -214,6 +288,7 @@ export class CreateOrdersComponent implements OnInit {
   }
   //?? Remueve el detalle de la req en la alta
   removeOrderDetail(rowIndex: number): void {
+    this.restaTotal(rowIndex)  
   console.log(this.orderDetail.controls[rowIndex].valid)
   if(!this.orderDetail.controls[rowIndex].valid){
     this.orderDetail.removeAt(rowIndex);
@@ -225,7 +300,21 @@ export class CreateOrdersComponent implements OnInit {
   //this.address.removeAt(rowIndex);
   }
   }
-
+  restaTotal(index){
+    for(let i=0;i < this.orderDetail.length;i++){
+      if(i == index){
+        console.log(index)
+        var resta = this.orderDetail.controls[index].get('amount').value
+        console.log("resta",resta)
+        var totalCost = this.formOrder.get('totalCost').value
+        console.log("totalCost",totalCost)
+        totalCost = totalCost - resta
+        console.log("resultado",totalCost)
+        //VALOR SE RESTA PERO NO SE ASIGNA
+        this.formOrder.get('totalCost').patchValue(totalCost);
+      }
+    }
+  }
   onSubmit() {
     console.log(this.formOrder.value);
   }  
@@ -237,11 +326,29 @@ export class CreateOrdersComponent implements OnInit {
       //Aquí va la inserción en la base de datos
       this.ordService.addOrder(data).then((custom)=>{
      console.log(custom)
+     this.toastr.success("");
+     this.formSaleDetail.reset();
       })
     } else {
       this.toastr.error("Favor de llenar campos faltantes");
     }
   } 
+
+  updateStatus(): void {
+    let data = this.formOrder.value;
+    console.log(this.formOrder.valid)
+    if (this.formOrder.valid) {
+      //Aquí va la inserción en la base de datos
+      this.ordService.updateStatus(data.id, data).then((custom)=>{
+     console.log(custom)
+     this.toastr.success("Pedido creado");
+     this.formSaleDetail.reset();
+      })
+    } else {
+      this.toastr.error("Favor de llenar campos faltantes");
+    }
+  } 
+
 
   /** Guarda registro de dirección de un cliente */
   saveSaleDetail(): void {
@@ -251,9 +358,11 @@ export class CreateOrdersComponent implements OnInit {
     // Aquí va la inserción en la base de datos
       this.fb.addSale(data).then((sale: any)=>{
           console.log(sale)
+          this.toastr.success("Pedido creado");
+          this.formSaleDetail.reset();
        });
   } else {
-    //this.toastr.error("Favor de llenar campos faltantes");
+    this.toastr.error("Ocurrio un Error");
   }
 }  
 
@@ -264,7 +373,62 @@ export class CreateOrdersComponent implements OnInit {
     this.toastr.success('Cliente eliminado correctamente')
   })   */
   }
+  deliverCancel(order: Order) {
 
+    const data = {
+      message: 'Estatus del pedido',
+      name: 'La orden de compra: ' + order.id,
+      btnName:'Entregado',
+      btnName2:'Cancelado'
+    }
+    this.dialog.open(ConfirmDialogComponent, {
+      data: data,
+      width: '40%'
+    }).afterClosed().subscribe((type: number) => {
+      if (type == 1 || type == 2) {
+        if (type == 1) {
+          order.status = "entregado";
+        } else if (type == 2) {
+          const data = {
+            message: '¿Estas seguro que deseas cancelar el pedido?',
+            name: 'El pedido: ' + order.id,
+            btnName:'Si',
+            btnName2:'No'
+          }
+          this.dialog.open(ConfirmDialogComponent, {
+            data: data,
+            width: '40%'
+          }).afterClosed().subscribe((type: number) => {
+            if (type == 1 || type == 2) {
+              if (type == 1) {
+                order.status = "cancelado";
+              } else if (type == 2) {
+                this.toastr.warning('Cancelado');
+              this.ngOnInit();
+              }
+              this.ordService.updateStatus(order.id, order).then((custom)=>{
+                console.log(custom)
+                this.toastr.success("Pedido Actualizado");
+                this.formSaleDetail.reset();
+                 })
+            } else {
+              this.toastr.warning('Cancelado');
+              this.ngOnInit();
+            }
+          });
+        }
+        this.ordService.updateStatus(order.id, order).then((custom)=>{
+          console.log(custom)
+          this.toastr.success("Pedido Actualizado");
+          this.formSaleDetail.reset();
+           })
+      } else {
+        this.toastr.warning('Cancelado');
+        this.ngOnInit();
+
+      }
+    });
+  }
 
   closeDialog(): void {
     //this.dialogRef.close({ event: 'Cancelar' });
@@ -309,10 +473,6 @@ openDialog(action: string, obj: any): void {
 
   // tslint:disable-next-line - Disables all
   deleteRowData(row_obj: Sale): boolean | any {
-/*       this.dataSource.data = this.dataSource.data.filter((value: any) => {
-          return value.id !== row_obj.id;
-      });
-  }
- */
+
 }
 }
