@@ -166,20 +166,25 @@ export class SalesComponent implements OnInit, AfterViewInit {
     console.log(product)
     this.saleDetail.controls[index].patchValue({"price":amount})
     this.saleDetail.controls[index].patchValue({"amount":amount})
-
   }
 
 
   nullAmount(index){
-    //console.log("opcion", this.saleDetail.controls[index].get('isCourtesy').value)
-    //console.log("index", index)
+    console.log("opcion", this.saleDetail.controls[index].get('isCourtesy').value)
+    console.log("index", index)
+    if(this.saleDetail.controls[index].get('isCourtesy').value == false  && this.saleDetail.controls[index].valid){
+      console.log("Activo")
+      this.restaTotal(index)
+    }else{
+      console.log("desactivado")
+    }
   }
   
   clear(): void {
     const stock = this.formSale.get('saleDetails') as FormArray;
-    stock.controls.forEach(stock => stock.patchValue({ productId: '', requestedQuantity: '1', amount: '', price: ''})); 
+    stock.controls.forEach(stock => stock.patchValue({ productId: '', requestedQuantity: '1', amount: '', price: '0'})); 
     //RESETEAN COSTO TOTAL DE LA TABLA.
-    //this.formSale.get('saleTypeId').patchValue({saleTypeId: ''});
+    this.formSale.get('saleTypeId').patchValue({saleTypeId: ''});
     //this.formSale.get('totalCost').patchValue({totalCost: ''});
   }
 
@@ -189,12 +194,13 @@ export class SalesComponent implements OnInit, AfterViewInit {
         console.log(index)
         var resta = this.saleDetail.controls[index].get('amount').value
         console.log("resta",resta)
-        var totalCost = this.formSale.get('totalCost').value
-        console.log("totalCost",totalCost)
-        totalCost = totalCost - resta
-        console.log("resultado",totalCost)
+        var totalcost = this.formSale.get('totalCost').value
+        console.log("totalCost",totalcost)
+        totalcost = totalcost - resta
+        console.log("resultado",totalcost)
         //VALOR SE RESTA PERO NO SE ASIGNA
-        this.formSale.get('totalCost').patchValue(totalCost);
+        //this.formSale.get('totalCost').setValue(totalcost);
+        this.formSale.get('totalCost').setValue({ totalCost: totalcost })
       }
     }
   }
@@ -348,7 +354,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       id: [null],
       saleId: [null],
       productId: [null, Validators.required],
-      requestedQuantity: [1, Validators.required],
+      requestedQuantity: [1, [Validators.required, Validators.pattern('^[0-9]+$')]],
       price: [""],
       amount: [""],
       isCourtesy: [""],
