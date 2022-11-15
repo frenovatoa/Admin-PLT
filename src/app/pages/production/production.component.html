@@ -111,8 +111,8 @@
                       <mat-form-field appearance="fill">
                           <mat-label>Ingrese rango de fechas</mat-label>
                           <mat-date-range-input [rangePicker]="picker">
-                              <input matStartDate formControlName="StartDate" placeholder="Start date">                              
-                              <input matEndDate formControlName="EndDate" placeholder="End date">
+                              <input matStartDate formControlName="StartDate" placeholder="Fecha inicio">                              
+                              <input matEndDate formControlName="EndDate" placeholder="Fecha fin">
                             </mat-date-range-input>
                           <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                           <mat-date-range-picker #picker></mat-date-range-picker>
@@ -144,19 +144,19 @@
                           <mat-cell *matCellDef="let element; let i = dataIndex">{{i + 1}}</mat-cell>
                       </ng-container>
 
-                      <!-- Date Column -->
+                      <!-- Columna de fecha -->
                       <ng-container matColumnDef="productionDate">
                           <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{ element.productionDate?.toDate() | date:'dd/MM/yyyy' }} </mat-cell>
                       </ng-container>
 
-                      <!-- Venta/Pedido Column -->
+                      <!-- Columna de notas -->
                       <ng-container matColumnDef="productionNotes">
                           <mat-header-cell *matHeaderCellDef mat-sort-header> Notas </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{element.productionNotes}} </mat-cell>
                       </ng-container>
 
-                      <!-- User Column -->
+                      <!-- Columna de usuario -->
                       <ng-container matColumnDef="userId">
                           <mat-header-cell *matHeaderCellDef mat-sort-header> Registrado Por </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </mat-cell>

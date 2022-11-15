@@ -83,6 +83,10 @@ export class AppBreadcrumbComponent {
             this.title = 'Tipos de producto';
             break;
           }
+          case '/pages/sales': {
+            this.title = 'Punto de venta';
+            break;
+          }
           case '/pages/sales/sales': {
             this.title = 'Punto de venta';
             break;
