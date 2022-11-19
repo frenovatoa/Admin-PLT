@@ -15,7 +15,7 @@
                         <div fxFlex="100" fxFlex.gt-md="30" style="margin-left: 15px;">
                             <mat-form-field appearance="outline">
                                 <mat-label>Tipo de Venta</mat-label>
-                                <mat-select matInput required id="saleTypeId" name="saleTypeId" ngDefaultControl [(ngModel)]="local_data.saleTypeId" formControlName="saleTypeId" [formControl]="formSale.controls['saleTypeId']">
+                                <mat-select matInput required id="saleTypeId" name="saleTypeId" ngDefaultControl [(ngModel)]="local_data.saleTypeId" formControlName="saleTypeId" [formControl]="formSale.controls['saleTypeId']" (click)="precios()">
                                     <mat-option *ngFor="let saleType of saleType" [value]="saleType.id">
                                         {{saleType.description}}
                                     </mat-option>
@@ -71,7 +71,7 @@
                         <div fxFlex="100" fxFlex.gt-md="16">
                             <div class="m-r-15 m-l-15">
                                 <mat-form-field appearance="outline">
-                                    <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity">
+                                    <input type="number" min="1" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity">
                                     <small *ngIf="add.controls['requestedQuantity'].hasError('required') && add.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
                                     <small *ngIf="add.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
                                 </mat-form-field>
