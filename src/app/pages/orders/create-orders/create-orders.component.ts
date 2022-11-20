@@ -115,7 +115,7 @@ export class CreateOrdersComponent implements OnInit {
       orderNotes :[null, Validators.required],
       saleTypeId:[null, Validators.required],
       userId: [null],
-      totalCost: [null],
+      totalCost: [0],
       status: ['pendiente', Validators.required],
       orderDetails: this.fs.array([])
      });
@@ -156,6 +156,7 @@ export class CreateOrdersComponent implements OnInit {
   }
 
   async ngOnInit() {
+
     this.orderDetail.valueChanges.subscribe((datas: Array<any>) => {
       var total = 0;
       datas.forEach((data, index) => {
@@ -301,19 +302,23 @@ export class CreateOrdersComponent implements OnInit {
   }
   }
   restaTotal(index){
-    for(let i=0;i < this.orderDetail.length;i++){
-      if(i == index){
-        console.log(index)
-        var resta = this.orderDetail.controls[index].get('amount').value
-        console.log("resta",resta)
-        var totalCost = this.formOrder.get('totalCost').value
-        console.log("totalCost",totalCost)
-        totalCost = totalCost - resta
-        console.log("resultado",totalCost)
-        //VALOR SE RESTA PERO NO SE ASIGNA
-        this.formOrder.get('totalCost').patchValue(totalCost);
-      }
-    }
+    
+   // this.formOrder.get('totalCost').setValue(10);
+    this.orderDetail.controls[index].patchValue({"price":0})
+    this.orderDetail.controls[index].patchValue({"amount":0})
+    // for(let i=0;i < this.orderDetail.length;i++){
+    //   if(i == index){
+    //     console.log(index)
+    //     var resta = this.orderDetail.controls[index].get('amount').value
+    //     console.log("resta",resta)
+    //     var totalCost = this.formOrder.get('totalCost').value
+    //     console.log("totalCost",totalCost)
+    //     totalCost = totalCost - resta
+    //     console.log("resultado",totalCost)
+    //     //VALOR SE RESTA PERO NO SE ASIGNA
+    //   }
+    //}
+
   }
   onSubmit() {
     console.log(this.formOrder.value);
