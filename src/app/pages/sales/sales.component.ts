@@ -28,6 +28,7 @@ import { Product } from 'src/app/shared/interfaces/product';
 import { SaleDetail } from 'src/app/shared/interfaces/sale.detail';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 
+
 @Component({
   selector: 'app-sales',
   templateUrl: './sales.component.html',
@@ -139,33 +140,55 @@ export class SalesComponent implements OnInit, AfterViewInit {
 
   public amount
   public priceSaleType
+
+  precios(){
+    //for(let i=0;i<this.product.length;i++){
+    //  console.log("index",i)
+    //  this.fb.getProducts().subscribe((product: Product[])=>{
+    //    this.obtenerPrecios(i,product[i])
+    //  })
+    //}
+    if(this.saleDetail.controls[0].get('productId').value == null){
+      console.log("no haga nada")
+    }else{
+      for(let i=0;i<this.saleDetail.length;i++){
+        //let product = this.saleDetail.controls[i].get('productId').value
+
+      }
+    }
+  }
+
   obtenerPrecios(index : number, product ?: Product)
   {  
-    console.log(product)
-    let retail
-    let wholesale
-    let amount
-    let id = this.formSale.get('saleTypeId').value
-    if(product.productTypeId != undefined){
-
-    this.productType.forEach((productType, index) =>{
-        if(productType.id == product.productTypeId){
-          if(id == 'yhl8Slx8goioNHV0OAGo'){
-            this.amount=productType.retailPrice
-            retail = productType.retailPrice
-            amount = retail
-          }else{
-            this.amount=productType.wholesalePrice
-            wholesale = productType.wholesalePrice
-            amount = wholesale
+    //console.log("valor",this.saleDetail.controls[0].get('productId').value)
+    //if(this.saleDetail.controls[0].get('productId').value != null){
+      let retail
+      let wholesale
+      let amount
+      let id = this.formSale.get('saleTypeId').value
+      console.log(product)
+      if(product.productTypeId != undefined){
+  
+      this.productType.forEach((productType, index) =>{
+          if(productType.id == product.productTypeId){
+            if(id == 'yhl8Slx8goioNHV0OAGo'){
+              this.amount=productType.retailPrice
+              retail = productType.retailPrice
+              amount = retail
+            }else{
+              this.amount=productType.wholesalePrice
+              wholesale = productType.wholesalePrice
+              amount = wholesale
+            }
+            //console.log(productType)
           }
-          console.log(productType)
-        }
-    })
-    }
-    console.log(product)
-    this.saleDetail.controls[index].patchValue({"price":amount})
-    this.saleDetail.controls[index].patchValue({"amount":amount})
+      })
+      }
+      //console.log(product)
+      this.saleDetail.controls[index].patchValue({"price":amount})
+      this.saleDetail.controls[index].patchValue({"amount":amount})
+    //}  
+    //console.log("hola")
   }
 
 
@@ -174,9 +197,13 @@ export class SalesComponent implements OnInit, AfterViewInit {
     console.log("index", index)
     if(this.saleDetail.controls[index].get('isCourtesy').value == false  && this.saleDetail.controls[index].valid){
       console.log("Activo")
-      this.restaTotal(index)
-    }else{
+      //deberia resetear el imorte a 0, para que no genere costo a totalCost.
+      this.saleDetail.controls[index].patchValue({"amount":0})
+    }else if (this.saleDetail.controls[index].get('isCourtesy').value == true ){
       console.log("desactivado")
+      this.saleDetail.controls[index].patchValue({"price":0})
+      this.saleDetail.controls[index].patchValue({"requestedQuantity":0})
+      this.saleDetail.controls[index].patchValue({"productId":''})
     }
   }
   
@@ -189,20 +216,8 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   restaTotal(index){
-    for(let i=0;i < this.saleDetail.length;i++){
-      if(i == index){
-        console.log(index)
-        var resta = this.saleDetail.controls[index].get('amount').value
-        console.log("resta",resta)
-        var totalcost = this.formSale.get('totalCost').value
-        console.log("totalCost",totalcost)
-        totalcost = totalcost - resta
-        console.log("resultado",totalcost)
-        //VALOR SE RESTA PERO NO SE ASIGNA
-        //this.formSale.get('totalCost').setValue(totalcost);
-        this.formSale.get('totalCost').setValue({ totalCost: totalcost })
-      }
-    }
+    this.saleDetail.controls[index].patchValue({"price":0})
+    this.saleDetail.controls[index].patchValue({"amount":0})
   }
 
   async expandir(sale: any){
@@ -302,46 +317,24 @@ export class SalesComponent implements OnInit, AfterViewInit {
         this.saleDetails=saleDetails
       })
 
-      //llamada de la BD de la coleccion de tipo de productos mediante la BD.
-      this.fb.getTypeOfProduct().subscribe((productType: any)=>{
-        this.productType=productType
-      })
-
       //llamada de la BD de productos para obtener la descripcion mediante la ID.
       this.fb.getProducts().subscribe((product: any)=>{
         this.product=product
-        let productDescription
-        let productTypeDescription
-        let productTypeRetailPrice
-        let productTypeWholesalePrice
-        this.saleDetails.forEach((saleDetails, index) =>{
-          this.product.forEach(product =>{
-            if(saleDetails.productId == product.id){ 
-              productDescription = product.description
-              
-              this.productType.forEach((productType, index) =>{
-                this.product.forEach(product =>{
-                  if(productType.id == product.productTypeId){
-                    productTypeRetailPrice = productType.retailPrice
-                    productTypeWholesalePrice = productType.wholesalePrice
-                  }
-                })
-              })
-            }
+        this.fb.getTypeOfProduct().subscribe((productType: any)=>{
+            console.log(productType)
+            this.productType=productType
+
+            let typeDescription
+            this.product.forEach((products, index) => {
+                this.productType.forEach(productType => {
+                    if(products.productTypeId == productType.id) {
+                        typeDescription = productType.description
+                    }
+                });
+                this.product[index].productTypeDescription = typeDescription
+            })
           });
-        this.saleDetails[index].productDescription = productDescription  
-        this.saleDetails[index].productRetailPrice = productTypeRetailPrice
-        this.saleDetails[index].productWholesalePrice = productTypeWholesalePrice
-        })
-        this.productType.forEach((productType, index) =>{
-          this.product.forEach(product =>{
-            if(productType.id == product.productTypeId){
-              productTypeDescription = productType.description
-            }
-          })
-        this.product[index].productTypeDescription = productTypeDescription   
-        })
-      });     
+      });  
     });     
   }
 
@@ -354,7 +347,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       id: [null],
       saleId: [null],
       productId: [null, Validators.required],
-      requestedQuantity: [1, [Validators.required, Validators.pattern('^[0-9]+$')]],
+      requestedQuantity: ["", [Validators.required, Validators.pattern('^[0-9]+$')]],
       price: [""],
       amount: [""],
       isCourtesy: [""],
@@ -387,19 +380,85 @@ export class SalesComponent implements OnInit, AfterViewInit {
     console.log(this.formSale.value);
   }  
 
+//Actualiza la cantidad de productos
+  updateQuantity(): void {
+    let data = this.formSale.value;
+    //Variable de control en caso de que la cantidad solicitada no este disponible.
+    let valid1 = true;
+
+    for(let i = 0; i < this.saleDetail.length;i++){
+      this.product.forEach(product =>{
+        //compara la id del los productos y la variable de control sea siempre true;
+        //en caso de ser false,dejara de buscar.
+        //en este ciclo buscador no hay tanto problema, ya que hay otro ciclo antes en save() que 
+        //valida si las cantidades solicitadas esten disponibles en  la tabla productos.
+        if(product.id == this.saleDetail.controls[i].get('productId').value && valid1 == true){
+          //obtiene la cantidad de la tabla productos y resta la cantidad solicitada de ventas.
+          let cantidadSobrante = product.quantity - this.saleDetail.controls[i].get('requestedQuantity').value
+          //compara que sea mayor u igual a 0, en caso de que al restar la cantidad solicitada quede en 0 la cantidad disponible en productos.
+          if(cantidadSobrante >= 0){
+            //asigna la resta de la cantidad sobrante a data.quantity
+            data.quantity = cantidadSobrante
+            //asigna a id, la id del producto actual del array en saleDetail
+            let id = this.saleDetail.controls[i].get('productId').value
+            //mantiene en true la variable de control.
+            valid1 = true
+            //llama a la funcion del servicio para actualizar la cantidad en productos.
+            this.fb.updateProduct(id, data).then((custom)=>{
+            })
+          } 
+        }
+      })
+    }  
+
+  }
+
+
   save(): void {
     let data = this.formSale.value;
     data.userId = this.id
     console.log(this.formSale.valid)
-    if (this.formSale.valid) {
-      //Aquí va la inserción en la base de datos
-      this.fb.addVentas(data).then((custom)=>{
-      this.toastr.success("Venta creada exitosamente");
-      this.closeDialog();
+    //primer ciclo que valida si hay stock disponible de un producto en especifico.
+    //Variable de control en true.
+    let valid = true
+    for(let i = 0; i < this.saleDetail.length;i++){
+      //console.log(this.saleDetail.controls[i].get('productId').value)
+      //let id = this.saleDetail.controls[i].get('productId').value
+      this.product.forEach(product =>{
+        if(product.id == this.saleDetail.controls[i].get('productId').value && valid == true){
+          //console.log(i, product.quantity)
+          let cantidadSobrante = product.quantity - this.saleDetail.controls[i].get('requestedQuantity').value
+          if(cantidadSobrante >= 0){
+            valid = true            
+            console.log(i,cantidadSobrante)
+          }
+          else{
+            //en caso de que algun producto de la venta no tenga stock disponible en productos la variable de control cambia a false,
+            // y termina la condicional del ciclo.
+            valid = false            
+            console.log("falta cantidad en producto.")
+          }
+        }
       })
-    } else {
-      this.toastr.error("Favor de llenar campos faltantes");
     }
+
+      if (this.formSale.valid) {
+        //Aquí va la inserción en la base de datos
+        //antes de crear la venta verificar que la variable de control sea true, en caso de que todos los productos seleccioandos de la venta tengan stock disponible
+        // en productos, la variable de control quedara en true, permitiendo que pase la condicional y se guarde la venta, en caso de que un producto no tenga stock, no
+        // hara la venta y arrojara un mensaje indicando que falta stock del producto.
+        if(valid == true){
+          this.updateQuantity()
+          this.fb.addVentas(data).then((custom)=>{
+          this.toastr.success("Venta creada exitosamente");
+          this.closeDialog();
+          })
+        }else{
+          this.toastr.error("No hay en stock para satisfacer la cantidad.");
+        }
+      } else {
+        this.toastr.error("Favor de llenar campos faltantes");
+      }
   } 
 
   /** Guarda registro de dirección de un cliente */

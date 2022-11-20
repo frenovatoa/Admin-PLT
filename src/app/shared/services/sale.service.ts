@@ -40,6 +40,14 @@ export class SaleService {
     .collection("tbl_sales").doc(id).collection("saleDetails")
     .valueChanges();
   }
+  
+  //Actualizar cantidad de los productos
+  async updateProduct(id: any, data: any) {
+    const ref = doc(this.firestore, `tbl_products`, id)
+    from(updateDoc(ref, {id: id,
+      quantity: data.quantity}))
+  }
+
 
   // Función que permite dar de alta documentos (registros)
 /*   addSale(data: any) {
@@ -122,7 +130,7 @@ export class SaleService {
     await custRef.set(saleData, {
       merge:true
     })
-    console.log(data.saleDetails)
+    //console.log(data.saleDetails)
     data.saleDetails.forEach(async add => {
     let addId =this.unicID();
     console.log(id)
