@@ -152,6 +152,13 @@ export class ProductionService {
    .valueChanges();
  }
 
+ //Actualizar cantidad de los productos
+ async updateProduct(id: any, data: any) {
+  const ref = doc(this.firestore, `tbl_products`, id)
+  from(updateDoc(ref, {id: id,
+    quantity: data.quantity}))
+}
+
  // Función que me da un id automático para las producciones
   unicID(): string {
   const today = moment();
