@@ -1,39 +1,227 @@
-<div fxLayout="row wrap">
-    <!-- Card column -->
-    <div fxFlex.gt-sm="100%" fxFlex="100">
-      <mat-card>
-        <mat-card-content>
-          <mat-card-title>Producción</mat-card-title>
-          <mat-horizontal-stepper [linear]="isLinear">
-            <!-- Producción -->
-            <mat-step [stepControl]="firstFormGroup">
-              <form [formGroup]="firstFormGroup">
-                <ng-template matStepLabel>Producción</ng-template>
-                <mat-form-field>
-                  <input matInput placeholder="Last name, First name" formControlName="firstCtrl" required>
-                </mat-form-field>
-                <div>
-                  <button mat-raised-button color="warn" matStepperNext>Next</button>
+<mat-horizontal-stepper>
+  <!-- Primer Stepper Ventas -->
+  <mat-step label="Producción">
+      <h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2>
+      <mat-dialog-content class="pb-3">
+          <form #ProductionForm="ngForm" [formGroup]="formProduction">
+              <div fxLayout="row wrap" class="align-items-center">
+                  <!-- Tipo De Venta -->
+                  <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
+                      <!-- Limpiar campos 
+                      <div mat-dialog-actions align="center" class="pt-3" style="margin-top: 25px; margin-left: 10px;">
+                          <button mat-flat-button color="primary" (click)="clear()">Limpiar Campos</button>
+                      </div> -->
+                      <!-- Fecha actual -->
+                      <div fxFlex.gt-md="100" class="text-left">
+                          <span class="font-medium"> Fecha de la producción: </span>
+                          <h4 name="date" class="m-t-10 m-b-0" ngDefaultControl>
+                              {{ currentDate | date:'dd/MM/yyyy' }}
+                          </h4>
+                      </div>
+                      <div fxFlex="100" fxFlex.gt-md="70">
+                        <mat-form-field class="p-r-15 m-r-15" appearance="outline">
+                            <mat-label>Notas: </mat-label>
+                            <textarea matInput formControlName="productionNotes"></textarea>
+                        </mat-form-field>
+                    </div>
+                  </div>
+              </div>              
+              <div fxLayout="row wrap" class="align-items-center">
+                <!-- Mensaje superior -->
+                <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">                        
+                    <div fxFlex="100" fxFlex.gt-md="100">
+                        <mat-label><b>Detalles de producción</b><br></mat-label><br>
+                    </div> 
                 </div>
-              </form>
-            </mat-step>
-            <!-- Reporte de producción -->
-            <mat-step [stepControl]="secondFormGroup">
-              <form [formGroup]="secondFormGroup">
-                <ng-template matStepLabel>Reporte de producción</ng-template>
-                <mat-form-field>
-                  <input matInput placeholder="Address" formControlName="secondCtrl" required>
-                </mat-form-field>
-                <div>
-                  <button mat-raised-button color="accent" matStepperPrevious>Back</button>
-                  <button mat-raised-button color="warn" matStepperNext>Next</button>
+               </div>
+                <div formArrayName="productionDetails" *ngFor="let add of productionDetail.controls; index as i">
+                    <div fxLayout="row wrap" class="align-items-center" [formGroup]="add">
+                        <!-- Productos -->
+                        <div fxFlex="100" fxFlex.gt-md="47">
+                            <div class="m-r-15 m-l-15">
+                                <mat-label><b>Producto {{i+1}}</b></mat-label>
+                            </div>
+                        </div>
+                        <div fxFlex="100" fxFlex.gt-md="47">
+                            <mat-label><b>Cantidad</b></mat-label>
+                        </div>                      
+                        <!-- Tipo De Producto -->
+                        <div fxFlex="100" fxFlex.gt-md="47">
+                            <div class="m-r-15 m-l-15">
+                                <mat-form-field appearance="outline">
+                                    <mat-label>Producto</mat-label>
+                                    <mat-select matInput required id="productId" name="productId" formControlName="productId">
+                                        <mat-option *ngFor="let product of product" [value]="product.id">
+                                            {{product.description}} <span>, Tipo de producto: </span> {{product.productTypeDescription}}
+                                        </mat-option>
+                                    </mat-select>
+                                    <small *ngIf="add.controls['productId'].hasError('required') && add.controls['productId'].touched" class="text-danger support-text">El producto es requerido.</small>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <!-- Cantidad solicitada -->
+                        <div fxFlex="100" fxFlex.gt-md="47">
+                            <div class="m-r-15 m-l-15">
+                                <mat-form-field appearance="outline">
+                                    <input type="number" min="0" matInput required id="producedQuantity" name="producedQuantity" placeholder="Cantidad" formControlName="producedQuantity">
+                                    <small *ngIf="add.controls['producedQuantity'].hasError('required') && add.controls['producedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
+                                    <small *ngIf="add.controls['producedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                        <div fxFlex="100" fxFlex.gt-md="5">
+                            <!-- Agregar Producción -->
+                            <button mat-icon-button color="primary" matTooltip="Agregar" [matTooltipPosition]="'above'" (click)="addProductionDetail(i)">
+                                <mat-icon>add_circle</mat-icon>
+                            </button>
+                            <!--  Remover Producción -->
+                            <button *ngIf="i != 0" mat-icon-button color="warn" matTooltip="Eliminar" [matTooltipPosition]="'above'" (click)="removeProductionDetail(i)">
+                                <mat-icon>delete_sweep</mat-icon>
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </form>
-            </mat-step>            
-          </mat-horizontal-stepper>
-  
-        </mat-card-content>
-  
-      </mat-card>
-    </div>
-  </div>
+              <div fxLayout="row wrap" class="align-items-center" style="margin: 0 40%">
+                  <!-- totalCost 
+                  <div fxFlex="100" fxFlex.gt-md="55">
+                      <div class="m-r-15 m-l-15">
+                          <mat-form-field appearance="outline">
+                              <input type="number" min="0" matInput required id="totalCost" name="totalCost" [(ngModel)]="local_data.totalCost" placeholder="Costo Total" formControlName="totalCost" [formControl]="formProduction.controls['totalCost']" [readonly]="true">
+                              <small *ngIf="formProduction.controls['totalCost'].hasError('required') && formProduction.controls['totalCost'].touched" class="text-danger support-text">El costo total es requerido.</small>
+                          </mat-form-field>
+                      </div>
+                  </div>-->
+                  <div mat-dialog-actions align="center" class="pt-3">
+                      <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="save()" [disabled]="!formProduction.valid">
+                          <mat-icon>save</mat-icon>
+                      </button>
+                  </div>
+              </div>
+          </form>
+      </mat-dialog-content>
+  </mat-step>
+  <!-- Segundo Stepper Reporte de Producción -->
+  <mat-step label="Reporte de producción">
+      <div fxLayout="row wrap">
+          <div fxFlex="100">
+              <!-- Filtrado de rangos por fechas -->
+              <div fxFlex.gt-md="25" fxFlex.gt-lg="25" fxFlex="100">
+                  <mat-hint>Filtrado por rango de fechas:</mat-hint>
+                  <form [formGroup]="filterForm" class="demo-button">
+                      <mat-form-field appearance="fill">
+                          <mat-label>Ingrese rango de fechas</mat-label>
+                          <mat-date-range-input [rangePicker]="picker">
+                              <input matStartDate formControlName="StartDate" placeholder="Fecha inicio">                              
+                              <input matEndDate formControlName="EndDate" placeholder="Fecha fin">
+                            </mat-date-range-input>
+                          <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                          <mat-date-range-picker #picker></mat-date-range-picker>
+                          <mat-error *ngIf="filterForm.controls.StartDate.hasError('required') && filterForm.controls['StartDate'].touched">Fecha inicial requerida</mat-error>
+                          <mat-error *ngIf="filterForm.controls.EndDate.hasError('required') && filterForm.controls['EndDate'].touched">Fecha final requerida</mat-error>
+                      </mat-form-field>
+                  </form>
+              </div>
+              <div class="text-right">
+                  <mat-card actions class="child" style="margin: 45%; margin-left: 5%;">
+                      <button class="button-form" mat-raised-button color="accent" (click)="applyFilter()" [disabled]="filterForm.invalid">Buscar</button>
+                  </mat-card>
+              </div>
+          </div>
+      </div>
+      <div fxLayout="row wrap">
+          <!-- Tabla de reportes de producción -->
+          <div fxFlex="100">
+              <!-- <mat-card>
+                  <mat-card-content> -->
+              <div class="table-responsive">
+                  <mat-table #table [dataSource]="dataSource" class="table production-list no-wrap" multiTemplateDataRows matSort #sort="matSort">
+                      <!--- Note that these columns can be defined in any order.
+                                The actual rendered columns are set as a property on the row definition" -->
+
+                      <!-- Position Column -->
+                      <ng-container matColumnDef="#">
+                          <mat-header-cell *matHeaderCellDef> # </mat-header-cell>
+                          <mat-cell *matCellDef="let element; let i = dataIndex">{{i + 1}}</mat-cell>
+                      </ng-container>
+
+                      <!-- Columna de fecha -->
+                      <ng-container matColumnDef="productionDate">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> {{ element.productionDate?.toDate() | date:'dd/MM/yyyy' }} </mat-cell>
+                      </ng-container>
+
+                      <!-- Columna de notas -->
+                      <ng-container matColumnDef="productionNotes">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header> Notas </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> {{element.productionNotes}} </mat-cell>
+                      </ng-container>
+
+                      <!-- Columna de usuario -->
+                      <ng-container matColumnDef="userId">
+                          <mat-header-cell *matHeaderCellDef mat-sort-header> Registrado Por </mat-header-cell>
+                          <mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </mat-cell>
+                      </ng-container>
+
+                      <!-- Expanded Content Column - The detail row is made up of this one column -->
+                      <ng-container matColumnDef="expandedDetail">
+                          <mat-cell *matCellDef="let detail" [attr.colspan]="displayedColumns.length">
+
+                              <div fxLayout="row wrap" class="align-items-center">
+                                  <div>
+                                      <div fxLayout="row wrap" class="align-items-center" *ngFor="let detail of productionDetailData; let i = index">
+                                          <!-- Productos -->
+                                          <div fxFlex="100" fxFlex.gt-md="100">
+                                              <div class="m-r-15 m-l-15">
+                                                  <mat-label><b>Producto {{i+1}}</b></mat-label>
+                                              </div>
+                                          </div>
+                                          <!-- Tipo De Producto -->
+                                          <div fxFlex="100" fxFlex.gt-md="75">
+                                              <div class="m-r-15 m-l-15">
+                                                  <mat-form-field appearance="outline">
+                                                      <mat-label>Producto:</mat-label>
+                                                      <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
+                                                  </mat-form-field>
+                                              </div>
+                                          </div>
+                                          <!-- Cantidad -->
+                                          <div fxFlex="100" fxFlex.gt-md="25">
+                                              <div class="m-r-15 m-l-15">
+                                                  <mat-form-field appearance="outline">
+                                                      <mat-label>Cantidad:</mat-label>
+                                                      <input type="number" min="0" matInput required id="producedQuantity" value="{{detail.producedQuantity}}" [readonly]="true" />
+                                                  </mat-form-field>
+                                              </div>
+                                          </div>
+                                      </div>
+                                  </div>
+                              </div>
+
+                          </mat-cell>
+                      </ng-container>
+
+                      <ng-container matColumnDef="action">
+                          <mat-header-cell *matHeaderCellDef> Accion </mat-header-cell>
+                          <mat-cell *matCellDef="let element">
+                              <button mat-icon-button *ngIf="expandedElement != element" [class.expanded]="expandedElement == element" (click)="expandir(element)">
+                                      <mat-icon>keyboard_arrow_down</mat-icon>
+                              </button>
+                              <button mat-icon-button *ngIf="expandedElement == element" [class.expanded]="expandedElement == undefined" (click)="expandedElement = undefined">
+                                      <mat-icon>keyboard_arrow_up</mat-icon>
+                              </button>
+                          </mat-cell>
+                      </ng-container>
+
+                      <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+                      <mat-row *matRowDef="let row; columns: displayedColumns;" matRipple class="element-row"></mat-row>
+                      <mat-row *matRowDef="let row; columns: ['expandedDetail'];" [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden">
+                      </mat-row>
+                  </mat-table>
+                  <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
+              </div>
+              <!-- </mat-card-content>
+              </mat-card> -->
+          </div>
+      </div>
+  </mat-step>
+</mat-horizontal-stepper>

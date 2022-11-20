@@ -83,6 +83,10 @@ export class AppBreadcrumbComponent {
             this.title = 'Tipos de producto';
             break;
           }
+          case '/pages/sales': {
+            this.title = 'Punto de venta';
+            break;
+          }
           case '/pages/sales/sales': {
             this.title = 'Punto de venta';
             break;
@@ -93,6 +97,10 @@ export class AppBreadcrumbComponent {
           }
           case '/pages/orders/schedule': {
             this.title = 'Agenda de pedidos';
+            break;
+          }
+          case '/pages/production': {
+            this.title = 'Producción';
             break;
           }
           case '/pages/production/production': {
