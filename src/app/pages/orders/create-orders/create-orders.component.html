@@ -16,7 +16,7 @@
                                                     <div fxFlex="100" fxFlex.gt-md="30">
                                                         <mat-form-field appearance="outline">
                                                             <mat-label>Tipo de Venta</mat-label>
-                                                            <mat-select matInput required id="saleTypeId" name="saleTypeId" ngDefaultControl [(ngModel)]="local_data.saleTypeId" formControlName="saleTypeId" [formControl]="formOrder.controls['saleTypeId']">
+                                                            <mat-select matInput required id="saleTypeId" ngDefaultControl [(ngModel)]="local_data.saleTypeId" name="saleTypeId" formControlName="saleTypeId" [formControl]="formOrder.controls['saleTypeId']" (selectionChange)="precios()">
                                                                 <mat-option *ngFor="let saleType of saleType" [value]="saleType.id">
                                                                     {{saleType.description}}
                                                                 </mat-option>
@@ -142,7 +142,7 @@
                                                     <!-- Cortesia -->
                                                     <div fxFlex="100" fxFlex.gt-md="8">
                                                         <div class="m-r-15 m-l-15" appearance="outline">
-                                                            <input type="checkbox" id="isCourtesy" value="isCourtesy" formControlName="isCourtesy" (input)="nullAmount(i)">
+                                                            <input type="checkbox" id="isCourtesy" value="isCourtesy" formControlName="isCourtesy" (input)="nullAmount($event.target.checked, i)">
                                                             <label for="isCourtesy">Cortesia</label>
                                                         </div>
                                                     </div>
@@ -160,21 +160,35 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div fxLayout="row wrap" class="align-items-center" style="margin: 0 40%">
+                                    <div fxLayout="row wrap" class="align-items-center" style="margin-left:55%;">
+                                        <!-- costo envio -->
                                         <!-- totalCost -->
-                                        <div fxFlex="100" fxFlex.gt-md="55">
+                                        <div fxFlex="100" fxFlex.gt-md="25">
                                             <div class="m-r-15 m-l-15">
                                                 <mat-form-field appearance="outline">
-                                                    <input type="number" min="0" matInput required id="totalCost" name="totalCost" [(ngModel)]="local_data.totalCost" placeholder="Costo Total" formControlName="totalCost" [formControl]="formOrder.controls['totalCost']" [readonly]="true">
+                                                    <mat-label><b>Costo de envio</b></mat-label>
+                                                    <input type="number" min="0" matInput required id="deliveryCost" name="deliveryCost" placeholder="Costo de envio" formControlName="deliveryCost" [formControl]="formOrder.controls['deliveryCost']">
+                                                    <small *ngIf="formOrder.controls['deliveryCost'].hasError('required') && formOrder.controls['deliveryCost'].touched" class="text-danger support-text">El costo de envio.</small>
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
+                                        <div fxFlex="100" fxFlex.gt-md="25">
+                                            <div class="m-r-15 m-l-15">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label><b>Costo Total</b></mat-label>
+                                                    <input type="number" min="0" matInput required id="totalCost" name="totalCost" placeholder="Costo Total" formControlName="totalCost" [formControl]="formOrder.controls['totalCost']" [readonly]="true">
                                                     <small *ngIf="formOrder.controls['totalCost'].hasError('required') && formOrder.controls['totalCost'].touched" class="text-danger support-text">El costo total es requerido.</small>
                                                 </mat-form-field>
                                             </div>
                                         </div>
-                                        <div mat-dialog-actions align="center" class="pt-3">
-                                            <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="save()" [disabled]="!formOrder.valid">
+                                        <div fxFlex="100" fxFlex.gt-md="25">
+                                            <div class="m-r-15 m-l-15">
+                                                <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="save()" [disabled]="!formOrder.valid">
                                                 <mat-icon>save</mat-icon>
                                             </button>
+                                            </div>
                                         </div>
+
                                     </div>
                                 </form>
 
@@ -258,49 +272,127 @@
                                             <mat-cell *matCellDef="let detail" [attr.colspan]="displayedColumns.length">
 
                                                 <div fxLayout="row wrap" class="align-items-center">
-                                                    <div>
-                                                        <div fxLayout="row wrap" class="align-items-center" *ngFor="let detail of orderDetailData; let i = index">
-                                                            <!-- Productos -->
-                                                            <div fxFlex="100" fxFlex.gt-md="100">
-                                                                <div class="m-r-15 m-l-15">
-                                                                    <mat-label><b>Producto {{i+1}}</b></mat-label>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Tipo De Producto -->
-                                                            <div fxFlex="100" fxFlex.gt-md="50">
-                                                                <div class="m-r-15 m-l-15">
-                                                                    <mat-form-field appearance="outline">
-                                                                        <mat-label>Producto:</mat-label>
-                                                                        <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
-                                                                    </mat-form-field>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Cantidad solicitada -->
-                                                            <div fxFlex="100" fxFlex.gt-md="20">
-                                                                <div class="m-r-15 m-l-15">
-                                                                    <mat-form-field appearance="outline">
-                                                                        <mat-label>Cantidad Solicitada:</mat-label>
-                                                                        <input type="number" min="0" matInput required id="requestedQuantity" value="{{detail.requestedQuantity}}" [readonly]="true" />
-                                                                    </mat-form-field>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Importe -->
-                                                            <div fxFlex="100" fxFlex.gt-md="20">
-                                                                <div class="m-r-15 m-l-15">
-                                                                    <mat-form-field appearance="outline">
-                                                                        <mat-label>Importe:</mat-label>
-                                                                        <input type="number" min="0" matInput required id="amount" value="{{detail.amount}}" [readonly]="true" />
-                                                                    </mat-form-field>
-                                                                </div>
-                                                            </div>
-                                                            <!-- Cortesia -->
-                                                            <div fxFlex="100" fxFlex.gt-md="8">
-                                                                <div class="m-r-15 m-l-15">
-                                                                    <label for="isCourtesy" *ngIf="detail.isCourtesy == true"><mat-icon color="primary">done</mat-icon><b>Cortesia</b></label>
+                                                    <form [formGroup]="updateFormDetail">
+
+                                                        <div fxLayout="row wrap">
+                                                            <div fxFlex="100">
+                                                                <div formArrayName="orderDetailsUp" *ngFor="let order of updateOrderDetail.controls; index as i">
+                                                                    <div fxLayout="row wrap" class="align-items-center" [formGroup]="order" *ngIf="order.get('status').value == true">
+                                                                        <!-- Productos -->
+                                                                        <div fxFlex="100" fxFlex.gt-md="36">
+                                                                            <div class="m-r-15 m-l-15">
+                                                                                <mat-label><b>Producto {{i+1}}</b></mat-label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div fxFlex="100" fxFlex.gt-md="16">
+                                                                            <mat-label><b>Cantidad Solicitada</b></mat-label>
+                                                                        </div>
+                                                                        <div fxFlex="100" fxFlex.gt-md="16">
+                                                                            <mat-label><b>Precio</b></mat-label>
+                                                                        </div>
+                                                                        <div fxFlex="100" fxFlex.gt-md="16">
+                                                                            <mat-label><b>Importe</b></mat-label>
+                                                                        </div>
+                                                                        <!-- Tipo De Producto -->
+                                                                        <div fxFlex="100" fxFlex.gt-md="30">
+                                                                            <div class="m-r-15 m-l-15">
+                                                                                <mat-form-field appearance="outline">
+                                                                                    <mat-label>Producto</mat-label>
+                                                                                    <mat-select matInput required id="productId" name="productId" formControlName="productId">
+                                                                                        <mat-option *ngFor="let product of product" [value]="product.id" (click)="obtenerPrecios2(i,product)">
+                                                                                            {{product.description}} <span>, Tipo de producto: </span> {{product.productTypeDescription}}
+                                                                                        </mat-option>
+                                                                                    </mat-select>
+                                                                                    <small *ngIf="order.controls['productId'].hasError('required') && order.controls['productId'].touched" class="text-danger support-text">El producto es requerido.</small>
+                                                                                </mat-form-field>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Cantidad solicitada -->
+                                                                        <div fxFlex="100" fxFlex.gt-md="16">
+                                                                            <div class="m-r-15 m-l-15">
+                                                                                <mat-form-field appearance="outline">
+                                                                                    <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity">
+                                                                                    <small *ngIf="order.controls['requestedQuantity'].hasError('required') && order.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
+                                                                                    <small *ngIf="order.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
+                                                                                </mat-form-field>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Cantidad solicitada -->
+                                                                        <div fxFlex="100" fxFlex.gt-md="16">
+                                                                            <div class="m-r-15 m-l-15">
+                                                                                <mat-form-field appearance="outline">
+                                                                                    <input type="number" min="0" matInput required id="price" name="price" placeholder="Precio" formControlName="price" [readonly]="true">
+                                                                                </mat-form-field>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Importe -->
+                                                                        <div fxFlex="100" fxFlex.gt-md="16">
+                                                                            <div class="m-r-15 m-l-15">
+                                                                                <mat-form-field appearance="outline">
+                                                                                    <input type="number" min="0" matInput required id="amount" name="amount" placeholder="Importe" formControlName="amount" [readonly]="true">
+                                                                                    <small *ngIf="order.controls['amount'].hasError('required') && order.controls['amount'].touched" class="text-danger support-text">El importe es requerido.</small>
+                                                                                </mat-form-field>
+                                                                            </div>
+                                                                        </div>
+                                                                        <!-- Cortesia -->
+                                                                        <div fxFlex="100" fxFlex.gt-md="8">
+                                                                            <div class="m-r-15 m-l-15" appearance="outline">
+                                                                                <input type="checkbox" id="isCourtesy" value="isCourtesy" formControlName="isCourtesy" (input)="nullAmount($event.target.checked, i)">
+                                                                                <label for="isCourtesy">Cortesia</label>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div fxFlex="100" fxFlex.gt-md="10" *ngIf="updateFormDetail.controls['status'] != 'entregado'">
+                                                                            <!-- Agregar Producto -->
+                                                                            <button mat-icon-button color="primary" matTooltip="Agregar" [matTooltipPosition]="'above'" (click)="updateAddOrderDetail(i)">
+                                                                                <mat-icon>add_circle</mat-icon>
+                                                                            </button>
+                                                                            <!--  Remover Producto -->
+                                                                            <button *ngIf="i != 0" mat-icon-button color="warn" matTooltip="Eliminar" [matTooltipPosition]="'above'" (click)="updateRemoveOrderDetail(i)">
+                                                                                <mat-icon>delete_sweep</mat-icon>
+                                                                            </button>
+                                                                        </div>
+                                                                    </div>
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </div>
+                                                        <div fxLayout="row wrap" class="align-items-center" style="margin-left: 60%;">
+                                                            <!-- costo envio -->
+                                                            <!-- totalCost -->
+                                                            <div fxFlex="100" fxFlex.gt-md="25">
+                                                                <div class="m-r-15 m-l-25">
+                                                                    <mat-form-field appearance="outline">
+                                                                        <mat-label><b>Costo de envio</b></mat-label>
+                                                                        <input type="number" min="0" matInput required id="deliveryCost" name="deliveryCost" [(ngModel)]="local_data.deliveryCost" placeholder="Costo de envio" formControlName="deliveryCost" [formControl]="updateFormDetail.controls['deliveryCost']">
+                                                                        <small *ngIf="updateFormDetail.controls['deliveryCost'].hasError('required') && updateFormDetail.controls['deliveryCost'].touched" class="text-danger support-text">El costo de envio.</small>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div fxFlex="100" fxFlex.gt-md="25">
+                                                                <div class="m-r-15 m-l-25" appearance="outline">
+                                                                    <mat-form-field appearance="outline">
+                                                                        <mat-label><b>Costo total</b></mat-label>
+                                                                        <input type="number" min="0" matInput required id="totalCost" name="totalCost" [(ngModel)]="local_data.totalCost" placeholder="Costo Total" formControlName="totalCost" [formControl]="updateFormDetail.controls['totalCost']" [readonly]="true">
+                                                                        <small *ngIf="updateFormDetail.controls['totalCost'].hasError('required') && updateFormDetail.controls['totalCost'].touched" class="text-danger support-text">El costo total es requerido.</small>
+                                                                    </mat-form-field>
+                                                                </div>
+                                                            </div>
+                                                            <div fxFlex="100" fxFlex.gt-md="25" *ngIf="updateFormDetail.controls['status'] != 'entregado'">
+                                                                <div class="m-r-15 m-l-25" appearance="outline">
+                                                                    <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="update()" [disabled]="!updateFormDetail.valid">
+                                                                        <mat-icon>save</mat-icon>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+
+                                                            <!--div class="m-r-15 m-l-15">
+                                                                    <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="update()" [disabled]="!updateFormDetail.valid">
+                                                                        <mat-icon>save</mat-icon>
+                                                                    </button>
+                                                                </div-->
+
+
+                                                        </div>
+                                                    </form>
                                                 </div>
 
                                             </mat-cell>
@@ -315,10 +407,10 @@
                                                 <button mat-icon-button *ngIf="expandedElement == element" [class.expanded]="expandedElement == undefined" (click)="expandedElement = undefined">
                                                         <mat-icon>keyboard_arrow_up</mat-icon>
                                                 </button>
-                                                <button mat-icon-button>
+                                                <button mat-icon-button (click)="delete(element)">
                                                     <mat-icon style="color:red;">delete</mat-icon>
                                             </button>
-                                                <button mat-icon-button (click)="deliverCancel(element)">
+                                                <button mat-icon-button (click)="deliverCancel(element)" *ngIf="element.status != 'entregado'">
                                                 <mat-icon class="mat-icon-green" style="color:green;">assignment_late</mat-icon>
                                         </button>
                                             </mat-cell>
