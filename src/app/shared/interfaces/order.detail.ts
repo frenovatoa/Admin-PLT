@@ -7,4 +7,5 @@ export interface OrderDetail {
     isCourtesy: number;
     productDescription?:string;
     productTypeDescription?:string;
+    price?:number
  }
