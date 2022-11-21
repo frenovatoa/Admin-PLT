@@ -36,6 +36,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatInputModule } from '@angular/material/input';
 import { MatFormFieldModule } from "@angular/material/form-field";
 
+import { CalendarModule, DateAdapter, CalendarDateFormatter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
 
 @NgModule({
   declarations: [
@@ -71,7 +73,11 @@ import { MatFormFieldModule } from "@angular/material/form-field";
     MatDatepickerModule,
     MatNativeDateModule,
     MatInputModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+  }),
   ],
   exports: [
   MatStepperModule,

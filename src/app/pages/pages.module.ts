@@ -9,6 +9,8 @@ import { PagesRoutes } from './pages.routing';
 import { NgxDatatableModule } from '@swimlane/ngx-datatable';
 import {MatListModule} from '@angular/material/list';
 import {MatDialogModule} from '@angular/material/dialog';
+import { CalendarModule, DateAdapter, CalendarDateFormatter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns'
 
 @NgModule({
   imports: [
@@ -20,7 +22,11 @@ import {MatDialogModule} from '@angular/material/dialog';
     MatListModule,
     ReactiveFormsModule,
     NgxDatatableModule,
-    MatDialogModule
+    MatDialogModule,
+    CalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+  }),
   ],
   declarations: []
 })
