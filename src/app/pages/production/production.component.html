@@ -51,7 +51,7 @@
                                 <mat-form-field appearance="outline">
                                     <mat-label>Producto</mat-label>
                                     <mat-select matInput required id="productId" name="productId" formControlName="productId">
-                                        <mat-option *ngFor="let product of product" [value]="product.id">
+                                        <mat-option *ngFor="let product of product" [value]="product.id" (click)="obtenerPrecios(i,product)">
                                             {{product.description}} <span>, Tipo de producto: </span> {{product.productTypeDescription}}
                                         </mat-option>
                                     </mat-select>
@@ -176,14 +176,14 @@
                                               </div>
                                           </div>
                                           <!-- Tipo De Producto -->
-                                          <div fxFlex="100" fxFlex.gt-md="75">
-                                              <div class="m-r-15 m-l-15">
-                                                  <mat-form-field appearance="outline">
-                                                      <mat-label>Producto:</mat-label>
-                                                      <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
-                                                  </mat-form-field>
-                                              </div>
-                                          </div>
+                                          <div fxFlex="100" fxFlex.gt-md="50">
+                                            <div class="m-r-15 m-l-15">
+                                                <mat-form-field appearance="outline">
+                                                    <mat-label>Producto:</mat-label>
+                                                    <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
+                                                </mat-form-field>
+                                            </div>
+                                        </div>
                                           <!-- Cantidad -->
                                           <div fxFlex="100" fxFlex.gt-md="25">
                                               <div class="m-r-15 m-l-15">

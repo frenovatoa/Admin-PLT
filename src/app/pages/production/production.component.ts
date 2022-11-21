@@ -132,68 +132,7 @@ export class ProductionComponent implements OnInit, AfterViewInit {
   }
 
   currentDate = new Date();
-
-  //public amount
-  // obtenerPrecios(index : number, product ?: Product)
-  // {  
-  //   console.log(product)
-  //   let retail
-  //   let wholesale
-  //   let amount
-  //   let id = this.formProduction.get('saleTypeId').value
-  //   if(product.productTypeId != undefined){
-
-  //   this.productType.forEach((productType, index) =>{
-  //       if(productType.id == product.productTypeId){
-  //         if(id == 'yhl8Slx8goioNHV0OAGo'){
-  //           this.amount=productType.retailPrice
-  //           retail = productType.retailPrice
-  //           amount = retail
-  //         }else{
-  //           this.amount=productType.wholesalePrice
-  //           wholesale = productType.wholesalePrice
-  //           amount = wholesale
-  //         }
-  //         console.log(productType)
-  //       }
-  //   })
-  //   }
-  //   console.log(product)
-  //   this.saleDetail.controls[index].patchValue({"price":amount})
-  //   this.saleDetail.controls[index].patchValue({"amount":amount})
-
-  // }
-
-
-  nullAmount(index){
-    //console.log("opcion", this.saleDetail.controls[index].get('isCourtesy').value)
-    //console.log("index", index)
-  }
-  
-  clear(): void {
-    const stock = this.formProduction.get('productionDetails') as FormArray;
-    stock.controls.forEach(stock => stock.patchValue({ producedQuantity: ''})); 
-    //RESETEAN COSTO TOTAL DE LA TABLA.
-    //this.formSale.get('saleTypeId').patchValue({saleTypeId: ''});
-    //this.formSale.get('totalCost').patchValue({totalCost: ''});
-  }
-
-  // restaTotal(index){
-  //   for(let i=0;i < this.productionDetail.length;i++){
-  //     if(i == index){
-  //       console.log(index)
-  //       var resta = this.productionDetail.controls[index].get('amount').value
-  //       console.log("resta",resta)
-  //       var totalCost = this.formProduction.get('totalCost').value
-  //       console.log("totalCost",totalCost)
-  //       totalCost = totalCost - resta
-  //       console.log("resultado",totalCost)
-  //       //VALOR SE RESTA PERO NO SE ASIGNA
-  //       this.formProduction.get('totalCost').patchValue(totalCost);
-  //     }
-  //   }
-  // }
-
+ 
   async expandir(production: any){
     this.expandedElement = production
     this.local_data = production
@@ -210,17 +149,24 @@ export class ProductionComponent implements OnInit, AfterViewInit {
             productionDetail[i].productDescription = product.description
           }
         })
-         this.productType.forEach(productType =>{
-           if(productType.id == this.product[i].productTypeId){
-             productionDetail[i].productTypeDescription = productType.description
-           }
-         })
+        this.productType.forEach(productType =>{
+          if(productType.id == this.product[i].productTypeId){
+            productionDetail[i].productTypeDescription = productType.description
+          }
+        })
         }
-        //console.log('HOLI')
+        //console.log("saleData",this.saleDetailData)
     });
     }
   }
-
+  
+  clear(): void {
+    const stock = this.formProduction.get('productionDetails') as FormArray;
+    stock.controls.forEach(stock => stock.patchValue({ producedQuantity: ''})); 
+    //RESETEAN COSTO TOTAL DE LA TABLA.
+    //this.formSale.get('saleTypeId').patchValue({saleTypeId: ''});
+    //this.formSale.get('totalCost').patchValue({totalCost: ''});
+  }
     
   async ngOnInit() {
 
@@ -273,20 +219,6 @@ export class ProductionComponent implements OnInit, AfterViewInit {
         this.production[index].userLastName = userLastName
         })
         });
-  
-      // //llamada de la BD de tipos de ventas para obtener la descripcion mediante la ID.
-      // this.fb.getSaleTypes().subscribe((saleType: any)=>{
-      //   this.saleType=saleType
-      //   let saleTypeDescription
-      //   this.production.forEach((production, index) => {
-      //       this.saleType.forEach(saleType => {
-      //           if(sale.saleTypeId == saleType.id) {
-      //               saleTypeDescription = saleType.description
-      //           }
-      //       });
-      //   this.production[index].saleTypeDescription = saleTypeDescription
-      //   })
-      // });
 
       //llamada de la BD de la coleccion de detalles de venta mediante la BD.
       this.fb.getProductionDetail(production.id).subscribe((productionDetails: any)=>{
@@ -298,41 +230,24 @@ export class ProductionComponent implements OnInit, AfterViewInit {
         this.productType=productType
       })
 
-      //llamada de la BD de productos para obtener la descripcion mediante la ID. 
+      //llamada de la BD de productos para obtener la descripcion mediante la ID.
       this.fb.getProducts().subscribe((product: any)=>{
         this.product=product
-        let productDescription
-        let productTypeDescription
-        let productTypeRetailPrice
-        let productTypeWholesalePrice
-        this.productionDetails.forEach((productionDetails, index) =>{
-          this.product.forEach(product =>{
-            if(productionDetails.productId == product.id){ 
-              productDescription = product.description
-              
-              this.productType.forEach((productType, index) =>{
-                this.product.forEach(product =>{
-                  if(productType.id == product.productTypeId){
-                    //productTypeRetailPrice = productType.retailPrice
-                    //productTypeWholesalePrice = productType.wholesalePrice
-                  }
-                })
-              })
-            }
+        this.fb.getTypeOfProduct().subscribe((productType: any)=>{
+            console.log(productType)
+            this.productType=productType
+
+            let typeDescription
+            this.product.forEach((products, index) => {
+                this.productType.forEach(productType => {
+                    if(products.productTypeId == productType.id) {
+                        typeDescription = productType.description
+                    }
+                });
+                this.product[index].productTypeDescription = typeDescription
+            })
           });
-        this.productionDetails[index].productDescription = productDescription  
-        //this.productionDetails[index].productRetailPrice = productTypeRetailPrice
-        //this.productionDetails[index].productWholesalePrice = productTypeWholesalePrice
-        })
-        this.productType.forEach((productType, index) =>{
-          this.product.forEach(product =>{
-            if(productType.id == product.productTypeId){
-              productTypeDescription = productType.description
-            }
-          })
-        this.product[index].productTypeDescription = productTypeDescription   
-        })
-      });     
+      });  
     });     
   }
 
@@ -356,11 +271,12 @@ export class ProductionComponent implements OnInit, AfterViewInit {
     //this.sumaTotal()
     this.productionDetail.push(this.newProductionDetail());    
   }
+
   //?? Remueve el detalle de la req en la alta
   removeProductionDetail(rowIndex: number): void {
   //this.restaTotal(rowIndex)  
   console.log(this.productionDetail.controls[rowIndex].valid)
-  if(!this.productionDetail.controls[rowIndex].valid){
+  if(this.productionDetail.controls[rowIndex].valid){
     this.productionDetail.removeAt(rowIndex);
     console.log("borre")
   }else{
@@ -372,19 +288,83 @@ export class ProductionComponent implements OnInit, AfterViewInit {
     console.log(this.formProduction.value);
   }  
 
+  //Actualiza la cantidad de productos
+  updateQuantity(): void {
+    let data = this.formProduction.value;
+    //Variable de control en caso de que la cantidad solicitada no este disponible.
+    //let valid1 = true;
+
+    for(let i = 0; i < this.productionDetail.length;i++){
+      this.product.forEach(product =>{
+        //compara la id del los productos y la variable de control sea siempre true;
+        //en caso de ser false,dejara de buscar.
+        //en este ciclo buscador no hay tanto problema, ya que hay otro ciclo antes en save() que 
+        //valida si las cantidades solicitadas esten disponibles en  la tabla productos.
+        if(product.id == this.productionDetail.controls[i].get('productId').value){
+          //obtiene la cantidad de la tabla productos y suma la cantidad producida.
+          let cantidadTotal = product.quantity + this.productionDetail.controls[i].get('producedQuantity').value
+          //compara que sea mayor u igual a 0, en caso de que al restar la cantidad solicitada quede en 0 la cantidad disponible en productos.
+          //if(cantidadTotal >= 0){
+            //asigna la resta de la cantidad sobrante a data.quantity
+            data.quantity = cantidadTotal
+            //asigna a id, la id del producto actual del array en saleDetail
+            let id = this.productionDetail.controls[i].get('productId').value
+            //mantiene en true la variable de control.
+            //valid1 = true
+            //llama a la funcion del servicio para actualizar la cantidad en productos.
+            this.fb.updateProduct(id, data).then((custom)=>{
+            })
+          } 
+        //}
+      })
+    }  
+
+  }
+
+
   save(): void {
     let data = this.formProduction.value;
     data.userId = this.id
     console.log(this.formProduction.valid)
-    if (this.formProduction.valid) {
-      //Aquí va la inserción en la base de datos
-      this.fb.addProduccion(data).then((custom)=>{
-      this.toastr.success("Producción creada exitosamente");
-      this.closeDialog();
+    //primer ciclo que valida si hay stock disponible de un producto en especifico.
+    //Variable de control en true.
+    //let valid = true
+    for(let i = 0; i < this.productionDetail.length;i++){
+      this.product.forEach(product =>{
+        if(product.id == this.productionDetail.controls[i].get('productId').value){
+          //console.log(i, product.quantity)
+          let cantidadTotal = product.quantity + this.productionDetail.controls[i].get('producedQuantity').value
+        //   if(cantidadTotal >= 0){
+        //     //valid = true            
+        //     console.log(i,cantidadTotal)
+        //   }
+        //   else{
+        //     //en caso de que algun producto de la venta no tenga stock disponible en productos la variable de control cambia a false,
+        //     // y termina la condicional del ciclo.
+        //     //valid = false            
+        //     console.log("falta cantidad en producto.")
+        //   }
+         }
       })
-    } else {
-      this.toastr.error("Favor de llenar campos faltantes");
     }
+
+      if (this.formProduction.valid) {
+        //Aquí va la inserción en la base de datos
+        //antes de crear la venta verificar que la variable de control sea true, en caso de que todos los productos seleccioandos de la venta tengan stock disponible
+        // en productos, la variable de control quedara en true, permitiendo que pase la condicional y se guarde la venta, en caso de que un producto no tenga stock, no
+        // hara la venta y arrojara un mensaje indicando que falta stock del producto.
+        //if(valid == true){
+          this.updateQuantity()
+          this.fb.addProduccion(data).then((custom)=>{
+          this.toastr.success("Producción creada exitosamente");
+          this.closeDialog();
+          })
+        // }else{
+        //   this.toastr.error("No hay en stock para satisfacer la cantidad.");
+        // }
+      } else {
+        this.toastr.error("Favor de llenar campos faltantes");
+      }
   } 
 
   /** Guarda registro de dirección de un cliente */
