@@ -27,6 +27,7 @@ import { ConstantPool } from '@angular/compiler';
 import { Product } from 'src/app/shared/interfaces/product';
 import { SaleDetail } from 'src/app/shared/interfaces/sale.detail';
 import { animate, state, style, transition, trigger } from '@angular/animations';
+import { isThisSecond } from 'date-fns';
 
 
 @Component({
@@ -58,6 +59,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   public formSaleDetail: FormGroup;
   public saleDetailForm: FormArray;
   public saleDetailData: SaleDetail[];
+  public newSaleFormDetail: FormGroup;
   
   //Form de filtro de rango de fechas.
   filterForm = new FormGroup({
@@ -130,6 +132,17 @@ export class SalesComponent implements OnInit, AfterViewInit {
       saleDetails: this.fs.array([])
      });
      this.addSaleDetail();
+     this.newSaleFormDetail = this.fs.group ({
+      id: [null],
+      orderId: ["Venta"],
+      saleDate: [new Date()],
+      saleTypeId: [null, Validators.required],
+      userId: [null],
+      totalCost: [null],
+      status: [true, Validators.required],
+      newSaleDetails: this.fs.array([])
+     });
+     this.newSaleFormDetail.reset();
   }
 
   applyFilter() {
@@ -240,6 +253,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
     this.formSale.get('totalCost').setValue(null);
     const stock = this.formSale.get('saleDetails') as FormArray;
     stock.controls.forEach(stock => stock.patchValue({ productId: null, requestedQuantity: null, price: null, amount: null})); 
+/*     for(let i=1;i <= this.saleDetail.length;i++){
+        this.removeSaleDetail(i);
+    } */
   }
 
   restaTotal(index){
@@ -248,7 +264,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
   }
 
   async expandir(sale: any){
-    this.expandedElement = sale
+/*     this.expandedElement = sale
     this.local_data = sale
     //console.log("Sale:",sale)
     if(this.local_data.id != null){
@@ -271,15 +287,43 @@ export class SalesComponent implements OnInit, AfterViewInit {
         }
         //console.log("saleData",this.saleDetailData)
     });
-    }
+    } */
+    this.newGetSaleDetail.clear();
+    this.newSaleFormDetail.patchValue(sale)
+    this.newSaleFormDetail.get('totalCost').setValue(0)
+    this.expandedElement = sale
+
+    await this.fb.getSaleDetail(sale.id).subscribe((saleDetail: SaleDetail[])=>{
+      this.saleDetailData = saleDetail;
+      for(let i=0; i<saleDetail.length;i++){
+        this.newAddSaleDetail()
+        this.product.forEach(product =>{
+          if(product.id == saleDetail[i].productId){
+            saleDetail[i].productDescription = product.description
+            this.productType.forEach(productType =>{
+              if(productType.id == product.productTypeId){
+                console.log('tipo de producto', productType.description)
+                saleDetail[i].productTypeDescription = productType.description
+                if(productType.id == 'ysOUKmrhHheCUJm20LHP'){
+                  saleDetail[i].price=productType.wholesalePrice
+                }else{
+                  saleDetail[i].price=productType.retailPrice
+                }
+              }
+            })
+          }
+        })
+      }
+      this.newGetSaleDetail.patchValue(this.saleDetailData)
+    });
   }
 
     
   async ngOnInit() {
 
     this.formSale.valueChanges.subscribe((datas: any) => {
-      var total = 0;
-      var total2 = 0;
+        var total = 0;
+        var total2 = 0;
       let productG;
       //console.log(datas.totalCost)
       datas.saleDetails.forEach((data, index) => {
@@ -301,13 +345,37 @@ export class SalesComponent implements OnInit, AfterViewInit {
     });
 
 
+/*     this.newSaleFormDetail.valueChanges.subscribe((datas: any) => {
+      var total = 0;
+      var total2 = 0;
+    let productG;
+    //console.log(datas.totalCost)
+    datas.newSaleDetails.forEach((data, index) => {
+    if(data.isCourtesy== true){
+     // const sub = data.requestedQuantity * data.price;
+     //console.log("total antes de resta", datas.totalCost)
+      total2 = datas.totalCost - data.amount;
+      //console.log("importe", data.amount)
+      //console.log("resta", total)
+      this.newSaleFormDetail.get('totalCost').patchValue(total2, { emitEvent: false });
+    }else{
+      const sub = data.requestedQuantity * data.price;
+      total = total + sub;
+      //console.log("total normal",total)
+      this.newGetSaleDetail.controls[index].get('amount').patchValue(sub, { emitEvent: false });
+      this.newSaleFormDetail.get('totalCost').patchValue(total, { emitEvent: false });
+     }
+     });
+    });    */ 
+
+
     
 
     //Form Sale
     //llamada de la BD de ventas
     this.fb.getSale().subscribe((sale: any)=>{     
       
-      this.sale=sale  
+      this.sale=sale
       this.dataSource = new MatTableDataSource < Sale > (this.sale);
       this.dataSource.paginator =this.paginator;
       this.dataSource.sort = this.sort;
@@ -384,6 +452,10 @@ export class SalesComponent implements OnInit, AfterViewInit {
     return this.formSale.get("saleDetails") as FormArray
   }
 
+  get newGetSaleDetail(){
+    return this.newSaleFormDetail.get("newSaleDetails") as FormArray
+  }
+
   newSaleDetail(): FormGroup {
     return this.fs.group({
       id: [null],
@@ -403,6 +475,25 @@ export class SalesComponent implements OnInit, AfterViewInit {
     //this.sumaTotal()
     this.saleDetail.push(this.newSaleDetail());    
   }
+
+  newSaleDetailTable(): FormGroup {
+    return this.fs.group({
+      id: [null],
+      saleId: [null],
+      productId: [null, Validators.required],
+      requestedQuantity: ["", [Validators.required, Validators.pattern('^[0-9]+$')]],
+      price: [""],
+      amount: [""],
+      isCourtesy: [""],
+      status: [true],
+    }
+    )
+  }   
+
+  newAddSaleDetail(): void {
+    this.newGetSaleDetail.push(this.newSaleDetailTable());
+  }
+
   //?? Remueve el detalle de la req en la alta
   removeSaleDetail(rowIndex: number): void {
   this.restaTotal(rowIndex)  
@@ -445,11 +536,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
             let id = this.saleDetail.controls[i].get('productId').value
             //mantiene en true la variable de control.
             valid1 = true
-            //llama a la funcion del servicio para actualizar la cantidad en productos.
-            if(this.saleDetail.controls[i].get('isCourtesy').value != true){
+            //llama a la funcion del servicio para actualizar la cantidad en productos.{
             this.fb.updateProduct(id, data).then((custom)=>{
             })
-            }
           } 
         }
       })
