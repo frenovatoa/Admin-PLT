@@ -276,12 +276,10 @@ export class ProductionComponent implements OnInit, AfterViewInit {
   removeProductionDetail(rowIndex: number): void {
   //this.restaTotal(rowIndex)  
   console.log(this.productionDetail.controls[rowIndex].valid)
-  if(this.productionDetail.controls[rowIndex].valid){
+  
     this.productionDetail.removeAt(rowIndex);
     console.log("borre")
-  }else{
-  this.productionDetail.controls[rowIndex].patchValue({"status":"false"})
-  }
+ 
   }
 
   onSubmit() {
