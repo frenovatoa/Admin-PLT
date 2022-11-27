@@ -251,10 +251,19 @@ export class SalesComponent implements OnInit, AfterViewInit {
   clear(): void {
     this.formSale.get('saleTypeId').setValue(null);
     this.formSale.get('totalCost').setValue(null);
-    const stock = this.formSale.get('saleDetails') as FormArray;
-    stock.controls.forEach(stock => stock.patchValue({ productId: null, requestedQuantity: null, price: null, amount: null})); 
+    //const stock = this.formSale.get('saleDetails') as FormArray;
+    //stock.controls.forEach(stock => stock.patchValue({ productId: null, requestedQuantity: null, price: null, amount: null})); 
 /*     for(let i=1;i <= this.saleDetail.length;i++){
         this.removeSaleDetail(i);
+    } */
+    this.saleDetail.clear();
+    this.addSaleDetail();
+/*     for(let m=0;m<=this.saleDetail.length;m++){
+      if(m != 0){
+        console.log(m)
+      this.removeSaleDetail(m);
+      this.saleDetail.clear
+      }
     } */
   }
 
@@ -288,7 +297,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
         //console.log("saleData",this.saleDetailData)
     });
     } */
-    this.newGetSaleDetail.clear();
+    //this.newGetSaleDetail.clear();
     this.newSaleFormDetail.patchValue(sale)
     this.newSaleFormDetail.get('totalCost').setValue(0)
     this.expandedElement = sale
@@ -328,8 +337,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       //console.log(datas.totalCost)
       datas.saleDetails.forEach((data, index) => {
       if(data.isCourtesy== true){
-       // const sub = data.requestedQuantity * data.price;
-       //console.log("total antes de resta", datas.totalCost)
+        //console.log("total antes de resta", datas.totalCost)
         total2 = datas.totalCost - data.amount;
         //console.log("importe", data.amount)
         //console.log("resta", total)
@@ -339,9 +347,9 @@ export class SalesComponent implements OnInit, AfterViewInit {
         total = total + sub;
         //console.log("total normal",total)
         this.saleDetail.controls[index].get('amount').patchValue(sub, { emitEvent: false });
-        this.formSale.get('totalCost').patchValue(total, { emitEvent: false });
       }
      });
+     this.formSale.get('totalCost').patchValue(total, { emitEvent: false });
     });
 
 
@@ -431,7 +439,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       this.fb.getProducts().subscribe((product: any)=>{
         this.product=product
         this.fb.getTypeOfProduct().subscribe((productType: any)=>{
-            console.log(productType)
+            //console.log(productType)
             this.productType=productType
 
             let typeDescription
@@ -461,7 +469,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
       id: [null],
       saleId: [null],
       productId: [null, Validators.required],
-      requestedQuantity: ["", [Validators.required, Validators.pattern('^[0-9]+$')]],
+      requestedQuantity: [1, [Validators.required, Validators.pattern('^[0-9]+$')]],
       price: [""],
       amount: [""],
       isCourtesy: [""],
@@ -588,7 +596,7 @@ export class SalesComponent implements OnInit, AfterViewInit {
           this.fb.addVentas(data).then((custom)=>{
           this.toastr.success("Venta creada exitosamente");
           //this.closeDialog();
-          this.clear();
+          this.clear()
           })
         }else{
           this.toastr.error("No hay en stock para satisfacer la cantidad.");
