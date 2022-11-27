@@ -161,11 +161,14 @@ export class ProductionComponent implements OnInit, AfterViewInit {
   }
   
   clear(): void {
-    const stock = this.formProduction.get('productionDetails') as FormArray;
-    stock.controls.forEach(stock => stock.patchValue({ producedQuantity: ''})); 
+    //const stock = this.formProduction.get('productionDetails') as FormArray;
+    //stock.controls.forEach(stock => stock.patchValue({ producedQuantity: ''})); 
     //RESETEAN COSTO TOTAL DE LA TABLA.
-    //this.formSale.get('saleTypeId').patchValue({saleTypeId: ''});
-    //this.formSale.get('totalCost').patchValue({totalCost: ''});
+    //this.formProduction.get('saleTypeId').setValue(null);
+    //this.formProduction.get('totalCost').setValue(null);
+
+    this.productionDetail.clear();
+    this.addProductionDetail();
   }
     
   async ngOnInit() {
@@ -324,24 +327,11 @@ export class ProductionComponent implements OnInit, AfterViewInit {
     let data = this.formProduction.value;
     data.userId = this.id
     console.log(this.formProduction.valid)
-    //primer ciclo que valida si hay stock disponible de un producto en especifico.
-    //Variable de control en true.
-    //let valid = true
     for(let i = 0; i < this.productionDetail.length;i++){
       this.product.forEach(product =>{
         if(product.id == this.productionDetail.controls[i].get('productId').value){
           //console.log(i, product.quantity)
           let cantidadTotal = product.quantity + this.productionDetail.controls[i].get('producedQuantity').value
-        //   if(cantidadTotal >= 0){
-        //     //valid = true            
-        //     console.log(i,cantidadTotal)
-        //   }
-        //   else{
-        //     //en caso de que algun producto de la venta no tenga stock disponible en productos la variable de control cambia a false,
-        //     // y termina la condicional del ciclo.
-        //     //valid = false            
-        //     console.log("falta cantidad en producto.")
-        //   }
          }
       })
     }
@@ -351,15 +341,12 @@ export class ProductionComponent implements OnInit, AfterViewInit {
         //antes de crear la venta verificar que la variable de control sea true, en caso de que todos los productos seleccioandos de la venta tengan stock disponible
         // en productos, la variable de control quedara en true, permitiendo que pase la condicional y se guarde la venta, en caso de que un producto no tenga stock, no
         // hara la venta y arrojara un mensaje indicando que falta stock del producto.
-        //if(valid == true){
           this.updateQuantity()
           this.fb.addProduccion(data).then((custom)=>{
           this.toastr.success("Producción creada exitosamente");
-          this.closeDialog();
+          //this.closeDialog();
+          this.clear()
           })
-        // }else{
-        //   this.toastr.error("No hay en stock para satisfacer la cantidad.");
-        // }
       } else {
         this.toastr.error("Favor de llenar campos faltantes");
       }
