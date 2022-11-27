@@ -20,7 +20,7 @@
                                         {{saleType.description}}
                                     </mat-option>
                                 </mat-select>
-                                <small *ngIf="formSale.controls['saleTypeId'].hasError('required') && formSale.controls['saleTypeId'].touched" class="text-danger support-text">El tipo de venta es requerido.</small>
+                                <small *ngIf="formSale.controls['saleTypeId'].hasError('required') && formSale.controls['saleTypeId'].touched" class="text-danger support-text"><!-- El tipo de venta es requerido. --></small>
                             </mat-form-field>
                         </div>
                         <!-- Limpiar campos -->
@@ -63,7 +63,7 @@
                                             {{product.description}} <span>, Tipo de producto: </span> {{product.productTypeDescription}}
                                         </mat-option>
                                     </mat-select>
-                                    <small *ngIf="add.controls['productId'].hasError('required') && add.controls['productId'].touched" class="text-danger support-text">El producto es requerido.</small>
+                                    <small *ngIf="add.controls['productId'].hasError('required') && add.controls['productId'].touched" class="text-danger support-text"><!-- El producto es requerido. --></small>
                                 </mat-form-field>
                             </div>
                         </div>
@@ -72,7 +72,7 @@
                             <div class="m-r-15 m-l-15">
                                 <mat-form-field appearance="outline">
                                     <input type="number" min="1" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity">
-                                    <small *ngIf="add.controls['requestedQuantity'].hasError('required') && add.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
+                                    <small *ngIf="add.controls['requestedQuantity'].hasError('required') && add.controls['requestedQuantity'].touched" class="text-danger support-text"><!-- La cantidad es requerida. --></small>
                                     <small *ngIf="add.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
                                 </mat-form-field>
                             </div>
@@ -118,6 +118,7 @@
                     <!-- totalCost -->
                     <div fxFlex="100" fxFlex.gt-md="55">
                         <div class="m-r-15 m-l-15">
+                            <mat-label><b>Costo total:</b></mat-label>
                             <mat-form-field appearance="outline">
                                 <input type="number" min="0" matInput required id="totalCost" name="totalCost" [(ngModel)]="local_data.totalCost" placeholder="Costo Total" formControlName="totalCost" [formControl]="formSale.controls['totalCost']" [readonly]="true">
                                 <small *ngIf="formSale.controls['totalCost'].hasError('required') && formSale.controls['totalCost'].touched" class="text-danger support-text">El costo total es requerido.</small>
@@ -149,8 +150,8 @@
                             </mat-date-range-input>
                             <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                             <mat-date-range-picker #picker></mat-date-range-picker>
-                            <mat-error *ngIf="filterForm.controls.StartDate.hasError('required') && filterForm.controls['StartDate'].touched">Fecha inicial requerida</mat-error>
-                            <mat-error *ngIf="filterForm.controls.EndDate.hasError('required') && filterForm.controls['EndDate'].touched">Fecha final requerida</mat-error>
+                            <!--                             <mat-error *ngIf="filterForm.controls.StartDate.hasError('required') && filterForm.controls['StartDate'].touched">Fecha inicial requerida</mat-error>
+                            <mat-error *ngIf="filterForm.controls.EndDate.hasError('required') && filterForm.controls['EndDate'].touched">Fecha final requerida</mat-error> -->
                         </mat-form-field>
                     </form>
                 </div>
@@ -179,19 +180,19 @@
 
                         <!-- Date Column -->
                         <ng-container matColumnDef="saleDate">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Fecha </mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{ element.saleDate?.toDate() | date:'dd/MM/yyyy' }} </mat-cell>
                         </ng-container>
 
                         <!-- Venta/Pedido Column -->
                         <ng-container matColumnDef="orderId">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Venta/Pedido </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Venta/Pedido </mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.orderId}} </mat-cell>
                         </ng-container>
 
                         <!-- TipoVenta Column -->
                         <ng-container matColumnDef="saleTypeId">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de venta </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Tipo de venta </mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.saleTypeDescription}} </mat-cell>
                         </ng-container>
 
@@ -203,7 +204,7 @@
 
                         <!-- User Column -->
                         <ng-container matColumnDef="userId">
-                            <mat-header-cell *matHeaderCellDef mat-sort-header> Realizada Por </mat-header-cell>
+                            <mat-header-cell *matHeaderCellDef> Realizada Por </mat-header-cell>
                             <mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </mat-cell>
                         </ng-container>
 
@@ -213,44 +214,48 @@
 
                                 <div fxLayout="row wrap" class="align-items-center">
                                     <div>
-                                        <div fxLayout="row wrap" class="align-items-center" *ngFor="let detail of saleDetailData; let i = index">
-                                            <!-- Productos -->
-                                            <div fxFlex="100" fxFlex.gt-md="100">
-                                                <div class="m-r-15 m-l-15">
-                                                    <mat-label><b>Producto {{i+1}}</b></mat-label>
-                                                </div>
-                                            </div>
-                                            <!-- Tipo De Producto -->
-                                            <div fxFlex="100" fxFlex.gt-md="50">
-                                                <div class="m-r-15 m-l-15">
-                                                    <mat-form-field appearance="outline">
-                                                        <mat-label>Producto:</mat-label>
-                                                        <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
-                                                    </mat-form-field>
-                                                </div>
-                                            </div>
-                                            <!-- Cantidad solicitada -->
-                                            <div fxFlex="100" fxFlex.gt-md="20">
-                                                <div class="m-r-15 m-l-15">
-                                                    <mat-form-field appearance="outline">
-                                                        <mat-label>Cantidad Solicitada:</mat-label>
-                                                        <input type="number" min="0" matInput required id="requestedQuantity" value="{{detail.requestedQuantity}}" [readonly]="true" />
-                                                    </mat-form-field>
-                                                </div>
-                                            </div>
-                                            <!-- Importe -->
-                                            <div fxFlex="100" fxFlex.gt-md="20">
-                                                <div class="m-r-15 m-l-15">
-                                                    <mat-form-field appearance="outline">
-                                                        <mat-label>Importe:</mat-label>
-                                                        <input type="number" min="0" matInput required id="amount" value="{{detail.amount}}" [readonly]="true" />
-                                                    </mat-form-field>
-                                                </div>
-                                            </div>
-                                            <!-- Cortesia -->
-                                            <div fxFlex="100" fxFlex.gt-md="8">
-                                                <div class="m-r-15 m-l-15">
-                                                    <label for="isCourtesy" *ngIf="detail.isCourtesy == true"><mat-icon color="primary">done</mat-icon><b>Cortesia</b></label>
+                                        <div fxLayout="row wrap" class="align-items-center">
+                                            <div>
+                                                <div fxLayout="row wrap" class="align-items-center" *ngFor="let detail of saleDetailData; let i = index">
+                                                    <!-- Productos -->
+                                                    <div fxFlex="100" fxFlex.gt-md="100">
+                                                        <div class="m-r-15 m-l-15">
+                                                            <mat-label><b>Producto {{i+1}}</b></mat-label>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Tipo De Producto -->
+                                                    <div fxFlex="100" fxFlex.gt-md="50">
+                                                        <div class="m-r-15 m-l-15">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Producto:</mat-label>
+                                                                <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Cantidad solicitada -->
+                                                    <div fxFlex="100" fxFlex.gt-md="20">
+                                                        <div class="m-r-15 m-l-15">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Cantidad Solicitada:</mat-label>
+                                                                <input type="number" min="0" matInput required id="requestedQuantity" value="{{detail.requestedQuantity}}" [readonly]="true" />
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Importe -->
+                                                    <div fxFlex="100" fxFlex.gt-md="20">
+                                                        <div class="m-r-15 m-l-15">
+                                                            <mat-form-field appearance="outline">
+                                                                <mat-label>Importe:</mat-label>
+                                                                <input type="number" min="0" matInput required id="amount" value="{{detail.amount}}" [readonly]="true" />
+                                                            </mat-form-field>
+                                                        </div>
+                                                    </div>
+                                                    <!-- Cortesia -->
+                                                    <div fxFlex="100" fxFlex.gt-md="8">
+                                                        <div class="m-r-15 m-l-15">
+                                                            <label for="isCourtesy" *ngIf="detail.isCourtesy == true"><mat-icon color="primary">done</mat-icon><b>Cortesia</b></label>
+                                                        </div>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -277,7 +282,7 @@
                         <mat-row *matRowDef="let row; columns: ['expandedDetail'];" [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden">
                         </mat-row>
                     </mat-table>
-                    <mat-paginator [pageSizeOptions]="[5, 8, 12]" showFirstLastButtons></mat-paginator>
+                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
                 </div>
                 <!-- </mat-card-content>
                 </mat-card> -->
