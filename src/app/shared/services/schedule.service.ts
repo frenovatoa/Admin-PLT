@@ -11,7 +11,7 @@ export class ScheduleService {
   // Función que permite obtener los documentos (registros) de la coelcción (tabla) de productos
   getOrders() {
     return this.db
-      .collection("tbl_orders", ref => ref.where('status', '!=', "false"))
+      .collection("tbl_orders", ref => ref.where('status', '==', "pendiente"))
       .valueChanges();
   }
   getCustumer(id: string) {
