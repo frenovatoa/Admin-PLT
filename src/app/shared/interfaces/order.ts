@@ -16,7 +16,7 @@ export interface Order {
     totalCost: number;
     status: string;
     orderDetails?:OrderDetail[],
-    saleTypeDescription?:string
+    orderTypeDescription?:string,
     customer?:Customer,
     address?:Address,
     deliveryCost:number,

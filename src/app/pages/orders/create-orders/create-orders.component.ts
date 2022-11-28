@@ -169,9 +169,11 @@ export class CreateOrdersComponent implements OnInit {
               if(productType.id == product.productTypeId){
                 console.log('tipo de producto', productType.description)
                 orderDetail[i].productTypeDescription = productType.description
-                if(productType.id == 'ysOUKmrhHheCUJm20LHP'){
+                if(this.updateFormDetail.get('saleTypeId').value == 'ysOUKmrhHheCUJm20LHP'){
+                  console.log("entro en menudeo",productType.id)
                   orderDetail[i].price=productType.wholesalePrice
                 }else{
+                  console.log("entro en menudeo",productType.id)
                   orderDetail[i].price=productType.retailPrice
                 }
               }
@@ -265,6 +267,20 @@ export class CreateOrdersComponent implements OnInit {
         });
       });
     })
+
+    this.fb.getSaleTypes().subscribe((saleType: any)=>{
+      this.saleType=saleType
+      let saleTypeDescription
+      this.order.forEach((order, index) => {
+          this.saleType.forEach(saleType => {
+              if(order.saleTypeId == saleType.id) {
+                  saleTypeDescription = saleType.description
+              }
+          });
+      this.order[index].orderTypeDescription = saleTypeDescription
+      })
+    });
+    
     }); 
     
     
@@ -280,18 +296,7 @@ export class CreateOrdersComponent implements OnInit {
      // console.log(this.customers)
   });  
   
-  this.fb.getSaleTypes().subscribe((saleType: any)=>{
-    this.saleType=saleType
-    let saleTypeDescription
-    this.order.forEach((order, index) => {
-        this.saleType.forEach(saleType => {
-            if(order.saleTypeId == saleType.id) {
-                saleTypeDescription = saleType.description
-            }
-        });
-    this.order[index].saleTypeDescription = saleTypeDescription
-    })
-  });
+
 
        
   
