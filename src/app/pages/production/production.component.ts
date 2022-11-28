@@ -164,7 +164,7 @@ export class ProductionComponent implements OnInit, AfterViewInit {
     //const stock = this.formProduction.get('productionDetails') as FormArray;
     //stock.controls.forEach(stock => stock.patchValue({ producedQuantity: ''})); 
     //RESETEAN COSTO TOTAL DE LA TABLA.
-    //this.formProduction.get('saleTypeId').setValue(null);
+    this.formProduction.get('productionNotes').setValue(null);
     //this.formProduction.get('totalCost').setValue(null);
 
     this.productionDetail.clear();
