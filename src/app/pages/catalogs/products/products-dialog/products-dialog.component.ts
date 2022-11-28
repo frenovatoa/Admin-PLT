@@ -69,7 +69,7 @@ export class ProductsDialogComponent implements OnInit {
       id: [''],
       productTypeId: [''],
       description: ['', Validators.required],
-      quantity: ['', Validators.required],
+      quantity: [],
       image: [''],
       status: [''],
 
@@ -84,9 +84,8 @@ export class ProductsDialogComponent implements OnInit {
     });   
     if(this.local_data.id == null) {
       this.local_data.quantity =0;
-      this.formProducts.get('quantity').disable()
-    }  
-    this.formProducts.get('quantity').disable()
+    }
+/*     this.formProducts.get('quantity').disable() */
     // this.toastr.success("Producto Creado");
     this.productService.getProducts().subscribe((product: any)=>{
       console.log(product)
@@ -120,12 +119,10 @@ export class ProductsDialogComponent implements OnInit {
     console.log(data)
     var productoExistente = false
     var tipoExistente = false
-  
-    
-    
-    // Al dar de alta un producto, su estatus es true
+
+    // Al dar de alta un tipo de producto, su estatus es true
     data.status = true;
-    
+
     // Obtener valor de la descripción y el tipo del producto
     const description = this.formProducts.value.description;
     const productTypeId = this.formProducts.value.productTypeId;
@@ -154,7 +151,7 @@ export class ProductsDialogComponent implements OnInit {
           //  });
           this.saveFile(data.image, data)
           //this.uploadFile(data.image, data.id)
-          this.toastr.success("Producto Creado.");
+          this.toastr.success("Producto creado.");
           this.closeDialog();
       } else {
         this.toastr.error("Favor de llenar campos faltantes.");
@@ -181,21 +178,21 @@ export class ProductsDialogComponent implements OnInit {
 // }
 
 update(): void {
-  // var productoExistente = false
-  // var tipoExistente = false
+   var productoExistente = false
+   var tipoExistente = false
 
   // Obtener valor de la descripción y el tipo del producto
-  // const description = this.formProducts.value.description;
-  // const productTypeId = this.formProducts.value.productTypeId;
+   const description = this.formProducts.value.description;
+   const productTypeId = this.formProducts.value.productTypeId;
 
   // Traer todos los productos de la base de datos
-  // this.product.forEach(data => {
-  //   if(data.description == description && data.productTypeId == productTypeId){
+   this.product.forEach(data => {
+     if(data.description == description && data.productTypeId == productTypeId){
   //     // Si hay un producto igual al colocado en el dialog, es un producto existente y lo marca como true
-  //     productoExistente = true
-  //     tipoExistente = true
-  //   }
-  // })
+       productoExistente = true
+       tipoExistente = true
+   }
+   })
 
   this.formProducts.get('id').setValue(this.local_data.id)
   let data = this.formProducts.getRawValue();
@@ -210,6 +207,7 @@ update(): void {
     data.image = this.local_data.image
   }
   
+  if (productoExistente == false && tipoExistente == false){
   console.log(data.image)
   if (this.formProducts.valid) {
     this.productService.updateProduct(data.id, data)
@@ -221,7 +219,9 @@ update(): void {
   } else {
   this.toastr.error("Favor de llenar campos faltantes");
   }
-
+  }else{
+     this.toastr.error("Ya hay un producto registrado con ese tipo y descripción.");
+  }
   // Si el producto no existe
   // if (productoExistente == false && tipoExistente == false){
   //   this.formProducts.get('id').setValue(this.local_data.id)

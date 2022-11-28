@@ -261,7 +261,7 @@
                                         </ng-container>
                                         <ng-container matColumnDef="saleType">
                                             <mat-header-cell *matHeaderCellDef> Tipo de Venta </mat-header-cell>
-                                            <mat-cell *matCellDef="let element"> menudeo </mat-cell>
+                                            <mat-cell *matCellDef="let element"> {{element.orderTypeDescription}} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="status">
                                             <mat-header-cell *matHeaderCellDef> Estatus </mat-header-cell>
@@ -421,7 +421,7 @@
                                         <mat-row *matRowDef="let row; columns: ['expandedDetail'];" [@detailExpand]="row == expandedElement ? 'expanded' : 'collapsed'" style="overflow: hidden">
                                         </mat-row>
                                     </mat-table>
-                                    <mat-paginator [pageSizeOptions]="[5, 8, 12]" showFirstLastButtons></mat-paginator>
+                                    <mat-paginator [pageSizeOptions]="[10, 15, 20]" showFirstLastButtons></mat-paginator>
                                 </div>
                                 <!-- </mat-card-content>
                                 </mat-card> -->

@@ -1,4 +1,4 @@
-<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2> 
+<h2 class="font-medium" mat-dialog-title><strong>{{action}}</strong></h2>
 <mat-dialog-content class="pb-3" *ngIf="action != 'Confirmación' else elseTemplate">
     <form #productForm="ngForm" [formGroup]="formProducts">
         <div class="d-flex align-items-center m-b-15">
@@ -16,21 +16,19 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput required  
-                            [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description" [formControl]="formProducts.controls['description']">
-                    <!-- Este campo es requerido -->
-                    <small *ngIf="formProducts.controls['description'].hasError('required') && formProducts.controls['description'].touched" class="text-danger support-text">La descripción es requerida.</small>
-                </mat-form-field>
+                        <input type="text" matInput required [(ngModel)]="local_data.description" placeholder="Descripcion" formControlName="description" [formControl]="formProducts.controls['description']">
+                        <!-- Este campo es requerido -->
+                        <small *ngIf="formProducts.controls['description'].hasError('required') && formProducts.controls['description'].touched" class="text-danger support-text">La descripción es requerida.</small>
+                    </mat-form-field>
                 </div>
             </div>
             <!-- Cantidad -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="number" min="0" matInput required id="quantity" name="quantity" 
-                            [(ngModel)]="local_data.quantity" placeholder="Cantidad" formControlName="quantity" [formControl]="formProducts.controls['quantity']">
-                            <!-- Este campo es requerido -->
-                            <small *ngIf="formProducts.controls['quantity'].hasError('required') && formProducts.controls['quantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
+                        <input type="number" min="0" matInput required id="quantity" name="quantity" [(ngModel)]="local_data.quantity" placeholder="Cantidad" formControlName="quantity" [formControl]="formProducts.controls['quantity']" [readonly]="true">
+                        <!-- Este campo es requerido -->
+                        <!--                             <small *ngIf="formProducts.controls['quantity'].hasError('required') && formProducts.controls['quantity'].touched" class="text-danger support-text">La cantidad es requerida.</small> -->
                     </mat-form-field>
                 </div>
             </div>
@@ -40,8 +38,7 @@
                     <mat-form-field>
                         <mat-label>Tipo de Producto</mat-label>
                         <!-- Lo que voy a guardar es el ID -->
-                        <mat-select matInput required id="productTypeId" name="productTypeId" 
-                        [(ngModel)]="local_data.productTypeId" formControlName="productTypeId" [formControl]="formProducts.controls['productTypeId']">
+                        <mat-select matInput required id="productTypeId" name="productTypeId" [(ngModel)]="local_data.productTypeId" formControlName="productTypeId" [formControl]="formProducts.controls['productTypeId']">
                             <!-- Muestro la descripción de los tipos de usuarios en el select -->
                             <mat-option *ngFor="let productType of productType" [value]="productType.id">
                                 {{productType.description}}
@@ -60,25 +57,23 @@
                         <label for="status">Activo</label>
                 </div>
             </div> -->
-        </div> 
+        </div>
         <!-- Botón de guardar registro de un nuevo usuario -->
         <!-- mat-flat-button es para dar marco al botón -->
         <!-- mat-dialog-actions dará un espaciado entre los botones -->
         <div mat-dialog-actions align="center" class="pt-3">
             <!-- El color del botón solo aparece una vez llenados todos los campos del formulario -->
-            <button *ngIf="action == 'Nuevo Producto'" mat-button (click)="save()" mat-flat-button color="primary"
-                [disabled]="!formProducts.valid">Guardar</button>
-            <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary"
-                [disabled]="!formProducts.valid">Actualizar</button>
-                <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
+            <button *ngIf="action == 'Nuevo Producto'" mat-button (click)="save()" mat-flat-button color="primary" [disabled]="!formProducts.valid">Guardar</button>
+            <button *ngIf="action == 'Actualizar'" mat-button (click)="update()" mat-flat-button color="primary" [disabled]="!formProducts.valid">Actualizar</button>
+            <!-- Se define el color del botón antes de la acción, pues si no, no se mostrará -->
             <button mat-button mat-flat-button color="warn" (click)="closeDialog()">Cancelar</button>
         </div>
     </form>
-</mat-dialog-content> 
+</mat-dialog-content>
 <ng-template #elseTemplate>
     <!-- Al seleccionar el ícono de Eliminar, nos enviará un mensaje de confirmación -->
     <!-- Preguntamos mostrando el nombre del usuario que se quiere eliminar -->
-    <p>¿Estás seguro que deseas eliminarlo? </p> 
+    <p>¿Estás seguro que deseas eliminarlo? </p>
     <div align="center"><b> {{local_data.description}}</b></div>
 
     <div mat-dialog-actions align="center" class="pt-3">
