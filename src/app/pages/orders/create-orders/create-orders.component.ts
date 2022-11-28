@@ -283,9 +283,9 @@ export class CreateOrdersComponent implements OnInit {
   this.fb.getSaleTypes().subscribe((saleType: any)=>{
     this.saleType=saleType
     let saleTypeDescription
-    this.order.forEach((sale, index) => {
+    this.order.forEach((order, index) => {
         this.saleType.forEach(saleType => {
-            if(sale.saleTypeId == saleType.id) {
+            if(order.saleTypeId == saleType.id) {
                 saleTypeDescription = saleType.description
             }
         });
@@ -521,8 +521,17 @@ export class CreateOrdersComponent implements OnInit {
     return this.updateFormDetail.get("orderDetailsUp") as FormArray
   }
   clear(): void {
-    this.formOrder.reset();
-    this.addOrderDetail()
+/*     this.formOrder.reset();
+    this.addOrderDetail() */
+    this.formOrder.get('saleTypeId').setValue(null);
+    this.formOrder.get('customerId').setValue(null);
+    this.formOrder.get('addressId').setValue(null);
+    this.formOrder.get('deliveryDate').setValue(null);
+    this.formOrder.get('orderNotes').setValue(null);
+    this.formOrder.get('deliveryCost').setValue(null);
+    this.formOrder.get('totalCost').setValue(null);
+    this.orderDetail.clear();
+    this.addOrderDetail();
   }
 
   nullAmount(e, i:number){

@@ -162,21 +162,21 @@ save(): void {
 
     // Al actualizar un cliente, su estatus es true
     data.status = true;
-    // let customerFound = false;
-    //   this.customers.forEach(cus =>{
-    //     if(data.phone == cus.phone){
-    //       customerFound = true;
-    //       console.log("true")
-    //     }
-    //   })
-      //if(customerFound == false){
+      let customerFound = false;
+      this.customers.forEach(cus =>{
+       if(data.phone == cus.phone){
+          customerFound = true;
+          console.log("true")
+        }
+       })
+      if(customerFound == false){
         this.customerService.updateCustomer(id, data).then((custom)=>{
           this.toastr.success("Cliente Actualizado");
           this.closeDialog();
         })
-     // }else{
-       // this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
-     // }
+     }else{
+       this.toastr.error("El numero de telefono ingresado ya esta ligado con otro cliente");
+     }
   //  if (this.formCustomer.valid) {
       // Aquí va la inserción en la base de datos
         

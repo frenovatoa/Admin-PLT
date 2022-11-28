@@ -185,11 +185,24 @@ update(): void {
   console.log('ACTUALIZA NORMAL');
   this.formUsers.get('uid').setValue(this.local_data.uid)
   let data = this.formUsers.getRawValue();
+  var emailExistente = false
   console.log(data)
 
   // Al actualizar un usuario, su estatus es true
   data.status = true;
 
+  // Obtengo el valor del email
+  const email = this.formUsers.value.email;
+  // Traemos todos los emails de la base de datos
+  this.user.forEach(data => {
+    if(data.email == email){
+      // Si hay un email igual al que pusimos en el dialog, es un email existente y lo marca como true
+      emailExistente = true
+      //console
+    }
+  })
+  // Si el email no existe, hace todo lo demás
+  if (emailExistente == false){
   if(this.image != undefined){
     data.image = this.image;
   }else{
@@ -212,6 +225,9 @@ update(): void {
   } else {
   this.toastr.error("Favor de llenar campos faltantes");
   }
+}else{
+  this.toastr.error("Ya hay un usuario registrado con ese correo");
+}
 }
 
 /** Actualiza estatus del registro, de manera que pase a no estar activo */
