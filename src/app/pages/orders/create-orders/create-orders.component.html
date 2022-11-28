@@ -21,7 +21,7 @@
                                                                     {{saleType.description}}
                                                                 </mat-option>
                                                             </mat-select>
-                                                            <small *ngIf="formOrder.controls['saleTypeId'].hasError('required') && formOrder.controls['saleTypeId'].touched" class="text-danger support-text">El tipo de venta es requerido.</small>
+                                                            <small *ngIf="formOrder.controls['saleTypeId'].hasError('required') && formOrder.controls['saleTypeId'].touched" class="text-danger support-text"><!-- El tipo de venta es requerido. --></small>
                                                         </mat-form-field>
                                                     </div>
                                                     <!-- Fecha actual -->
@@ -177,7 +177,7 @@
                                                 <mat-form-field appearance="outline">
                                                     <mat-label><b>Costo Total</b></mat-label>
                                                     <input type="number" min="0" matInput required id="totalCost" name="totalCost" placeholder="Costo Total" formControlName="totalCost" [formControl]="formOrder.controls['totalCost']" [readonly]="true">
-                                                    <small *ngIf="formOrder.controls['totalCost'].hasError('required') && formOrder.controls['totalCost'].touched" class="text-danger support-text">El costo total es requerido.</small>
+                                                    <small *ngIf="formOrder.controls['totalCost'].hasError('required') && formOrder.controls['totalCost'].touched" class="text-danger support-text"><!-- El costo total es requerido. --></small>
                                                 </mat-form-field>
                                             </div>
                                         </div>
@@ -240,15 +240,15 @@
                                         </ng-container>
 
                                         <ng-container matColumnDef="reqDate">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Sol.</mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef> Fecha Sol.</mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{ element.requestDate?.toDate() | date:'dd/MM/yyyy' }} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="delDate">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha Entrega </mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef> Fecha Entrega </mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{ element.deliveryDate?.toDate() | date:'dd/MM/yyyy' }} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="customer">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Cliente </mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef> Cliente </mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.customer.name}} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="address">
@@ -256,15 +256,15 @@
                                             <mat-cell *matCellDef="let element"> {{element.address.neighborhood}} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="totalCost">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Costo Total </mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef> Costo Total </mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.totalCost}} </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="saleType">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Tipo de Venta </mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef> Tipo de Venta </mat-header-cell>
                                             <mat-cell *matCellDef="let element"> menudeo </mat-cell>
                                         </ng-container>
                                         <ng-container matColumnDef="status">
-                                            <mat-header-cell *matHeaderCellDef mat-sort-header> Estatus </mat-header-cell>
+                                            <mat-header-cell *matHeaderCellDef> Estatus </mat-header-cell>
                                             <mat-cell *matCellDef="let element"> {{element.status}} </mat-cell>
                                         </ng-container>
                                         <!-- Expanded Content Column - The detail row is made up of this one column -->

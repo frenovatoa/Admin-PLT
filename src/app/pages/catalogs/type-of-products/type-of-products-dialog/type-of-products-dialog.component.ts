@@ -100,10 +100,19 @@ update(): void {
 this.formTypeOfProduct.get("id").setValue(this.local_data.id)  
 let data = this.formTypeOfProduct.value;
 console.log(data)
+let descriptionExistente = false;
 
 // Al actualizar un tipo de producto, su estatus es true
 data.status = true;
-
+//obtiene el valor de la descripcion
+const description = this.formTypeOfProduct.value.description;
+//se traen todas las descripciones de la BD
+this.productType.forEach(data =>{
+  if(data.description == description){
+    descriptionExistente = true    
+  }
+})
+if( descriptionExistente == false){ 
 if (this.formTypeOfProduct.valid) {
 // Aquí va la inserción en la base de datos
   this.typeOfProductService.updateTypeOfProduct(data.id, data)
@@ -111,7 +120,10 @@ if (this.formTypeOfProduct.valid) {
   this.closeDialog();
 } else {
  this.toastr.error("Favor de llenar campos faltantes");
-}
+}}
+else{
+  this.toastr.error("Ya existe un tipo de producto con la misma descripcion");
+}    
 }
 
 
