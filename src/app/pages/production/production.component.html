@@ -7,10 +7,6 @@
               <div fxLayout="row wrap" class="align-items-center">
                   <!-- Tipo De Venta -->
                   <div fxFlex.gt-md="100" fxFlex.gt-lg="100" fxFlex="100">
-                      <!-- Limpiar campos 
-                      <div mat-dialog-actions align="center" class="pt-3" style="margin-top: 25px; margin-left: 10px;">
-                          <button mat-flat-button color="primary" (click)="clear()">Limpiar Campos</button>
-                      </div> -->
                       <!-- Fecha actual -->
                       <div fxFlex.gt-md="100" class="text-left">
                           <span class="font-medium"> Fecha de la producción: </span>
@@ -63,7 +59,7 @@
                         <div fxFlex="100" fxFlex.gt-md="47">
                             <div class="m-r-15 m-l-15">
                                 <mat-form-field appearance="outline">
-                                    <input type="number" min="0" matInput required id="producedQuantity" name="producedQuantity" placeholder="Cantidad" formControlName="producedQuantity">
+                                    <input type="number" matInput required id="producedQuantity" name="producedQuantity" placeholder="Cantidad" formControlName="producedQuantity">
                                     <small *ngIf="add.controls['producedQuantity'].hasError('required') && add.controls['producedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
                                     <small *ngIf="add.controls['producedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
                                 </mat-form-field>
@@ -146,19 +142,19 @@
 
                       <!-- Columna de fecha -->
                       <ng-container matColumnDef="productionDate">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Fecha </mat-header-cell>
+                          <mat-header-cell *matHeaderCellDef > Fecha </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{ element.productionDate?.toDate() | date:'dd/MM/yyyy' }} </mat-cell>
                       </ng-container>
 
                       <!-- Columna de notas -->
                       <ng-container matColumnDef="productionNotes">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Notas </mat-header-cell>
+                          <mat-header-cell *matHeaderCellDef > Notas </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{element.productionNotes}} </mat-cell>
                       </ng-container>
 
                       <!-- Columna de usuario -->
                       <ng-container matColumnDef="userId">
-                          <mat-header-cell *matHeaderCellDef mat-sort-header> Registrado Por </mat-header-cell>
+                          <mat-header-cell *matHeaderCellDef > Registrado Por </mat-header-cell>
                           <mat-cell *matCellDef="let element"> {{element.userName}} {{element.userLastName}} </mat-cell>
                       </ng-container>
 
