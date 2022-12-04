@@ -298,7 +298,7 @@
                                                                             <div class="m-r-15 m-l-15">
                                                                                 <mat-form-field appearance="outline">
                                                                                     <mat-label>Producto</mat-label>
-                                                                                    <mat-select matInput required id="productId" name="productId" formControlName="productId">
+                                                                                    <mat-select matInput required id="productId" name="productId" formControlName="productId" [readonly]="statusCorrecto">
                                                                                         <mat-option *ngFor="let product of product" [value]="product.id" (click)="obtenerPrecios2(i,product)">
                                                                                             {{product.description}} <span>, Tipo de producto: </span> {{product.productTypeDescription}}
                                                                                         </mat-option>
@@ -311,7 +311,7 @@
                                                                         <div fxFlex="100" fxFlex.gt-md="16">
                                                                             <div class="m-r-15 m-l-15">
                                                                                 <mat-form-field appearance="outline">
-                                                                                    <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity">
+                                                                                    <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity" [readonly]="statusCorrecto">
                                                                                     <small *ngIf="order.controls['requestedQuantity'].hasError('required') && order.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
                                                                                     <small *ngIf="order.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
                                                                                 </mat-form-field>
@@ -335,13 +335,13 @@
                                                                             </div>
                                                                         </div>
                                                                         <!-- Cortesia -->
-                                                                        <div fxFlex="100" fxFlex.gt-md="8">
+                                                                        <div fxFlex="100" fxFlex.gt-md="8" *ngIf="statusCorrecto == true">
                                                                             <div class="m-r-15 m-l-15" appearance="outline">
                                                                                 <input type="checkbox" id="isCourtesy" value="isCourtesy" formControlName="isCourtesy" (input)="nullAmount($event.target.checked, i)">
                                                                                 <label for="isCourtesy">Cortesia</label>
                                                                             </div>
                                                                         </div>
-                                                                        <div fxFlex="100" fxFlex.gt-md="10" *ngIf="updateFormDetail.controls['status'] != 'entregado'">
+                                                                        <div fxFlex="100" fxFlex.gt-md="10" *ngIf="statusCorrecto == true">
                                                                             <!-- Agregar Producto -->
                                                                             <button mat-icon-button color="primary" matTooltip="Agregar" [matTooltipPosition]="'above'" (click)="updateAddOrderDetail(i)">
                                                                                 <mat-icon>add_circle</mat-icon>
@@ -362,7 +362,7 @@
                                                                 <div class="m-r-15 m-l-25">
                                                                     <mat-form-field appearance="outline">
                                                                         <mat-label><b>Costo de envio</b></mat-label>
-                                                                        <input type="number" min="0" matInput required id="deliveryCost" name="deliveryCost" [(ngModel)]="local_data.deliveryCost" placeholder="Costo de envio" formControlName="deliveryCost" [formControl]="updateFormDetail.controls['deliveryCost']">
+                                                                        <input type="number" min="0" matInput required id="deliveryCost" name="deliveryCost" [(ngModel)]="local_data.deliveryCost" placeholder="Costo de envio" formControlName="deliveryCost" [formControl]="updateFormDetail.controls['deliveryCost']" [readonly]="statusCorrecto">
                                                                         <small *ngIf="updateFormDetail.controls['deliveryCost'].hasError('required') && updateFormDetail.controls['deliveryCost'].touched" class="text-danger support-text">El costo de envio.</small>
                                                                     </mat-form-field>
                                                                 </div>
@@ -376,13 +376,17 @@
                                                                     </mat-form-field>
                                                                 </div>
                                                             </div>
-                                                            <div fxFlex="100" fxFlex.gt-md="25" *ngIf="updateFormDetail.controls['status'] != 'entregado'">
+                                                            <div fxFlex="100" fxFlex.gt-md="25" *ngIf="statusCorrecto == true">
                                                                 <div class="m-r-15 m-l-25" appearance="outline">
                                                                     <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="update()" [disabled]="!updateFormDetail.valid">
                                                                         <mat-icon>save</mat-icon>
                                                                     </button>
+
+
                                                                 </div>
                                                             </div>
+                                                            <h5 *ngIf="userOrderDetail != null ||userOrderDetail != undefined ">Realizado por: {{userOrderDetail.name}} &nbsp; {{userOrderDetail.paternalLastName}}</h5>
+
 
                                                             <!--div class="m-r-15 m-l-15">
                                                                     <button mat-icon-button color="primary" matTooltip="Guardar" [matTooltipPosition]="'above'" (click)="update()" [disabled]="!updateFormDetail.valid">

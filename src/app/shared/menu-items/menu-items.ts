@@ -37,6 +37,7 @@ const MENUITEMS = [
         name: 'Dashboard',
         type: 'link',
         icon: 'dashboard',
+        userType: ['6qEyioEas90R7lujiioJ', 'oqHSeK8FRTbWtObf7FdD']
     },
     {
         /* state: 'administracion' */
@@ -44,6 +45,7 @@ const MENUITEMS = [
         name: 'Administración',
         type: 'sub',
         icon: 'settings',
+        userType:['6qEyioEas90R7lujiioJ'],
         children: [
             { /* state: 'usuarios' */ state: 'users', name: 'Usuarios', type: 'link' }
         ]
@@ -54,6 +56,7 @@ const MENUITEMS = [
         name: 'Catálogos',
         type: 'sub',
         icon: 'apps',
+        userType:['6qEyioEas90R7lujiioJ'],
         children: [
             { /* state: 'clientes' */ state: 'clients', name: 'Clientes', type: 'link' },
             { /* state: 'productos' */  state: 'products', name: 'Productos', type: 'link' },
@@ -65,6 +68,7 @@ const MENUITEMS = [
         name: 'Ventas',
         type: 'link',
         icon: 'add_shopping_cart',
+        userType: ['6qEyioEas90R7lujiioJ', 'oqHSeK8FRTbWtObf7FdD']
     },
     {
         /* state: 'pedidos' */
@@ -72,6 +76,7 @@ const MENUITEMS = [
         name: 'Pedidos',
         type: 'sub',
         icon: 'shopping_bag',
+        userType:['6qEyioEas90R7lujiioJ'],
         children: [
             { /* state: 'generar_pedido' */ state: 'generateOrder', name: 'Generar pedido', type: 'link' },
             { /* state: 'agenda' */ state: 'schedule', name: 'Agenda', type: 'link' },
@@ -82,6 +87,7 @@ const MENUITEMS = [
         name: 'Producción',
         type: 'link',
         icon: 'inventory_2',
+        userType:['6qEyioEas90R7lujiioJ'],
     }
 ];
 
