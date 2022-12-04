@@ -177,7 +177,7 @@ export class ScheduleComponent {
     public dates: any[] = [];
     public userLogged:User;
     
-
+/*Cambio test*/
     activeDayIsOpen = true;
 
     @ViewChild(MatPaginator) paginator: MatPaginator;
