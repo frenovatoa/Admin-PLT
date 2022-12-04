@@ -21,17 +21,17 @@
     </mat-menu>
 </div>
 
-<mat-nav-list appAccordion>
+<mat-nav-list appAccordion *ngIf="activate">
     <mat-list-item appAccordionLink *ngFor="let menuitem of menuItems.getMenuitem()" routerLinkActive="selected" group="{{menuitem.state}}" (click)="scrollToTop()">
 
-        <a class="" appAccordionToggle [routerLink]="['/pages', menuitem.state]" *ngIf="menuitem.type === 'link'" (click)="handleNotify()">
+        <a class="" appAccordionToggle [routerLink]="['/pages', menuitem.state]" *ngIf="menuitem.type === 'link' &&  menuitem.userType.includes(user.userTypeId)" (click)="handleNotify()">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name | translate }}</span>
             <span fxFlex></span>
             <span class="label label-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
         </a>
 
-        <a class="" appAccordionToggle href="{{menuitem.state}}" *ngIf="menuitem.type === 'extLink'">
+        <!--a class="" appAccordionToggle href="{{menuitem.state}}" *ngIf="menuitem.type === 'extLink'">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name | translate }}</span>
             <span fxFlex></span>
@@ -43,9 +43,9 @@
             <span>{{ menuitem.name | translate}}</span>
             <span fxFlex></span>
             <span class="label label-{{ badge.type }}" *ngFor="let badge of menuitem.badge">{{ badge.value }}</span>
-        </a>
+        </a-->
 
-        <a class="" appAccordionToggle href="javascript:;" *ngIf="menuitem.type === 'sub'">
+        <a class="" appAccordionToggle href="javascript:;" *ngIf="menuitem.type === 'sub' &&  menuitem.userType.includes(user.userTypeId)">
             <mat-icon>{{ menuitem.icon }}</mat-icon>
             <span>{{ menuitem.name | translate }}</span>
             <span fxFlex></span>

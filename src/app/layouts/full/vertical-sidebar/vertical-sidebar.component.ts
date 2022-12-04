@@ -23,7 +23,7 @@ export class VerticalAppSidebarComponent implements OnDestroy {
   public config: PerfectScrollbarConfigInterface = {};
   mobileQuery: MediaQueryList;
   public user: User;
-
+public activate:boolean = false;
   @Input() showClass: boolean = false;
   @Output() notify: EventEmitter<boolean> = new EventEmitter<boolean>()
 
@@ -69,12 +69,17 @@ export class VerticalAppSidebarComponent implements OnDestroy {
     this.fb.getUser().subscribe((user: any)=>{
       user.forEach(user => {
         if(user.email == this.user.email){
+
+          this.user = user;
+          console.log(this.user)
           this.user.name = user.name;
           this.user.maternalLastName = user.maternalLastName;
           this.user.paternalLastName = user.paternalLastName;
+          this.activate=true;
         }
         
       });
+      console.log(this.user)
   });  
    
     //this.user = this.authService.user;

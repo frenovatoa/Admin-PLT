@@ -9,6 +9,10 @@ import { ProductType } from 'src/app/shared/interfaces/product.type';
 import { Product } from 'src/app/shared/interfaces/product';
 import { ProductService } from 'src/app/shared/services/product.service';
 import { ProductsDialogComponent } from './products-dialog/products-dialog.component';
+import { UserService } from 'src/app/shared/services/user.service';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/auth/auth.service';
+import { User } from 'src/app/shared/interfaces/user';
 
 // export interface Product {
 //   id: string;
@@ -25,7 +29,7 @@ import { ProductsDialogComponent } from './products-dialog/products-dialog.compo
   styleUrls: ['./products.component.scss']
 })
 export class ProductsComponent implements OnInit {
-
+public userLogged :User;
   public products: Product[];
   // public firstFormGroup: FormGroup = Object.create(null);
   public dataSource: MatTableDataSource<Product>;
@@ -37,11 +41,26 @@ export class ProductsComponent implements OnInit {
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: ProductService, public _MatPaginatorIntl: MatPaginatorIntl) { 
-
-  }
+  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: ProductService, public _MatPaginatorIntl: MatPaginatorIntl,
+    public fa: UserService,
+              private router: Router,
+              public authService:AuthService) {
+                this.userLogged = this.authService.user;
+              }
 
   ngOnInit(): void {
+    this.fa.getUser().subscribe((user: any)=>{
+        user.forEach(user => {
+            if(user.email == this.userLogged.email){
+              if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+                this.router.navigate(['/dashboard'])
+              }
+                this.userLogged = user;
+              
+            }
+        });
+    });  
+
       // Obtener los documentos de la colección indicada en la función getUser()
       this.fb.getProducts().subscribe((product: any)=>{
         console.log(product)

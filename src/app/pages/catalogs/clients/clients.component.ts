@@ -6,6 +6,10 @@ import { MatTableDataSource } from '@angular/material/table';
 //import { Customer } from '../../../shared/interfaces/customer';
 import { ClientsDialogComponent } from './clients-dialog/clients-dialog.component';
 import { CustomerService } from '../../../shared/services/customer.service';
+import { UserService } from 'src/app/shared/services/user.service';
+import { Router } from '@angular/router';
+import { User } from 'src/app/shared/interfaces/user';
+import { AuthService } from 'src/app/shared/auth/auth.service';
 
 export interface Customer{
   id: string;
@@ -26,14 +30,32 @@ export class ClientsComponent implements OnInit {
   public customers: Customer[];
   public dataSource: MatTableDataSource<Customer>;
   public displayedColumns = ['#', 'name', 'phone', 'action'];
+  public userLogged:User;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   constructor(public dialog: MatDialog,
               public customerService:CustomerService,
-              public _MatPaginatorIntl: MatPaginatorIntl) { }
+              public _MatPaginatorIntl: MatPaginatorIntl,
+              public fb: UserService,
+              private router: Router,
+              public authService:AuthService) {
+                this.userLogged = this.authService.user;
+               }
 
   ngOnInit(): void {
+    this.fb.getUser().subscribe((user: any)=>{
+      user.forEach(user => {
+          if(user.email == this.userLogged.email){
+            if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+              this.router.navigate(['/dashboard'])
+            }
+              this.userLogged = user;
+            
+          }
+      });
+  });  
+
     this.customerService.getCustomer().subscribe((user: any)=>{
       console.log(user)
       this.customers=user

@@ -9,7 +9,7 @@ import { UserService } from 'src/app/shared/services/user.service';
 import { FormControl, FormGroup } from '@angular/forms';
 import { MatSort } from '@angular/material/sort';
 import { AuthService } from 'src/app/shared/auth/auth.service';
-
+import {Router} from "@angular/router"
 
 export interface User {
     uid?: string;
@@ -30,7 +30,7 @@ export interface User {
 })
 
 export class UserComponent implements OnInit, AfterViewInit {
-     
+     public userLogged;
     // Inicializo un arreglo vacío de usuarios
     public user: User[]=[];
     public dataSource: MatTableDataSource<User>;
@@ -44,12 +44,13 @@ export class UserComponent implements OnInit, AfterViewInit {
     public displayedColumns: string[] = ['#', 'name','email', 'action']; 
     private started: boolean = false;
  
-    constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService, public _MatPaginatorIntl: MatPaginatorIntl) { 
-        
+    constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: UserService, public _MatPaginatorIntl: MatPaginatorIntl, public authService:AuthService, private router: Router) { 
+        this.userLogged = this.authService.user;
     }
 
 
     ngOnInit(): void {
+        
         // Obtener los documentos de la colección indicada en la función getUser()
         this.fb.getUser().subscribe((user: any)=>{
             console.log(user)
@@ -58,6 +59,15 @@ export class UserComponent implements OnInit, AfterViewInit {
             console.log(this.dataSource);
             this.dataSource.paginator =this.paginator;
             this.dataSource.sort = this.sort;
+            user.forEach(user => {
+                if(user.email == this.userLogged.email){
+                  if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+                    this.router.navigate(['/dashboard'])
+                  }
+                    this.userLogged = user;
+                  
+                }
+            });
         });  
         // Cambio texto de la paginación en la parte inferior 
         this._MatPaginatorIntl.itemsPerPageLabel = 'Elementos por página';     
