@@ -56,6 +56,10 @@ import { ClassGetter } from '@angular/compiler/src/output/output_ast';
 import { registerLocaleData } from '@angular/common';
 import localeEs from '@angular/common/locales/es';
 import { Schedule } from 'src/app/shared/interfaces/schedule';
+import { UserService } from 'src/app/shared/services/user.service';
+import { Router } from '@angular/router';
+import { AuthService } from 'src/app/shared/auth/auth.service';
+import { User } from 'src/app/shared/interfaces/user';
 
 registerLocaleData(localeEs);
 
@@ -171,7 +175,7 @@ export class ScheduleComponent {
     // }];
 
     public dates: any[] = [];
-
+    public userLogged:User;
     
 
     activeDayIsOpen = true;
@@ -179,10 +183,26 @@ export class ScheduleComponent {
     @ViewChild(MatPaginator) paginator: MatPaginator;
     @ViewChild(MatSort) sort: MatSort;
 
-    constructor(public dialog: MatDialog, @Inject(DOCUMENT) doc: any, public fb: ScheduleService) { }
+    constructor(public dialog: MatDialog, @Inject(DOCUMENT) doc: any, public fb: ScheduleService,
+    public fa: UserService,
+    private router: Router,
+    public authService:AuthService) {
+        this.userLogged = this.authService.user;
+     }
 
     ngOnInit(): void {
-        
+        this.fa.getUser().subscribe((user: any)=>{
+            user.forEach(user => {
+                if(user.email == this.userLogged.email){
+                  if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+                    this.router.navigate(['/dashboard'])
+                  }
+                    this.userLogged = user;
+                  
+                }
+            });
+        });  
+      
         // this.fb.getOrders().subscribe(async (order: any) => {
         //     this.dates = order
         //     console.log(order);

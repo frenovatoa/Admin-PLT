@@ -14,6 +14,9 @@ import { AuthService } from 'src/app/shared/auth/auth.service';
 import { query } from 'chartist';
 import { collection } from 'firebase/firestore';
 import { ifStmt } from '@angular/compiler/src/output/output_ast';
+import { UserService } from 'src/app/shared/services/user.service';
+import { Router } from '@angular/router';
+import { User } from 'src/app/shared/interfaces/user';
 
 
 
@@ -37,7 +40,7 @@ export class TypeOfProductsComponent implements OnInit, AfterViewInit {
 
   public typeOfProduct: TypeOfProduct[]=[];
   public dataSource: MatTableDataSource<TypeOfProduct>;
-
+  public userLogged:User;
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
     
@@ -45,12 +48,27 @@ export class TypeOfProductsComponent implements OnInit, AfterViewInit {
   public displayedColumns: string[] = ['#', 'description', 'retailPrice', 'wholesalePrice', 'action'];
   private started: boolean = false;
 
-  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: TypeOfProductService, public _MatPaginatorIntl: MatPaginatorIntl) { 
-
-  }
+  constructor(public dialog: MatDialog, public datePipe: DatePipe, public fb: TypeOfProductService, public _MatPaginatorIntl: MatPaginatorIntl,
+    public fa: UserService,
+    private router: Router,
+    public authService:AuthService) {
+      this.userLogged = this.authService.user;
+    }
 
 
   ngOnInit(): void {
+    this.fa.getUser().subscribe((user: any)=>{
+      user.forEach(user => {
+          if(user.email == this.userLogged.email){
+            if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+              this.router.navigate(['/dashboard'])
+            }
+              this.userLogged = user;
+            
+          }
+      });
+  });  
+
      this.fb.getTypeOfProduct().subscribe((typeOfProduct: any)=>{      
         this.typeOfProduct=typeOfProduct
         this.dataSource = new MatTableDataSource < TypeOfProduct > (this.typeOfProduct);

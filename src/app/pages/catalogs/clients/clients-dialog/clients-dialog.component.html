@@ -25,8 +25,8 @@
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
-                        <input type="text" matInput id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formCustomer.controls['paternalLastName']">
-                        <small *ngIf="formCustomer.controls['paternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido materno no es válido.</small>
+                        <input type="text" matInput id="maternalLastName" name="maternalLastName" [(ngModel)]="local_data.maternalLastName" placeholder="Apellido Materno" formControlName="maternalLastName" [formControl]="formCustomer.controls['maternalLastName']">
+                        <small *ngIf="formCustomer.controls['maternalLastName'].hasError('pattern')" class="text-danger support-text">El apellido materno no es válido.</small>
                     </mat-form-field>
                 </div>
             </div>
@@ -35,18 +35,18 @@
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput required id="phone" name="phone" [(ngModel)]="local_data.phone" placeholder="Teléfono 1" formControlName="phone" [maxLength]="10">
-                    <small *ngIf="formCustomer.controls['phone'].hasError('required') && formCustomer.controls['phone'].touched" class="text-danger support-text">El telefono es requerido</small>
-                    <small *ngIf="formCustomer.controls['phone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
-                    <small *ngIf="formCustomer.controls['phone'].hasError('minLength')" class="text-danger support-text">El telefono debe contener mínimo 10 digitos.</small>
-                </mat-form-field>
-            </div>
+                        <small *ngIf="formCustomer.controls['phone'].hasError('required') && formCustomer.controls['phone'].touched" class="text-danger support-text">El telefono es requerido</small>
+                        <small *ngIf="formCustomer.controls['phone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
+                        <small *ngIf="formCustomer.controls['phone'].hasError('minLength')" class="text-danger support-text">El telefono debe contener mínimo 10 digitos.</small>
+                    </mat-form-field>
+                </div>
             </div>
             <!-- Espacio para escribir el teléfono 2 del cliente -->
             <div fxFlex="100" fxFlex.gt-md="50">
                 <div class="m-r-15 m-l-15">
                     <mat-form-field>
                         <input type="text" matInput id="alternativePhone" name="alternativePhone" [(ngModel)]="local_data.alternativePhone" placeholder="Teléfono 2" formControlName="alternativePhone" [maxLength]="10">
-                    <small *ngIf="formCustomer.controls['alternativePhone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
+                        <small *ngIf="formCustomer.controls['alternativePhone'].hasError('pattern')" class="text-danger support-text">El telefono solo debe de contener valores numericos</small>
                     </mat-form-field>
                 </div>
             </div>

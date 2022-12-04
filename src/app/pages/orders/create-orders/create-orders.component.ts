@@ -33,6 +33,8 @@ import { Order } from '../../../shared/interfaces/order';
 import { animate, state, style, transition, trigger } from '@angular/animations';
 import { OrderDetail } from 'src/app/shared/interfaces/order.detail';
 import { ConfirmDialogComponent } from 'src/app/shared/components/confirm-dialog/confirm-dialog.component';
+import { UserService } from 'src/app/shared/services/user.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-create-orders',
@@ -65,7 +67,8 @@ export class CreateOrdersComponent implements OnInit {
   public saleDetailForm: FormArray;
   public orderDetailData: OrderDetail[];
   public updateFormDetail: FormGroup;
-  
+  public statusCorrecto: boolean = false;
+  public valid1:boolean=false;
   //Form de filtro de rango de fechas.
   filterForm = new FormGroup({
     StartDate: new FormControl(),
@@ -86,6 +89,9 @@ export class CreateOrdersComponent implements OnInit {
   expandedElement: any;
   public amount_1;
   public amount
+  public userLogged:User;
+  public userDone:User;
+public userOrderDetail:User;
 
   constructor(
     private fs: FormBuilder,
@@ -98,7 +104,10 @@ export class CreateOrdersComponent implements OnInit {
      public custService: CustomerService,
      public authService : AuthService,
      public toastr :ToastrService,
+     public fa: UserService,
+     private router: Router,
      @Optional() @Inject(MAT_DIALOG_DATA) public data: Sale) { 
+      this.userLogged = this.authService.user;
      this.local_data = { ...data };
      this.action = this.local_data.action;
      this.filterForm = this.fs.group({
@@ -146,17 +155,37 @@ export class CreateOrdersComponent implements OnInit {
   currentDate = new Date();
 
   async expandir(order: any){
-      this.updateOrderDetail.clear();
-   console.log(order)
+    this.userOrderDetail =null;
+    console.log(order) 
+    if(order.status == 'entregado' || order.status == 'cancelado'){
+      this.statusCorrecto = false;
+    }else{
+      this.statusCorrecto= true;
+    }
+    this.fa.getUser().subscribe((user: any)=>{
+      console.log(user)
+      user.forEach(user => {
+       // console.log(order.userId)
+          if(order.userId == user.uid){
+            console.log(user)
+            this.userOrderDetail = user;  
+            console.log(this.userOrderDetail)  
+          }
+      });
+  });  
+    
+    this.updateOrderDetail.clear();
+  // console.log(order)
    this.updateFormDetail.patchValue(order)
    this.updateFormDetail.get('totalCost').setValue(0)
     this.expandedElement = order
+
     //this.local_data = orde
     //console.log("Sale:",sale)
    
       await this.ordService.getOrderDetail(order.id).subscribe((orderDetail: OrderDetail[])=>{
 
-        console.log("p",orderDetail)
+      //  console.log("p",orderDetail)
         this.orderDetailData= orderDetail;
         //console.log("saleData:",this.saleDetailData)
         for(let i=0; i< orderDetail.length; i++){
@@ -167,13 +196,13 @@ export class CreateOrdersComponent implements OnInit {
             orderDetail[i].productDescription = product.description
             this.productType.forEach(productType =>{
               if(productType.id == product.productTypeId){
-                console.log('tipo de producto', productType.description)
+              //  console.log('tipo de producto', productType.description)
                 orderDetail[i].productTypeDescription = productType.description
                 if(this.updateFormDetail.get('saleTypeId').value == 'ysOUKmrhHheCUJm20LHP'){
-                  console.log("entro en menudeo",productType.id)
+              //    console.log("entro en menudeo",productType.id)
                   orderDetail[i].price=productType.wholesalePrice
                 }else{
-                  console.log("entro en menudeo",productType.id)
+                //  console.log("entro en menudeo",productType.id)
                   orderDetail[i].price=productType.retailPrice
                 }
               }
@@ -188,26 +217,38 @@ export class CreateOrdersComponent implements OnInit {
   }
 
   async ngOnInit() {
+    this.fa.getUser().subscribe((user: any)=>{
+      user.forEach(user => {
+          if(user.email == this.userLogged.email){
+            this.userDone = user;
+            if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+              this.router.navigate(['/dashboard'])
+            }
+              this.userLogged = user;
+            
+          }
+      });
+  });  
 
     this.formOrder.valueChanges.subscribe((datas: any) => {
       var total = 0;
       var total2 = 0;
       let productG;
-      console.log(datas.totalCost)
+     // console.log(datas.totalCost)
       datas.orderDetails.forEach((data, index) => {
       if(data.isCourtesy== true){
        // const sub = data.requestedQuantity * data.price;
-       console.log("total antes de resta", datas.totalCost)
+     //  console.log("total antes de resta", datas.totalCost)
         total2 = datas.totalCost - data.amount;
-        console.log("importe", data.amount)
-        console.log("resta", total)
+      //  console.log("importe", data.amount)
+       // console.log("resta", total)
        
         this.formOrder.get('totalCost').patchValue(total2, { emitEvent: false });
       }else{
 
         const sub = data.requestedQuantity * data.price;
         total = total + sub;
-        console.log("total normal",total)
+      //  console.log("total normal",total)
         this.orderDetail.controls[index].get('amount').patchValue(sub, { emitEvent: false });
       }
       });
@@ -222,16 +263,16 @@ export class CreateOrdersComponent implements OnInit {
      datas.orderDetailsUp.forEach((data, index) => {
       if(data.isCourtesy== true){
        // const sub = data.requestedQuantity * data.price;
-       console.log("total antes de resta", datas.totalCost)
+      // console.log("total antes de resta", datas.totalCost)
         total2 = datas.totalCost - data.amount;
-        console.log("importe", data.amount)
-        console.log("resta", total)
+       // console.log("importe", data.amount)
+       // console.log("resta", total)
       
         this.updateFormDetail.get('totalCost').patchValue(total2, { emitEvent: false });
       }else{
         const sub = data.requestedQuantity * data.price;
         total = total + sub;
-        console.log("total normal",total)
+      //  console.log("total normal",total)
         this.updateOrderDetail.controls[index].get('amount').patchValue(sub, { emitEvent: false });
        
       }
@@ -326,7 +367,7 @@ export class CreateOrdersComponent implements OnInit {
   }
 
   changeTypes(e){
-    console.log(e)
+   // console.log(e)
   }
   public amount1
   precios(){
@@ -343,7 +384,7 @@ export class CreateOrdersComponent implements OnInit {
             let productId = this.product[j].id
             //console.log("product",productId)
             if(this.orderDetail.controls[i].get('productId').value == productId){
-              console.log("product1",productId)
+            //  console.log("product1",productId)
               let retail1
               let amount_1
               this.productType.forEach((productType, index) =>{
@@ -365,7 +406,7 @@ export class CreateOrdersComponent implements OnInit {
           //this.saleDetail.controls[i].get('amount').setValue(amount)
           for(let j=0;j<this.product.length;j++){
             let productId = this.product[j].id
-            console.log("product",productId)
+           // console.log("product",productId)
             if(this.orderDetail.controls[i].get('productId').value == productId){
               //console.log("product1",productId)
               let wholesale1
@@ -396,7 +437,7 @@ export class CreateOrdersComponent implements OnInit {
       let wholesale
       let amount
       let id = this.formOrder.get('saleTypeId').value
-      console.log(product)
+      //console.log(product)
       if(product.productTypeId != undefined){
   
       this.productType.forEach((productType, index) =>{
@@ -436,7 +477,7 @@ export class CreateOrdersComponent implements OnInit {
             let productId = this.product[j].id
             //console.log("product",productId)
             if(this.updateOrderDetail.controls[i].get('productId').value == productId){
-              console.log("product1",productId)
+             // console.log("product1",productId)
               let retail1
               let amount_1
               this.productType.forEach((productType, index) =>{
@@ -458,7 +499,7 @@ export class CreateOrdersComponent implements OnInit {
           //this.saleDetail.controls[i].get('amount').setValue(amount)
           for(let j=0;j<this.product.length;j++){
             let productId = this.product[j].id
-            console.log("product",productId)
+          //  console.log("product",productId)
             if(this.updateOrderDetail.controls[i].get('productId').value == productId){
               //console.log("product1",productId)
               let wholesale1
@@ -489,7 +530,7 @@ export class CreateOrdersComponent implements OnInit {
       let wholesale
       let amount
       let id = this.updateFormDetail.get('saleTypeId').value
-      console.log(product)
+     // console.log(product)
       if(product.productTypeId != undefined){
   
       this.productType.forEach((productType, index) =>{
@@ -608,16 +649,9 @@ restaTotalUp(index){
   //?? Remueve el detalle de la req en la alta
   removeOrderDetail(rowIndex: number): void {
     this.restaTotal(rowIndex)  
- // console.log(this.orderDetail.controls[rowIndex].valid)
-  if(!this.orderDetail.controls[rowIndex].valid){
+ 
     this.orderDetail.removeAt(rowIndex);
-   // console.log("borre")
-  }else{
-  // this.local_data.address.splice(rowIndex,1)
-  // console.log(this.formCustomer.get(['address', 0]).value)
-  this.orderDetail.controls[rowIndex].patchValue({"status":"false"})
-  //this.address.removeAt(rowIndex);
-  }
+   
   }
   restaTotal(index){
     this.orderDetail.controls[index].patchValue({"price":0})
@@ -629,7 +663,8 @@ restaTotalUp(index){
 
   save(): void {
     let data = this.formOrder.value;
-    //console.log(this.formOrder.valid)
+    data.userId= this.userDone.uid;
+    console.log(data)
     if (this.formOrder.valid) {
       //Aquí va la inserción en la base de datos
      this.ordService.addOrder(data).then((custom)=>{
@@ -663,7 +698,7 @@ restaTotalUp(index){
 
   update(): void {
     let data = this.updateFormDetail.value;
-    console.log(data)
+  //  console.log(data)
     if (this.updateFormDetail.valid) {
       //Aquí va la inserción en la base de datos
      this.ordService.updateOrder(data.id, data).then((custom)=>{
@@ -737,7 +772,7 @@ restaTotalUp(index){
 
 
 deliverCancel(order: Order) {
-console.log(order)
+//console.log(order)
     const data = {
       message: 'Estatus del pedido',
       name: 'La orden de compra: ' + order.id,
@@ -750,8 +785,8 @@ console.log(order)
     }).afterClosed().subscribe((type: number) => {
       if (type == 1 || type == 2) {
         if (type == 1) {
-          order.status = "entregado";
-          this.saveSale(order)          
+          //order.status = "entregado";
+          this.saveSale(order)     
         } else if (type == 2) {
           const data = {
             message: '¿Estas seguro que deseas cancelar el pedido?',
@@ -780,12 +815,7 @@ console.log(order)
               this.ngOnInit();
             }
           });
-        }
-        this.ordService.updateStatus(order.id, order).then((custom)=>{
-          //console.log(custom)
-          this.toastr.success("Pedido Actualizado");
-          this.formSaleDetail.reset();
-           })
+        }     
       } else {
         this.toastr.warning('Cancelado');
         this.ngOnInit();
@@ -797,9 +827,9 @@ console.log(order)
 async saveSale(order:Order){
  // this.updateQuantity(order)
  await this.ordService.getOrderDetail(order.id).subscribe((orderDetail: OrderDetail[])=>{
-  console.log("p",orderDetail)
+  //console.log("p",orderDetail)
   order.orderDetails= orderDetail;
-  console.log("order wt Details", order)
+ /// console.log("order wt Details", order)
   this.updateQuantity(order)
 });
 
@@ -808,7 +838,7 @@ async updateQuantity(order:Order) {
   let data = order;
   let upProduct : Product [] = [];
   //Variable de control en caso de que la cantidad solicitada no este disponible.
-  let valid1 = true;
+  
 //console.log("Asignacion", order)
   for(let i = 0; i < order.orderDetails.length;i++){
 
@@ -820,8 +850,9 @@ async updateQuantity(order:Order) {
        // console.log('Cantidad Restante', cantidadSobrante)
         if(cantidadSobrante <= 0){
           this.toastr.error(`No hay cantidad suficiente de ${product.description} para satisfacer`);
-          valid1= false;
+          this.valid1= false;
         } else{
+          this.valid1= true;         
           product.quantity = cantidadSobrante;
           upProduct.push(product)
         }
@@ -829,9 +860,9 @@ async updateQuantity(order:Order) {
     })
    // console.log(upProduct)
   }  
-  console.log(upProduct)
-if(valid1 == true){
-  console.log('Actualiza')
+ // console.log(upProduct)
+if(this.valid1 == true){
+ // console.log('Actualiza')
 upProduct.forEach(producto =>{
   this.fb.updateProduct(producto.id, producto).then((custom)=>{
   })
@@ -839,6 +870,13 @@ upProduct.forEach(producto =>{
 this.ordService.addVentas(order).then((custom)=>{
   this.toastr.success("Venta creada exitosamente");
   //this.closeDialog();
+ })
+ order.status = "entregado";
+          
+ this.ordService.updateStatus(order.id, order).then((custom)=>{
+//console.log(custom)
+this.toastr.success("Pedido Actualizado");
+this.formSaleDetail.reset();
  })
 }
 }

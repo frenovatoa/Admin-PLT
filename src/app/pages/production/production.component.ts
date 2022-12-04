@@ -23,6 +23,7 @@ import { Product } from 'src/app/shared/interfaces/product';
 import { ProductType } from 'src/app/shared/interfaces/product.type';
 import { ProductionService } from 'src/app/shared/services/production.service';
 import { DateAdapter } from '@angular/material/core';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-production',
@@ -79,7 +80,7 @@ export class ProductionComponent implements OnInit, AfterViewInit {
   expandedElement: any;
 
   private started: boolean = false;
-
+public userLogged:User;
   public id
 
   constructor(
@@ -95,8 +96,10 @@ export class ProductionComponent implements OnInit, AfterViewInit {
      //public dialogRef: MatDialogRef<SalesComponent>,
      public authService : AuthService,
      public toastr :ToastrService,
+     public fa: UserService,
+     private router: Router,
      @Optional() @Inject(MAT_DIALOG_DATA) public data: Production) { 
-
+      this.userLogged = this.authService.user;
       this.dateAdapter.setLocale('en-GB'); //dd/MM/yyyy
       
       let email = this.authService.user
@@ -172,7 +175,17 @@ export class ProductionComponent implements OnInit, AfterViewInit {
   }
     
   async ngOnInit() {
-
+    this.fa.getUser().subscribe((user: any)=>{
+      user.forEach(user => {
+          if(user.email == this.userLogged.email){
+            if(user.userTypeId=='oqHSeK8FRTbWtObf7FdD'){
+              this.router.navigate(['/dashboard'])
+            }
+              this.userLogged = user;
+            
+          }
+      });
+  });  
      this.productionDetail.valueChanges.subscribe((datas: Array<any>) => {
        var total = 0;
     //   datas.forEach((data, index) => {
