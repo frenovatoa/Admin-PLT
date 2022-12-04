@@ -24,7 +24,7 @@ import {
     isSameMonth,
     addHours
 } from 'date-fns';
-import { Subject } from 'rxjs/Subject';
+// import { Subject } from 'rxjs/Subject';
 import {
     CalendarEvent,
     CalendarEventAction,
@@ -119,7 +119,7 @@ export class ScheduleComponent {
         }
     ];
 
-    refresh: Subject<any> = new Subject();
+    // refresh: Subject<any> = new Subject();
 
     // events: CalendarEvent[] = [
     //     {
