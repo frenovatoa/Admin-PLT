@@ -658,7 +658,7 @@ restaTotalUp(index){
     this.orderDetail.controls[index].patchValue({"amount":0})
   }
   onSubmit() {
-   // console.log(this.formOrder.value);
+   
   }  
 
   save(): void {
