@@ -366,7 +366,7 @@
                                                                 <div class="m-r-15 m-l-25">
                                                                     <mat-form-field appearance="outline">
                                                                         <mat-label><b>Costo de envio</b></mat-label>
-                                                                        <input type="number" min="0" matInput required id="deliveryCost" name="deliveryCost" [(ngModel)]="local_data.deliveryCost" placeholder="Costo de envio" formControlName="deliveryCost" [formControl]="updateFormDetail.controls['deliveryCost']" [readonly]="statusCorrecto">
+                                                                        <input type="number" min="0" matInput required id="deliveryCost" name="deliveryCost" [(ngModel)]="local_data.deliveryCost" placeholder="Costo de envio" formControlName="deliveryCost" [formControl]="updateFormDetail.controls['deliveryCost']" [readonly]="statusCorrecto==false">
                                                                         <small *ngIf="updateFormDetail.controls['deliveryCost'].hasError('required') && updateFormDetail.controls['deliveryCost'].touched" class="text-danger support-text">El costo de envio.</small>
                                                                     </mat-form-field>
                                                                 </div>
