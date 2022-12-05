@@ -296,14 +296,18 @@
                                                                         <!-- Tipo De Producto -->
                                                                         <div fxFlex="100" fxFlex.gt-md="30">
                                                                             <div class="m-r-15 m-l-15">
-                                                                                <mat-form-field appearance="outline">
+                                                                                <mat-form-field appearance="outline" *ngIf="statusCorrecto != false">
                                                                                     <mat-label>Producto</mat-label>
-                                                                                    <mat-select matInput required id="productId" name="productId" formControlName="productId" [readonly]="statusCorrecto">
+                                                                                    <mat-select matInput required id="productId" name="productId" formControlName="productId" [readonly]="statusCorrecto == false">
                                                                                         <mat-option *ngFor="let product of product" [value]="product.id" (click)="obtenerPrecios2(i,product)">
                                                                                             {{product.description}} <span>, Tipo de producto: </span> {{product.productTypeDescription}}
                                                                                         </mat-option>
                                                                                     </mat-select>
                                                                                     <small *ngIf="order.controls['productId'].hasError('required') && order.controls['productId'].touched" class="text-danger support-text">El producto es requerido.</small>
+                                                                                </mat-form-field>
+                                                                                <mat-form-field appearance="outline" *ngIf="statusCorrecto == false">
+                                                                                    <mat-label>Producto:</mat-label>
+                                                                                    <input matInput required id="productId" value="{{detail.productDescription}}, Tipo de producto: {{detail.productTypeDescription}}" [readonly]="true" />
                                                                                 </mat-form-field>
                                                                             </div>
                                                                         </div>
@@ -311,7 +315,7 @@
                                                                         <div fxFlex="100" fxFlex.gt-md="16">
                                                                             <div class="m-r-15 m-l-15">
                                                                                 <mat-form-field appearance="outline">
-                                                                                    <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity" [readonly]="statusCorrecto">
+                                                                                    <input type="number" min="0" matInput required id="requestedQuantity" name="requestedQuantity" placeholder="Cantidad" formControlName="requestedQuantity" [readonly]="statusCorrecto == false">
                                                                                     <small *ngIf="order.controls['requestedQuantity'].hasError('required') && order.controls['requestedQuantity'].touched" class="text-danger support-text">La cantidad es requerida.</small>
                                                                                     <small *ngIf="order.controls['requestedQuantity'].hasError('pattern')" class="text-danger support-text">La cantidad no es valida.</small>
                                                                                 </mat-form-field>
