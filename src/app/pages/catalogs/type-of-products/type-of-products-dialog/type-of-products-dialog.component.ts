@@ -23,7 +23,7 @@ import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 export class TypeOfProductsDialogComponent {
 
   private started: boolean = false;
-  public productType: ProductType[]=[];
+  public productType: ProductType[] = [];
   public dataSourceP: MatTableDataSource<ProductType>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -41,104 +41,107 @@ export class TypeOfProductsDialogComponent {
     public dialogRef: MatDialogRef<TypeOfProductsDialogComponent>,
     public fb: FormBuilder,
     public typeOfProductService: TypeOfProductService,
-    public authService : AuthService,
-    public toastr :ToastrService,
+    public authService: AuthService,
+    public toastr: ToastrService,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: ProductType) {
     this.local_data = { ...data };
     this.action = this.local_data.action;
-    this.formTypeOfProduct = this.fb.group ({
+    this.formTypeOfProduct = this.fb.group({
       id: [''],
       description: ['', Validators.required],
-      retailPrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')] ],
-      wholesalePrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')] ],
+      retailPrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')]],
+      wholesalePrice: ['', [Validators.required, Validators.pattern('^[0-9]+(.[0-9]{0,2})?$')]],
       status: [''],
-  });
-  console.log(this.local_data);
-}
-
-  ngOnInit() {    
-    this.typeOfProductService.getTypeOfProduct().subscribe((productType: any)=>{      
-    this.productType=productType
-  });  
-}
-
-/** Guarda registro */
-save(): void {
-  let descriptionExistente = false;
-  let data = this.formTypeOfProduct.value;
-  //console.log(data)  
-
-  // Al dar de alta un tipo de producto, su estatus es true
-  data.status = true;
-
-  //obtiene el valor de la descripcion
-  const description = this.formTypeOfProduct.value.description;
-  //se traen todas las descripciones de la BD
-  this.productType.forEach(data =>{
-    if(data.description == description){
-      descriptionExistente = true    
-    }
-  })
-  if( descriptionExistente == false){  
-  if (this.formTypeOfProduct.valid) {
-      // Aquí va la inserción en la base de datos
-        this.typeOfProductService.addTypeOfProduct(data).then((typeOfProduct: any)=>{
-        console.log(typeOfProduct)
-        this.toastr.success("Tipo de Producto Creado");
-        this.closeDialog();
-      });
-    } else {
-      this.toastr.error("Favor de verificar los datos ingresados");
-    }
-  }else{
-    this.toastr.error("Ya existe un tipo de producto con la misma descripcion");
-  }    
-}
-
-/** Actualiza registro */
-update(): void {
-this.formTypeOfProduct.get("id").setValue(this.local_data.id)  
-let data = this.formTypeOfProduct.value;
-console.log(data)
-let descriptionExistente = false;
-
-// Al actualizar un tipo de producto, su estatus es true
-data.status = true;
-//obtiene el valor de la descripcion
-const description = this.formTypeOfProduct.value.description;
-//se traen todas las descripciones de la BD
-this.productType.forEach(data =>{
-  if(data.description == description){
-    descriptionExistente = true    
+    });
+    console.log(this.local_data);
   }
-})
-if( descriptionExistente == false){ 
-if (this.formTypeOfProduct.valid) {
-// Aquí va la inserción en la base de datos
-  this.typeOfProductService.updateTypeOfProduct(data.id, data)
-  this.toastr.success("Tipo de Producto Actualizado");
-  this.closeDialog();
-} else {
- this.toastr.error("Favor de llenar campos faltantes");
-}}
-else{
-  this.toastr.error("Ya existe un tipo de producto con la misma descripcion");
-}    
-}
+
+  ngOnInit() {
+    this.typeOfProductService.getTypeOfProduct().subscribe((productType: any) => {
+      this.productType = productType
+    });
+  }
+
+  /** Guarda registro */
+  save(): void {
+    let descriptionExistente = false;
+    let data = this.formTypeOfProduct.value;
+    //console.log(data)  
+
+    // Al dar de alta un tipo de producto, su estatus es true
+    data.status = true;
+
+    //obtiene el valor de la descripcion
+    const description = this.formTypeOfProduct.value.description;
+    //se traen todas las descripciones de la BD
+    this.productType.forEach(data => {
+      if (data.description.toLowerCase() == description.toLowerCase()) {
+        descriptionExistente = true
+      }
+    })
+    if (descriptionExistente == false) {
+      if (this.formTypeOfProduct.valid) {
+        // Aquí va la inserción en la base de datos
+        this.typeOfProductService.addTypeOfProduct(data).then((typeOfProduct: any) => {
+          console.log(typeOfProduct)
+          this.toastr.success("Tipo de Producto Creado");
+          this.closeDialog();
+        });
+      } else {
+        this.toastr.error("Favor de verificar los datos ingresados");
+      }
+    } else {
+      this.toastr.error("Ya existe un tipo de producto con la misma descripcion");
+    }
+  }
+
+  /** Actualiza registro */
+  update(): void {
+    this.formTypeOfProduct.get("id").setValue(this.local_data.id)
+    let data = this.formTypeOfProduct.value;
+    console.log(data)
+    let descriptionExistente = false;
+
+    // Al actualizar un tipo de producto, su estatus es true
+    data.status = true;
+    //obtiene el valor de la descripcion
+    const description = this.formTypeOfProduct.value.description;
+    //se traen todas las descripciones de la BD
+    this.productType.forEach(data => {
+      if (data.description.toLowerCase() == description.toLowerCase()) {
+        if (this.formTypeOfProduct.get("id").value != data.id) {
+          descriptionExistente = true
+        }
+      }
+    })
+    if (descriptionExistente == false) {
+      if (this.formTypeOfProduct.valid) {
+        // Aquí va la inserción en la base de datos
+        this.typeOfProductService.updateTypeOfProduct(data.id, data)
+        this.toastr.success("Tipo de Producto Actualizado");
+        this.closeDialog();
+      } else {
+        this.toastr.error("Favor de llenar campos faltantes");
+      }
+    }
+    else {
+      this.toastr.error("Ya existe un tipo de producto con la misma descripcion");
+    }
+  }
 
 
-doAction(): void {
-  let data = this.local_data;
-  data.status = false;
-console.log(data)
-// Aquí va la inserción en la base de datos
-  this.typeOfProductService.updateTypeOfProduct(data.id, data)
-  this.toastr.success("Tipo de producto Eliminado");
-  this.closeDialog();
-}
+  doAction(): void {
+    let data = this.local_data;
+    data.status = false;
+    console.log(data)
+    // Aquí va la inserción en la base de datos
+    this.typeOfProductService.updateTypeOfProduct(data.id, data)
+    this.toastr.success("Tipo de producto Eliminado");
+    this.closeDialog();
+  }
 
-closeDialog(): void {
-  this.dialogRef.close({ event: 'Cancelar' });
-}
-  
+  closeDialog(): void {
+    this.dialogRef.close({ event: 'Cancelar' });
+  }
+
 }
