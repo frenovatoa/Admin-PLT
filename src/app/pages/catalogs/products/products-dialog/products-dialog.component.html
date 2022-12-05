@@ -38,7 +38,7 @@
                     <mat-form-field>
                         <mat-label>Tipo de Producto</mat-label>
                         <!-- Lo que voy a guardar es el ID -->
-                        <mat-select matInput required id="productTypeId" name="productTypeId" [(ngModel)]="local_data.productTypeId" formControlName="productTypeId" [formControl]="formProducts.controls['productTypeId']">
+                        <mat-select matInput required id="productTypeId" ngDefaultControl name="productTypeId" [(ngModel)]="local_data.productTypeId" formControlName="productTypeId" [formControl]="formProducts.controls['productTypeId']">
                             <!-- Muestro la descripción de los tipos de usuarios en el select -->
                             <mat-option *ngFor="let productType of productType" [value]="productType.id">
                                 {{productType.description}}
