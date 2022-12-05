@@ -67,7 +67,7 @@ export class CreateOrdersComponent implements OnInit {
   public saleDetailForm: FormArray;
   public orderDetailData: OrderDetail[];
   public updateFormDetail: FormGroup;
-  public statusCorrecto: boolean = false;
+  public statusCorrecto: boolean = true;
   public valid1:boolean=false;
   //Form de filtro de rango de fechas.
   filterForm = new FormGroup({
@@ -157,11 +157,13 @@ public userOrderDetail:User;
   async expandir(order: any){
     this.userOrderDetail =null;
     console.log(order) 
-    if(order.status == 'entregado' || order.status == 'cancelado'){
-      this.statusCorrecto = false;
+
+    if(order.status == 'pendiente'){
+      this.statusCorrecto = true;
     }else{
-      this.statusCorrecto= true;
+      this.statusCorrecto= false;
     }
+
     this.fa.getUser().subscribe((user: any)=>{
       console.log(user)
       user.forEach(user => {
@@ -255,17 +257,18 @@ public userOrderDetail:User;
       total = total + datas.deliveryCost;
       this.formOrder.get('totalCost').patchValue(total, { emitEvent: false });
     });
+  
     this.updateFormDetail.valueChanges.subscribe((datas: any) => {
       var total = 0;
       var total2 = 0;
       let productG;
-     // this.updateFormDetail.get('totalCost').patchValue(0, { emitEvent: false });
+     
      datas.orderDetailsUp.forEach((data, index) => {
       if(data.isCourtesy== true){
-       // const sub = data.requestedQuantity * data.price;
-      // console.log("total antes de resta", datas.totalCost)
+       const sub = data.requestedQuantity * data.price;
+       console.log("total antes de resta", datas.totalCost)
         total2 = datas.totalCost - data.amount;
-       // console.log("importe", data.amount)
+      console.log("importe", data.amount)
        // console.log("resta", total)
       
         this.updateFormDetail.get('totalCost').patchValue(total2, { emitEvent: false });
